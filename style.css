@@ -1,0 +1,85 @@
+
+*{
+	margin: 0px;
+	padding: 0px;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+textarea#source{
+	width: 40em;
+	height: 8em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
