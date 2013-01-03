@@ -74,6 +74,13 @@ module DTSDoc{
     export class TSFunction extends TSClassMember{ 
         constructor(public docs:TSDocs, public name:string, public params:TSParameter[], public ret:string){ super(); } 
         toString():string{ return this.name + "(" + this.params.join() + "):" + this.ret; }
+        toHTML():JQuery{
+            var p = $('<section class="ts_modulemember ts_function"/>');
+            p.append($("<a/>").attr("name", "func_" + this.name));
+            p.append($('<h1 class="ts_modulemember_title ts_function_title" />').text("function " + this.name));
+            var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
+            return p;
+        }
     }
 
 
@@ -99,6 +106,16 @@ module DTSDoc{
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     /// Class Members //////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    export class TSConstructor extends TSClassMember{
+        constructor(public docs:TSDocs, public params:TSParameter[]){ super(); }
+        toHTML():JQuery{
+            var span = $('<span class="ts_code ts_constructor"/>');
+            span.append("constructor");
+            span.append(genParameters(this.params));
+            return span;
+        }
+    }
 
     export class TSMethod extends TSClassMember{ 
         constructor(public docs:TSDocs, public access:Accessibility, public isStatic:bool, public name:string, public params:TSParameter[], public ret:TSTypeRef){ super(); } 
@@ -150,16 +167,7 @@ module DTSDoc{
     	toHTML():JQuery{ return undefined; }
     }
 
-    export class TSIConstructor extends TSInterfaceMember{
-        constructor(public docs:TSDocs, public params:TSParameter[]){ super(); }
-        toHTML():JQuery{
-        	var span = $('<span class="ts_code ts_constructor"/>');
-        	span.append("constructor");
-        	span.append(genParameters(this.params));
-            span.append(";");
-            return span;
-        }
-    }
+
 
     export class TSIndexer extends TSInterfaceMember{
         constructor(public docs:TSDocs, public name:string, public indexType:TSTypeRef, public retType:TSTypeRef){ super(); }
@@ -191,6 +199,16 @@ module DTSDoc{
         		content.append(m.toHTML());
         	});
         	return section;
+        }
+    }
+
+    export class TSIConstructor extends TSInterfaceMember{
+        constructor(public docs:TSDocs, public params:TSParameter[], public type:TSTypeRef){ super(); }
+        toHTML():JQuery{
+            var span = $('<span class="ts_code ts_constructor"/>');
+            span.append("new");
+            span.append(genParameters(this.params));
+            return span;
         }
     }
 

@@ -4,8 +4,11 @@
 
 module DTSDoc{
 
+	////////////////////////////////////////////////////////////////////////////////////
+	// lex
+	////////////////////////////////////////////////////////////////////////////////////
 	var lineComment      = regexp(/^\/\/(?!>)[^\n]*\n/);
-	var blockComment     = regexp(/^\/\*(.|\r|\n)*\*\//m);
+	var blockComment     = regexp(/^\/\*(.|\r|\n)*?\*\//m);
 	var comment          = or(lineComment, blockComment);
 	var whitespace       = regexp(/^[ \t\r\n]+/);
 	var spaces           = many(or(whitespace, comment));
@@ -17,6 +20,10 @@ module DTSDoc{
 			return v;
 		});
 	}
+
+	////////////////////////////////////////////////////////////////////////
+	// Common parsers
+	//////////////////////////////////////////////////////////////////////
 
 	var colon = lexme(string(":"));
 	var semi  = lexme(string(";"));
@@ -33,8 +40,48 @@ module DTSDoc{
 	});
 	var documentComment     = lexme(optional(map((ls)=>ls.join('\n'), many(documentCommentLine))));
 
-	var reference  = lexme(regexp(/^([_a-zA-Z][_a-zA-Z0-9]*)(\.([_a-zA-Z][_a-zA-Z0-9]*))*/));
-	var identifier = lexme(regexp(/^[_a-zA-Z][_a-zA-Z0-9]*/));
+	var reference  = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
+	var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*/));
+
+	var tsDeclare = optional(reserved("declare"));
+
+	var pParameter = seq((s)=>{
+		var isVarArg = s(optional(reserved("...")));
+		var varName = s(identifier);
+		var opt = s(option(false, map(()=>true, reserved("?"))));
+		
+
+		var typeName = s(option(new TSNameRef("any"), seq((s)=>{
+			s(colon);
+			return s(typename);
+		})));
+
+		//s(colon);
+		//var typeName = s(typename);
+		
+
+		return typeName && new TSParameter(varName, opt, typeName);
+	});
+
+	var pParameters = seq((s)=>{
+		s(reserved("("));
+		var ps = s(sepBy(pParameter, comma));
+		s(reserved(")"));
+		return ps;
+	});
+
+
+
+	var accessibility = option(Accessibility.Public, or(
+		map(()=>Accessibility.Public,  reserved("public")), 
+		map(()=>Accessibility.Private, reserved("private"))
+	));
+
+	var modStatic = option(false, map(()=>true, reserved("static")));
+
+	//////////////////////////////////////////////////////////////////////////////////////
+	// Type parsers
+	/////////////////////////////////////////////////////////////////////////////////
 
 	var spcifying = seq((s)=>{
 		s(reserved("{"));
@@ -56,7 +103,7 @@ module DTSDoc{
 	}));
 
 	var tsFunctionType = seq((s)=>{
-		var params = s(parameters);
+		var params = s(pParameters);
 		s(reserved("=>"));
 		var retType = s(typename);
 		return new TSFunctionTypeRef(params, retType);
@@ -72,37 +119,18 @@ module DTSDoc{
 		return type;
 	});
 
-	var parameter = seq((s)=>{
-		var varName = s(identifier);
-		var opt = s(option(false, map(()=>true, reserved("?"))));
-		s(colon);
-		var typeName = s(typename);
-		return typeName && new TSParameter(varName, opt, typeName);
-	});
 
-	export var parameters = seq((s)=>{
-		s(reserved("("));
-		var ps = s(sepBy(parameter, comma));
-		s(reserved(")"));
-		return ps;
-	});
-
-
-
-	var accessibility = option(Accessibility.Public, or(
-		map(()=>Accessibility.Public,  reserved("public")), 
-		map(()=>Accessibility.Private, reserved("private"))
-	));
-
-	var modStatic = option(false, map(()=>true, reserved("static")));
+	/////////////////////////////////////////////////////////////////////////////////////
+	// Class parser
+	/////////////////////////////////////////////////////////////////////////////////////////
 
 	var tsMethod = seq((s)=>{
 		var docs = s(documentComment);		
 		var access = s(accessibility);		
 		var isStatic = s(modStatic);
 		var methodName = s(identifier);
-		var params = s(parameters);
-		var retType = s(option("any", seq((s)=>{
+		var params = s(pParameters);
+		var retType = s(option(new TSNameRef("any"), seq((s)=>{
 			s(colon);
 			var retType = s(typename);
 			return retType;
@@ -110,7 +138,6 @@ module DTSDoc{
 		s(semi);
 		return retType && new TSMethod(docs && new TSDocs(docs), access, isStatic, methodName, params, retType);
 	});
-
 
 	var tsField = seq((s)=>{
 		var docs = s(documentComment);		
@@ -126,9 +153,9 @@ module DTSDoc{
 	var tsConstructor = seq((s)=>{
 		var docs = s(documentComment);		
 		s(reserved("constructor"));
-		var params = s(parameters);
+		var params = s(pParameters);
 		s(semi);
-		return new TSIConstructor(docs && new TSDocs(docs), params);
+		return new TSConstructor(docs && new TSDocs(docs), params);
 	});
 
 	var tsIndexer = seq((s)=>{
@@ -148,6 +175,7 @@ module DTSDoc{
 
 	var tsClass = seq((s)=>{
 		var docs = s(documentComment);
+		s(tsDeclare);
 		s(optExport);
 		s(reserved("class"));
 		var name = s(identifier);
@@ -165,22 +193,13 @@ module DTSDoc{
 		return new TSClass(docs && new TSDocs(docs), name, members);
 	});
 
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// Interface parser
+	///////////////////////////////////////////////////////////////////////////////////	
 
-	
 
 
-
-	var tsInterface = seq((s)=>{
-		var docs = s(documentComment);
-		s(optExport);
-		s(reserved("interface"));
-		var name = s(identifier);
-		s(reserved("{"));
-		var members = s(many(tsInterfaceMember));
-		s(reserved("}"));
-		return new TSInterface(docs && new TSDocs(docs), name, members);
-	});
-
+	// x:X;
 	var tsIField = seq((s)=>{
 		var docs = s(documentComment);
 		var name = s(identifier);
@@ -191,23 +210,69 @@ module DTSDoc{
 		return new TSIField(docs && new TSDocs(docs), name, opt, type);
 	});
 
+	// new (a:A, b:BS):Z
+	var pIConstructor = seq((s)=>{
+		var docs = s(documentComment);
+		s(reserved("new"));
+		var params = s(pParameters);
+		s(colon);
+		var type = s(typename);
+		s(semi);
+		return new TSIConstructor(docs && new TSDocs(docs), params, type);
+	});
+
 	var tsIFunction = seq((s)=>{
 		var docs = s(documentComment);
-		var params = s(parameters);
+		var params = s(pParameters);
 		s(colon);
 		var type = s(typename);
 		s(semi);
 		return new TSIFunction(docs && new TSDocs(docs), params, type);
 	});
 
+	var tsIMethod = seq((s)=>{
+		var docs = s(documentComment);		
+		var access = s(accessibility);		
+		var isStatic = s(modStatic);
+		var methodName = s(identifier);
+		var opt = s(option(false, map(()=>true, reserved("?"))));		
+		var params = s(pParameters);
+		var retType = s(option(new TSNameRef("any"), seq((s)=>{
+			s(colon);
+			var retType = s(typename);
+			return retType;
+		})));
+		s(semi);
+		return retType && new TSMethod(docs && new TSDocs(docs), access, isStatic, methodName, params, retType);
+	});
+
 
 	var tsInterfaceMember = or(
-		tsConstructor,
-		tsMethod,
+		pIConstructor,
+		tsIMethod,
 		tsIField,
 		tsIndexer,
 		tsIFunction
 	);
+
+	var tsInterface = seq((s)=>{
+		var docs = s(documentComment);
+		s(optExport);
+		s(reserved("interface"));
+		var name = s(identifier);
+		var ifs = s(optional(seq((s)=>{
+			s(reserved("extends"));
+			s(sepBy1(typenameRef, comma));
+		})));
+		s(reserved("{"));
+		var members = s(many(tsInterfaceMember));
+		s(reserved("}"));
+		return new TSInterface(docs && new TSDocs(docs), name, members);
+	});
+
+	/////////////////////////////////////////////////////////////////////////////////////////
+	// Other module member elements
+	/////////////////////////////////////////////////////////////////////////////////////// 
 
 	var tsEnum = seq((s)=>{
 		var docs = s(documentComment);		
@@ -223,10 +288,11 @@ module DTSDoc{
 
 	var tsFunction = seq((s)=>{
 		var docs = s(documentComment);
+		s(tsDeclare);		
 		s(optExport);
 		s(reserved("function"));
 		var name = s(identifier);
-		var params = s(parameters);
+		var params = s(pParameters);
 		var retType = s(option("any", seq((s)=>{
 			s(colon);
 			var retType = s(typename);
@@ -237,18 +303,20 @@ module DTSDoc{
 	});
 
 	var tsVar = seq((s)=>{
-		var docs = s(documentComment);		
+		var docs = s(documentComment);	
+		s(tsDeclare);			
 		s(optExport);
 		s(reserved("var"));
 		var name = s(identifier);
 		s(colon);
 		var typeName = s(typename);
-		s(semi);
+		s(optional(semi));
 		return typeName && new TSVar(docs && new TSDocs(docs), name, typeName);
 	});
 
 	var tsModule = seq((s)=>{
 		var docs = s(documentComment);
+		s(tsDeclare);		
 		s(optExport);
 		s(reserved("module"));
 		var name = s(reference);
@@ -260,12 +328,5 @@ module DTSDoc{
 
 	var tsModuleMembers = many(or(tsModule, tsClass, tsFunction, tsInterface, tsEnum, tsVar));
 
-	export var program = seq((s)=>{
-		s(spaces);
-		var s = s(tsModuleMembers);
-		return s;
-	});
-
-
-
+	export var program = series(spaces, tsModuleMembers);
 }
