@@ -339,14 +339,16 @@ module DTSDoc{
     // Other Module members
     ////////////////////////////////////////////////////////////////////// 
     
-    export class ASTFunction extends ASTClassMember{ 
-        constructor(public docs:TSDocs, public name:string, public params:ASTParameter[], public ret:string){ super(); } 
-        toString():string{ return this.name + "(" + this.params.join() + "):" + this.ret; }
+    export class ASTFunction extends ASTModuleMember{ 
+        constructor(public docs:TSDocs, public name:string, public sign:ASTFuncionSignature){ super(); } 
         toHTML():JQuery{
             var p = $('<section class="ts_modulemember ts_function"/>');
             p.append($("<a/>").attr("name", "func_" + this.name));
             p.append($('<h1 class="ts_modulemember_title ts_function_title" />').text("function " + this.name));
             var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
+            var span = $('<span class="ts_code ts_method"/>').appendTo(content);
+            span.append("function " + this.name);
+            span.append(this.sign.toHTML(this.parent));
             return p;
         }
     }

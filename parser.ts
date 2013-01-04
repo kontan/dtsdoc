@@ -287,7 +287,7 @@ module DTSDoc{
 			return retType;
 		})));
 		s(semi);
-		return retType && new ASTFunction(docs && new TSDocs(docs), name, params, retType);
+		return retType && new ASTFunction(docs && new TSDocs(docs), name, new ASTFuncionSignature(params, retType));
 	});
 
 	var pVar = seq((s)=>{
