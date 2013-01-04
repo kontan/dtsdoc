@@ -36,9 +36,10 @@ module DTSDoc{
 		s(string('//>'));
 		var text = s(regexp(/^.*/));
 		s(regexp(/^(\n|$)/));
+		s(whitespace);
 		return text;
 	});
-	var documentComment     = lexme(optional(map((ls)=>ls.join('\n'), many(documentCommentLine))));
+	var documentComment     = optional(map((ls)=>ls.join('\n'), many(documentCommentLine)));
 
 	var reference  = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
 	var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*/));
@@ -51,16 +52,16 @@ module DTSDoc{
 		var opt = s(option(false, map(()=>true, reserved("?"))));
 		
 
-		var typeName = s(option(new TSNameRef("any"), seq((s)=>{
+		var typeName = s(option(new ASTTypeName("any"), seq((s)=>{
 			s(colon);
-			return s(typename);
+			return s(pType);
 		})));
 
 		//s(colon);
-		//var typeName = s(typename);
+		//var typeName = s(pType);
 		
 
-		return typeName && new TSParameter(varName, opt, typeName);
+		return typeName && new ASTParameter(varName, opt, typeName);
 	});
 
 	var pParameters = seq((s)=>{
@@ -70,9 +71,7 @@ module DTSDoc{
 		return ps;
 	});
 
-
-
-	var accessibility = option(Accessibility.Public, or(
+	var pAccessibility = option(Accessibility.Public, or(
 		map(()=>Accessibility.Public,  reserved("public")), 
 		map(()=>Accessibility.Private, reserved("private"))
 	));
@@ -83,38 +82,43 @@ module DTSDoc{
 	// Type parsers
 	/////////////////////////////////////////////////////////////////////////////////
 
-	var spcifying = seq((s)=>{
+	var pSpecifyingType = seq((s)=>{
 		s(reserved("{"));
-		var members = s(many(tsInterfaceMember));
+		var members = s(many(or(
+			pIConstructor,
+			pIMethod,
+			pIField,
+			pIIndexer,
+			pIFunction
+		)));
 		s(reserved("}"));
-		return new TSSpecifing(members);
+		return new ASTSpecifingType(members);
 	});
 
-
-	var typenameRef = lexme(seq((s)=>{
+	var pTypeName = lexme(seq((s)=>{
 		var name = s(identifier);
-		var type:TSTypeRef = new TSNameRef(name);
+		var type:ASTType = new ASTTypeName(name);
 		s(many(seq((s)=>{
 			s(reserved("."));
 			s(identifier);
-			s(ret(()=>{ type = new TSModuleRef(name, type); }));
+			s(ret(()=>{ type = new ASTModulePrefix(name, type); }));
 		}))); 
 		return type;
 	}));
 
-	var tsFunctionType = seq((s)=>{
+	var pFunctionType = seq((s)=>{
 		var params = s(pParameters);
 		s(reserved("=>"));
-		var retType = s(typename);
-		return new TSFunctionTypeRef(params, retType);
+		var retType = s(pType);
+		return new ASTFunctionTypeRef(params, retType);
 	});
 
-	var typename = seq((s)=>{
-		var type = s(or(spcifying, typenameRef, tsFunctionType));
+	var pType = seq((s)=>{
+		var type = s(or(pSpecifyingType, pTypeName, pFunctionType));
 		s(many(seq((s)=>{
 			s(reserved("["));
 			s(reserved("]"));
-			s(ret(()=>{ type = new TSArrayRef(type); }));
+			s(ret(()=>{ type = new ASTArrayType(type); }));
 		})));
 		return type;
 	});
@@ -124,157 +128,142 @@ module DTSDoc{
 	// Class parser
 	/////////////////////////////////////////////////////////////////////////////////////////
 
-	var tsMethod = seq((s)=>{
+	var pMethod = seq((s)=>{
 		var docs = s(documentComment);		
-		var access = s(accessibility);		
+		var access = s(pAccessibility);		
 		var isStatic = s(modStatic);
 		var methodName = s(identifier);
 		var params = s(pParameters);
-		var retType = s(option(new TSNameRef("any"), seq((s)=>{
+		var retType = s(option(new ASTTypeName("any"), seq((s)=>{
 			s(colon);
-			var retType = s(typename);
+			var retType = s(pType);
 			return retType;
 		})));
 		s(semi);
-		return retType && new TSMethod(docs && new TSDocs(docs), access, isStatic, methodName, params, retType);
+		return retType && new ASTMethod(docs && new TSDocs(docs), access, isStatic, methodName, new ASTFuncionSignature(params, retType));
 	});
 
-	var tsField = seq((s)=>{
+	var pField = seq((s)=>{
 		var docs = s(documentComment);		
-		var access = s(accessibility);
+		var access = s(pAccessibility);
 		var isStatic = s(modStatic);		
 		var name = s(identifier);
 		s(colon);
-		var type = s(typename);
+		var type = s(pType);
 		s(semi);
-		return new TSField(docs && new TSDocs(docs), access, isStatic, name, type);
+		return new ASTField(docs && new TSDocs(docs), access, isStatic, name, type);
 	});
 
-	var tsConstructor = seq((s)=>{
+	var pConstructor = seq((s)=>{
 		var docs = s(documentComment);		
 		s(reserved("constructor"));
 		var params = s(pParameters);
 		s(semi);
-		return new TSConstructor(docs && new TSDocs(docs), params);
+		return new ASTConstructor(docs && new TSDocs(docs), params);
 	});
 
-	var tsIndexer = seq((s)=>{
+	var pIIndexer = seq((s)=>{
 		var docs = s(documentComment);
 		s(reserved("["));
 		var name:string = s(identifier);
 		s(colon);
-		var type:TSTypeRef = s(typename);
+		var type:ASTType = s(pType);
 		s(reserved("]"));
 		s(colon);
-		var retType:TSTypeRef = s(typename);
+		var retType:ASTType = s(pType);
 		s(semi);
-		return new TSIndexer(docs && new TSDocs(docs), name, type, retType);
+		return new ASTIIndexer(docs && new TSDocs(docs), name, type, retType);
 	});
 
-	var tsClassmember = or(tsConstructor, tsMethod, tsField, tsIndexer);
-
-	var tsClass = seq((s)=>{
+	var pClass = seq((s)=>{
 		var docs = s(documentComment);
 		s(tsDeclare);
 		s(optExport);
 		s(reserved("class"));
 		var name = s(identifier);
-		var superClasses = s(option([], seq((s)=>{
+		var superClasse = s(option(undefined, seq((s)=>{
 			s(reserved("extends"));
-			s(sepBy1(identifier, comma));
+			s(pTypeName);
 		})));
 		var interfaces = s(option([], seq((s)=>{
 			s(reserved("implements"));
 			s(sepBy1(identifier, comma));
 		})));
 		s(reserved("{"));
-		var members = s(many(tsClassmember));
+		var members = s(many(or(pConstructor, pMethod, pField, pIIndexer)));
 		s(reserved("}"));
-		return new TSClass(docs && new TSDocs(docs), name, members);
+		if(s.success){
+			var clazz = new ASTClass(docs && new TSDocs(docs), name, superClasse, members);
+			members.forEach((m)=>{ m.parent = clazz; });
+			return clazz;
+		}
 	});
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// Interface parser
 	///////////////////////////////////////////////////////////////////////////////////	
 
-
-
-	// x:X;
-	var tsIField = seq((s)=>{
+	var pIField = seq((s)=>{
 		var docs = s(documentComment);
 		var name = s(identifier);
 		var opt = s(option(false, map(()=>true, reserved("?"))));
 		s(colon);
-		var type = s(typename);
+		var type = s(pType);
 		s(semi);
-		return new TSIField(docs && new TSDocs(docs), name, opt, type);
+		return new ASTIField(docs && new TSDocs(docs), name, opt, type);
 	});
 
-	// new (a:A, b:BS):Z
 	var pIConstructor = seq((s)=>{
 		var docs = s(documentComment);
 		s(reserved("new"));
 		var params = s(pParameters);
 		s(colon);
-		var type = s(typename);
+		var type = s(pType);
 		s(semi);
-		return new TSIConstructor(docs && new TSDocs(docs), params, type);
+		return new ASTIConstructor(docs && new TSDocs(docs), params, type);
 	});
 
-	var tsIFunction = seq((s)=>{
+	var pIFunction = seq((s)=>{
 		var docs = s(documentComment);
 		var params = s(pParameters);
 		s(colon);
-		var type = s(typename);
+		var type = s(pType);
 		s(semi);
-		return new TSIFunction(docs && new TSDocs(docs), params, type);
+		return new ASTIFunction(docs && new TSDocs(docs), params, type);
 	});
 
-	var tsIMethod = seq((s)=>{
-		var docs = s(documentComment);		
-		var access = s(accessibility);		
-		var isStatic = s(modStatic);
-		var methodName = s(identifier);
-		var opt = s(option(false, map(()=>true, reserved("?"))));		
-		var params = s(pParameters);
-		var retType = s(option(new TSNameRef("any"), seq((s)=>{
+	var pIMethod = seq((s)=>{
+		var docs:TSDocs          = s(documentComment);		
+		var methodName:string    = s(identifier);
+		var opt:bool             = s(option(false, map(()=>true, reserved("?"))));		
+		var params:ASTParameter[] = s(pParameters);
+		var retType:ASTType    = s(option(new ASTTypeName("any"), seq((s)=>{
 			s(colon);
-			var retType = s(typename);
+			var retType = s(pType);
 			return retType;
 		})));
 		s(semi);
-		return retType && new TSMethod(docs && new TSDocs(docs), access, isStatic, methodName, params, retType);
+		return retType && new ASTIMethod(docs && new TSDocs(docs), methodName, new ASTFuncionSignature(params, retType));
 	});
 
-
-	var tsInterfaceMember = or(
-		pIConstructor,
-		tsIMethod,
-		tsIField,
-		tsIndexer,
-		tsIFunction
-	);
-
-	var tsInterface = seq((s)=>{
+	var pInterface = seq((s)=>{
 		var docs = s(documentComment);
 		s(optExport);
 		s(reserved("interface"));
-		var name = s(identifier);
-		var ifs = s(optional(seq((s)=>{
+		var name:string = s(identifier);
+		var ifs:ASTTypeName[] = s(option([], seq((s)=>{
 			s(reserved("extends"));
-			s(sepBy1(typenameRef, comma));
+			s(sepBy1(pTypeName, comma));
 		})));
-		s(reserved("{"));
-		var members = s(many(tsInterfaceMember));
-		s(reserved("}"));
-		return new TSInterface(docs && new TSDocs(docs), name, members);
+		var type:ASTSpecifingType = s(pSpecifyingType);
+		return new ASTInterface(docs && new TSDocs(docs), name, ifs, type);
 	});
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// Other module member elements
 	/////////////////////////////////////////////////////////////////////////////////////// 
 
-	var tsEnum = seq((s)=>{
+	var pEnum = seq((s)=>{
 		var docs = s(documentComment);		
 		s(optExport);
 		s(reserved("enum"));
@@ -282,11 +271,10 @@ module DTSDoc{
 		s(reserved("{"));
 		var members = s(sepBy(identifier, comma));
 		s(reserved("}"));
-		return new TSEnum(docs && new TSDocs(docs), name, members);
+		return new ASTEnum(docs && new TSDocs(docs), name, members);
 	});
 
-
-	var tsFunction = seq((s)=>{
+	var pFunction = seq((s)=>{
 		var docs = s(documentComment);
 		s(tsDeclare);		
 		s(optExport);
@@ -295,38 +283,49 @@ module DTSDoc{
 		var params = s(pParameters);
 		var retType = s(option("any", seq((s)=>{
 			s(colon);
-			var retType = s(typename);
+			var retType = s(pType);
 			return retType;
 		})));
 		s(semi);
-		return retType && new TSFunction(docs && new TSDocs(docs), name, params, retType);
+		return retType && new ASTFunction(docs && new TSDocs(docs), name, params, retType);
 	});
 
-	var tsVar = seq((s)=>{
+	var pVar = seq((s)=>{
 		var docs = s(documentComment);	
 		s(tsDeclare);			
 		s(optExport);
 		s(reserved("var"));
 		var name = s(identifier);
 		s(colon);
-		var typeName = s(typename);
+		var typeName = s(pType);
 		s(optional(semi));
-		return typeName && new TSVar(docs && new TSDocs(docs), name, typeName);
+		return typeName && new ASTVar(docs && new TSDocs(docs), name, typeName);
 	});
 
-	var tsModule = seq((s)=>{
+	var pModule = seq((s)=>{
 		var docs = s(documentComment);
 		s(tsDeclare);		
 		s(optExport);
 		s(reserved("module"));
 		var name = s(reference);
 		s(reserved("{"));
-		var members = s(tsModuleMembers);
+		var members = s(pModuleMembers);
 		s(reserved("}"));
-		return new TSModule(docs && new TSDocs(docs), name, members);
+		if(s.success){
+			var mod = new ASTModule(docs && new TSDocs(docs), name, members);
+			members.forEach((m)=>{ m.parent = mod; });
+			return mod;
+		}
 	});
 
-	var tsModuleMembers = many(or(tsModule, tsClass, tsFunction, tsInterface, tsEnum, tsVar));
+	var pModuleMembers = many(or(pModule, pClass, pFunction, pInterface, pEnum, pVar));
 
-	export var program = series(spaces, tsModuleMembers);
+	export var program = seq((s)=>{
+		s(spaces);
+		var members = s(pModuleMembers);
+		var mod = new ASTModule(undefined, "(global)", members);
+		members.forEach((m)=>{ m.parent = mod; });
+		mod.updateHierarchy();
+		return mod;
+	});
 }
