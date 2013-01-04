@@ -167,5 +167,4 @@ pip-log.txt
 ## TypeScript
 ##############
 
-*.js
 *.js.map

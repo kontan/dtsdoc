@@ -1,3 +1,4 @@
-type.ts
-parser.ts
-dtsdoc.ts
+--out test/dtsdoc.js
+src/type.ts
+src/parser.ts
+src/dtsdoc.ts
