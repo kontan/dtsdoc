@@ -676,15 +676,13 @@ var Parsect;
     })();
     Parsect.Parser = Parser;    
     var State = (function () {
-        function State(value, source, success) {
+        function State(value, source, success, errorMesssage) {
             if (typeof success === "undefined") { success = true; }
             this.value = value;
             this.source = source;
             this.success = success;
+            this.errorMesssage = errorMesssage;
         }
-        State.prototype.fail = function () {
-            return new State(this.value, this.source, false);
-        };
         return State;
     })();
     Parsect.State = State;    
@@ -697,131 +695,162 @@ var Parsect;
         Source.prototype.progress = function (delta) {
             return new Source(this.source, this.position + delta);
         };
+        Source.prototype.success = function (delta, value) {
+            if (typeof delta === "undefined") { delta = 0; }
+            if (typeof value === "undefined") { value = undefined; }
+            return new State(value, new Source(this.source, this.position + delta), true);
+        };
+        Source.prototype.fail = function (message) {
+            return new State(undefined, this, false, message);
+        };
+        Source.prototype.getPosition = function () {
+            var lines = this.source.slice(0, this.position).split('\n');
+            return {
+                line: lines.length,
+                column: lines[lines.length - 1].length
+            };
+        };
+        Source.prototype.getInput = function () {
+            return this.source.slice(this.position);
+        };
         return Source;
     })();
     Parsect.Source = Source;    
-    function seq(f) {
-        return new Parser("seq", function (source) {
-            var currentState = new State(undefined, source, true);
-            var active = true;
-            var s = function (a) {
-                var p = a instanceof Parser ? a : string(a);
-                if(active) {
-                    currentState = p.parse(currentState.source);
-                    if(currentState.success) {
-                        s.result = currentState.value === undefined ? "<undefined>" : currentState.value === null ? "<null>" : currentState.value.toString().slice(0, 16);
-                        s.source = currentState.source.source.slice(currentState.source.position, currentState.source.position + 64);
-                        return currentState.value;
-                    }
-                }
-                active = false;
-                s.success = false;
-                return undefined;
-            };
-            s.source = source.source.slice(source.position, source.position + 64);
-            s.success = true;
-            var returnValue = f(s);
-            return active ? (returnValue !== undefined ? new State(returnValue, currentState.source, true) : currentState) : new State(undefined, source, false);
-        });
-    }
-    Parsect.seq = seq;
-    function series() {
-        var ps = [];
-        for (var _i = 0; _i < (arguments.length - 0); _i++) {
-            ps[_i] = arguments[_i + 0];
-        }
-        return new Parser("series", function (source) {
-            var currentState = new State(undefined, source, true);
-            for(var i = 0; i < ps.length; i++) {
-                currentState = ps[i].parse(currentState.source);
-                if(currentState.success) {
-                } else {
-                    break;
-                }
-            }
-            return currentState.success ? currentState : new State(undefined, source, false);
-        });
-    }
-    Parsect.series = series;
     function string(text) {
         return new Parser("string \"" + text + "\"", function (s) {
-            if(s.source.indexOf(text, s.position) === s.position) {
-                return new State(text, s.progress(text.length));
-            } else {
-                return new State(undefined, s, false);
-            }
+            return s.source.indexOf(text, s.position) === s.position ? s.success(text.length, text) : s.fail("expected \"" + text + "\"");
         });
     }
     Parsect.string = string;
     function regexp(pattern) {
         return new Parser("regexp \"" + pattern + "\"", function (s) {
             var input = s.source.slice(s.position);
-            var matches = pattern.exec(input);
-            if(matches && matches.length > 0 && input.indexOf(matches[0]) == 0) {
-                var matched = matches[0];
-                return new State(matched, s.progress(matched.length));
+            var ms = pattern.exec(input);
+            if(ms && ms.length > 0) {
+                var m = ms[0];
+                return input.indexOf(ms[0]) == 0 ? s.success(m.length, m) : s.fail();
             } else {
-                return new State(undefined, s, false);
+                return s.fail();
             }
         });
     }
     Parsect.regexp = regexp;
+    function satisfy(cond) {
+        return new Parser("satisfy", function (s) {
+            var c = s.source[s.position];
+            return cond(c) ? s.success(1, c) : s.fail();
+        });
+    }
+    Parsect.satisfy = satisfy;
+    function seq(f) {
+        return new Parser("seq", function (source) {
+            var st = source.success();
+            var s = function (a) {
+                if(st.success) {
+                    st = (a instanceof Parser ? a : string(a)).parse(st.source);
+                    if(st.success) {
+                        return st.value;
+                    }
+                }
+            };
+            s.success = function () {
+                return st.success;
+            };
+            s.source = function () {
+                return st.source.source.slice(st.source.position);
+            };
+            s.result = function () {
+                return st.value;
+            };
+            var r = f(s);
+            return s.success() ? (r !== undefined ? st.source.success(0, r) : st) : st;
+        });
+    }
+    Parsect.seq = seq;
+    function trying(p) {
+        return new Parser('tring', function (source) {
+            var st = p.parse(source);
+            return st.success ? st : source.fail(st.errorMesssage);
+        });
+    }
+    Parsect.trying = trying;
+    function series() {
+        var ps = [];
+        for (var _i = 0; _i < (arguments.length - 0); _i++) {
+            ps[_i] = arguments[_i + 0];
+        }
+        return new Parser("series", function (source) {
+            var st = source.success();
+            for(var i = 0; i < ps.length && st.success; i++) {
+                var _st = ps[i].parse(st.source);
+                if(_st.success) {
+                    st = _st;
+                } else {
+                    return st.source.fail();
+                }
+            }
+            return st.success ? st : st.source.fail();
+        });
+    }
+    Parsect.series = series;
     function ret(f) {
         return new Parser("ret", function (s) {
-            return new State(f(), s);
+            return s.success(0, f());
         });
     }
     Parsect.ret = ret;
     function count(n, p) {
         return new Parser("count " + n, function (s) {
-            var st = new State(undefined, s, true);
+            var st = s.success();
             var results = [];
             for(var i = 0; i < n; i++) {
-                st = p.parse(st.source);
-                if(st.success) {
+                var _st = p.parse(st.source);
+                if(_st.success) {
+                    st = _st;
                     results.push(st.value);
                 } else {
-                    return new State(undefined, s, false);
+                    return st.source.fail();
                 }
             }
-            return new State(results, st.source, true);
+            return st.source.success(0, results);
         });
     }
     Parsect.count = count;
     function many(p) {
         return new Parser("many", function (s) {
-            var st = new State(undefined, s, true);
+            var st = s.success();
             var results = [];
             for(var i = 0; true; i++) {
-                st = p.parse(st.source);
-                if(st.success) {
+                var _st = p.parse(st.source);
+                if(_st.success) {
+                    st = _st;
                     results.push(st.value);
                 } else {
-                    break;
+                    if(_st.source.position == st.source.position) {
+                        return st.source.success(0, results);
+                    } else {
+                        return _st;
+                    }
                 }
             }
-            return new State(results, st.source, true);
         });
     }
     Parsect.many = many;
     function many1(p) {
         return new Parser("many1", function (s) {
-            var st = new State(undefined, s, true);
+            var st = s.success();
             var results = [];
             var i = 0;
-            for(; true; i++) {
-                st = p.parse(st.source);
-                if(st.success) {
+            for(var i = 0; true; i++) {
+                var _st = p.parse(st.source);
+                if(_st.success) {
+                    st = _st;
                     results.push(st.value);
                 } else {
                     break;
                 }
             }
-            if(i == 0) {
-                return new State(undefined, s, false);
-            } else {
-                return new State(results, st.source, true);
-            }
+            return results.length > 0 ? st.source.success(0, results) : st.source.fail();
         });
     }
     Parsect.many1 = many1;
@@ -833,34 +862,23 @@ var Parsect;
         var ps = arguments;
         return new Parser("or", function (source) {
             for(var i = 0; i < ps.length; i++) {
-                var _st = ps[i].parse(source);
-                if(_st.success) {
-                    return _st;
+                var st = ps[i].parse(source);
+                if(st.success) {
+                    return st;
+                } else {
+                    if(st.source.position != source.position) {
+                        return st;
+                    }
                 }
             }
-            return new State(undefined, source, false);
+            return source.fail();
         });
     }
     Parsect.or = or;
-    function satisfy(cond) {
-        return new Parser("cond", function (source) {
-            var c = source.source[source.position];
-            if(cond(c)) {
-                return new State(c, source.progress(1), true);
-            } else {
-                return new State(undefined, source, false);
-            }
-        });
-    }
-    Parsect.satisfy = satisfy;
     function option(defaultValue, p) {
         return new Parser("option", function (source) {
-            var _st = p.parse(source);
-            if(_st.success) {
-                return _st;
-            } else {
-                return new State(defaultValue, source, true);
-            }
+            var st = p.parse(source);
+            return st.success ? st : source.success(0, defaultValue);
         });
     }
     Parsect.option = option;
@@ -870,12 +888,8 @@ var Parsect;
     Parsect.optional = optional;
     function map(f, p) {
         return new Parser("map(" + p.name + ")", function (source) {
-            var _st = p.parse(source);
-            if(_st.success) {
-                return new State(f(_st.value), _st.source, true);
-            } else {
-                return _st;
-            }
+            var st = p.parse(source);
+            return st.success ? st.source.success(0, f(st.value)) : st;
         });
     }
     Parsect.map = map;
@@ -883,15 +897,12 @@ var Parsect;
         return new Parser("sepBy1", seq(function (s) {
             var x = s(p);
             var xs = s(many(series(sep, p)));
-            if(xs) {
+            if(s.success()) {
                 xs.unshift(x);
                 return xs;
             }
         }).parse);
     };
-    Parsect.empty = new Parser("empty", function (source) {
-        return new State(undefined, source, true);
-    });
     Parsect.sepBy = function (p, sep) {
         return new Parser("sepBy", or(Parsect.sepBy1(p, sep), map(function () {
             return [];
@@ -907,18 +918,38 @@ var Parsect;
             return seq(function (s) {
                 var x = s(q);
                 var xs = s(many(q));
-                if(x) {
+                if(s.success()) {
                     xs.unshift(x);
                     return xs;
                 }
-            });
+            }).parse(source);
         });
     };
     Parsect.endBy = function (p, sep) {
         return new Parser("endBy", or(Parsect.endBy1(p, sep), Parsect.empty).parse);
     };
-    Parsect.number = map(parseFloat, regexp(/^[-+]?\d+(\.\d+)?/));
+    Parsect.between = function (open, p, close) {
+        return seq(function (s) {
+            s(open);
+            var v = s(p);
+            s(close);
+            return v;
+        });
+    };
+    Parsect.eof = new Parser('eof', function (source) {
+        return source.position === source.source.length ? source.success(1) : source.fail();
+    });
+    Parsect.empty = new Parser("empty", function (source) {
+        return source.success(0);
+    });
     Parsect.spaces = regexp(/^\w*/);
+    Parsect.lower = regexp(/^[a-z]/);
+    Parsect.upper = regexp(/^[A-Z]/);
+    Parsect.alpha = regexp(/^[a-zA-Z]/);
+    Parsect.digit = regexp(/^[0-9]/);
+    Parsect.alphaNum = regexp(/^[0-9a-zA-Z]/);
+    Parsect.number;
+    Parsect.number = map(parseFloat, regexp(/^[-+]?\d+(\.\d+)?/));
 })(Parsect || (Parsect = {}));
 var Source = Parsect.Source;
 var ret = Parsect.ret;
@@ -933,6 +964,11 @@ var series = Parsect.series;
 var or = Parsect.or;
 var sepBy1 = Parsect.sepBy1;
 var sepBy = Parsect.sepBy;
+var endBy = Parsect.endBy;
+var between = Parsect.between;
+var trying = Parsect.trying;
+var eof = Parsect.eof;
+var empty = Parsect.empty;
 var string = Parsect.string;
 var regexp = Parsect.regexp;
 var number = Parsect.number;
@@ -968,7 +1004,7 @@ var DTSDoc;
         return ls.join('\n');
     }, many(documentCommentLine)));
     var reference = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
-    var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*/));
+    var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
     var tsDeclare = optional(reserved("declare"));
     var pParameter = seq(function (s) {
         var isVarArg = s(optional(reserved("...")));
@@ -998,7 +1034,7 @@ var DTSDoc;
     }, reserved("static")));
     var pSpecifyingType = seq(function (s) {
         s(reserved("{"));
-        var members = s(many(or(pIConstructor, pIMethod, pIField, pIIndexer, pIFunction)));
+        var members = s(many(or(trying(pIConstructor), trying(pIMethod), pIField, pIIndexer, pIFunction)));
         s(reserved("}"));
         return new DTSDoc.ASTSpecifingType(members);
     });
@@ -1086,12 +1122,12 @@ var DTSDoc;
         })));
         var interfaces = s(option([], seq(function (s) {
             s(reserved("implements"));
-            s(sepBy1(identifier, comma));
+            s(sepBy1(pTypeName, comma));
         })));
         s(reserved("{"));
-        var members = s(many(or(pConstructor, pMethod, pField, pIIndexer)));
+        var members = s(many(or(trying(pConstructor), trying(pMethod), trying(pField), pIIndexer)));
         s(reserved("}"));
-        if(s.success) {
+        if(s.success()) {
             var clazz = new DTSDoc.ASTClass(docs && new DTSDoc.TSDocs(docs), name, superClasse, members);
             members.forEach(function (m) {
                 m.parent = clazz;
@@ -1114,8 +1150,7 @@ var DTSDoc;
         var docs = s(documentComment);
         s(reserved("new"));
         var params = s(pParameters);
-        s(colon);
-        var type = s(pType);
+        var type = s(option(new DTSDoc.ASTTypeName('any'), series(colon, pType)));
         s(semi);
         return new DTSDoc.ASTIConstructor(docs && new DTSDoc.TSDocs(docs), params, type);
     });
@@ -1160,7 +1195,8 @@ var DTSDoc;
         s(reserved("enum"));
         var name = s(identifier);
         s(reserved("{"));
-        var members = s(sepBy(identifier, comma));
+        var members = s(or(trying(sepBy(identifier, comma)), endBy(identifier, comma)));
+        s(optional(comma));
         s(reserved("}"));
         return new DTSDoc.ASTEnum(docs && new DTSDoc.TSDocs(docs), name, members);
     });
@@ -1190,7 +1226,11 @@ var DTSDoc;
         s(optional(semi));
         return typeName && new DTSDoc.ASTVar(docs && new DTSDoc.TSDocs(docs), name, typeName);
     });
+    function hoge() {
+        var v = 0;
+    }
     var pModule = seq(function (s) {
+        hoge();
         var docs = s(documentComment);
         s(tsDeclare);
         s(optExport);
@@ -1199,7 +1239,7 @@ var DTSDoc;
         s(reserved("{"));
         var members = s(pModuleMembers);
         s(reserved("}"));
-        if(s.success) {
+        if(s.success()) {
             var mod = new DTSDoc.ASTModule(docs && new DTSDoc.TSDocs(docs), name, members);
             members.forEach(function (m) {
                 m.parent = mod;
@@ -1207,16 +1247,19 @@ var DTSDoc;
             return mod;
         }
     });
-    var pModuleMembers = many(or(pModule, pClass, pFunction, pInterface, pEnum, pVar));
+    var pModuleMembers = many(or(trying(pVar), trying(pModule), trying(pClass), trying(pFunction), trying(pInterface), pEnum));
     DTSDoc.program = seq(function (s) {
         s(spaces);
         var members = s(pModuleMembers);
-        var mod = new DTSDoc.ASTModule(undefined, "(global)", members);
-        members.forEach(function (m) {
-            m.parent = mod;
-        });
-        mod.updateHierarchy();
-        return mod;
+        s(eof);
+        if(s.success()) {
+            var mod = new DTSDoc.ASTModule(undefined, "(global)", members);
+            members.forEach(function (m) {
+                m.parent = mod;
+            });
+            mod.updateHierarchy();
+            return mod;
+        }
     });
 })(DTSDoc || (DTSDoc = {}));
 var genButton = $("#gen");
@@ -1231,29 +1274,34 @@ function generateDocuments() {
     setTimeout(function () {
         var sourceCode = textarea.val();
         var result = DTSDoc.program.parse(new Source(sourceCode, 0));
-        docs.append("<p>Parsing finished</p><p>Document generating...</p>");
-        var global = result.value;
-        var members = global.members;
-        documentContent = $('<div/>');
-        documentContent.append($('<h2>Contents</h2>'));
-        documentContent.append($('<ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul>'));
-        documentContent.append('<a name="members" />');
-        documentContent.append('<h2>Members</h2>');
-        documentContent.append(members.map(function (m) {
-            return m.toHTML();
-        }));
-        documentContent.append($('<hr/>'));
-        documentContent.append('<a name="hierarchy" />');
-        documentContent.append('<h2>Class Hierarchy</h2>');
-        documentContent.append(global.toHierarchyHTML());
-        documentContent.append($('<hr/>'));
-        documentContent.append($('<footer>Generated by <a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer>'));
-        docs.children().remove();
-        docs.append(documentContent);
-        var source = encodeURIComponent(documentContent.html());
-        source = "<body>" + source;
-        source = '<html><head><meta charset="utf-8"><style>' + cssText + '</style></head>' + source + "</html>";
-        $('#downloadLink').attr('href', "data:text/html," + source);
+        if(result.success) {
+            docs.append("<p>Parsing finished</p><p>Document generating...</p>");
+            var global = result.value;
+            var members = global.members;
+            documentContent = $('<div/>');
+            documentContent.append($('<h2>Contents</h2>'));
+            documentContent.append($('<ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul>'));
+            documentContent.append('<a name="members" />');
+            documentContent.append('<h2>Members</h2>');
+            documentContent.append(members.map(function (m) {
+                return m.toHTML();
+            }));
+            documentContent.append($('<hr/>'));
+            documentContent.append('<a name="hierarchy" />');
+            documentContent.append('<h2>Class Hierarchy</h2>');
+            documentContent.append(global.toHierarchyHTML());
+            documentContent.append($('<hr/>'));
+            documentContent.append($('<footer>Generated by <a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer>'));
+            docs.children().remove();
+            docs.append(documentContent);
+            var source = encodeURIComponent(documentContent.html());
+            source = "<body>" + source;
+            source = '<html><head><meta charset="utf-8"><style>' + cssText + '</style></head>' + source + "</html>";
+            $('#downloadLink').attr('href', "data:text/html," + source);
+        } else {
+            var pos = result.source.getPosition();
+            docs.append("<p>Parsing failed at line " + pos.line + ", column " + pos.column + ": \"" + result.source.source.slice(result.source.position, result.source.position + 128) + "\"</p>");
+        }
     }, 1);
 }
 genButton.click(function () {

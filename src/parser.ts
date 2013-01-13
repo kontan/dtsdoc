@@ -42,7 +42,7 @@ module DTSDoc{
 	var documentComment     = optional(map((ls)=>ls.join('\n'), many(documentCommentLine)));
 
 	var reference  = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
-	var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*/));
+	var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
 
 	var tsDeclare = optional(reserved("declare"));
 
@@ -85,8 +85,8 @@ module DTSDoc{
 	var pSpecifyingType = seq((s)=>{
 		s(reserved("{"));
 		var members = s(many(or(
-			pIConstructor,
-			pIMethod,
+			trying(pIConstructor),
+			trying(pIMethod),
 			pIField,
 			pIIndexer,
 			pIFunction
@@ -187,12 +187,12 @@ module DTSDoc{
 		})));
 		var interfaces = s(option([], seq((s)=>{
 			s(reserved("implements"));
-			s(sepBy1(identifier, comma));
+			s(sepBy1(pTypeName, comma));
 		})));
 		s(reserved("{"));
-		var members = s(many(or(pConstructor, pMethod, pField, pIIndexer)));
+		var members = s(many(or(trying(pConstructor), trying(pMethod), trying(pField), pIIndexer)));
 		s(reserved("}"));
-		if(s.success){
+		if(s.success()){
 			var clazz = new ASTClass(docs && new TSDocs(docs), name, superClasse, members);
 			members.forEach((m)=>{ m.parent = clazz; });
 			return clazz;
@@ -217,8 +217,7 @@ module DTSDoc{
 		var docs = s(documentComment);
 		s(reserved("new"));
 		var params = s(pParameters);
-		s(colon);
-		var type = s(pType);
+		var type = s(option(new ASTTypeName('any'), series(colon, pType)));
 		s(semi);
 		return new ASTIConstructor(docs && new TSDocs(docs), params, type);
 	});
@@ -269,7 +268,11 @@ module DTSDoc{
 		s(reserved("enum"));
 		var name = s(identifier);
 		s(reserved("{"));
-		var members = s(sepBy(identifier, comma));
+		var members = s(or(
+			trying(sepBy(identifier, comma)), 
+			endBy(identifier, comma)
+		));
+		s(optional(comma));
 		s(reserved("}"));
 		return new ASTEnum(docs && new TSDocs(docs), name, members);
 	});
@@ -302,7 +305,13 @@ module DTSDoc{
 		return typeName && new ASTVar(docs && new TSDocs(docs), name, typeName);
 	});
 
+
+	function hoge{
+		var v = 0;
+	}
+
 	var pModule = seq((s)=>{
+		hoge();
 		var docs = s(documentComment);
 		s(tsDeclare);		
 		s(optExport);
@@ -311,21 +320,24 @@ module DTSDoc{
 		s(reserved("{"));
 		var members = s(pModuleMembers);
 		s(reserved("}"));
-		if(s.success){
+		if(s.success()){
 			var mod = new ASTModule(docs && new TSDocs(docs), name, members);
 			members.forEach((m)=>{ m.parent = mod; });
 			return mod;
 		}
 	});
 
-	var pModuleMembers = many(or(pModule, pClass, pFunction, pInterface, pEnum, pVar));
+	var pModuleMembers = many(or(trying(pVar), trying(pModule), trying(pClass), trying(pFunction), trying(pInterface), pEnum));
 
 	export var program = seq((s)=>{
 		s(spaces);
 		var members = s(pModuleMembers);
-		var mod = new ASTModule(undefined, "(global)", members);
-		members.forEach((m)=>{ m.parent = mod; });
-		mod.updateHierarchy();
-		return mod;
+		s(eof);
+		if(s.success()){
+			var mod = new ASTModule(undefined, "(global)", members);
+			members.forEach((m)=>{ m.parent = mod; });
+			mod.updateHierarchy();
+			return mod;
+		}
 	});
 }
