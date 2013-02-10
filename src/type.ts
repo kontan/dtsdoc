@@ -1,4 +1,4 @@
-/// <reference path="jquery.d.ts" />
+/// <reference path="../typings/jquery.d.ts" />
 
 module DTSDoc{
 
@@ -253,9 +253,9 @@ module DTSDoc{
             	content.append($('<div>').text(this.docs.text));
             }
             content.append('<h3>Members</h3>');
-            this.members.forEach((m)=>{
+            this.members.forEach((m:ASTClassMember)=>{
                 if(m.toHTML){
-                    var html = m.toHTML(this);
+                    var html:JQuery = m.toHTML();
                     if(html){
                         content.append($('<div/>').append(html));
                     }

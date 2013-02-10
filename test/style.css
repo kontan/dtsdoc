@@ -15,8 +15,12 @@ input[type=button]{
 	margin: 4px;
 }
 
+input[type=file]{
+	display: none;
+}
+
 textarea#source{
-	width: 40em;
+	width: 100%;
 	height: 8em;
 }
 

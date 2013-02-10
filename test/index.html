@@ -11,14 +11,16 @@
 		<h5>DTSDoc - Document Generator for TypeScript</h5>
 		<textarea id="source"></textarea>
 		<div>
-			<input id="gen" type="button" value="Generate Docs"></input>
-			<a id="downloadLink" href=""><input id="download" type="button" value="Download"></input></a>			
+			<input id="input_file" type="file" value=""></input>
+			<input id="button_open" type="button" value="Open"></input>
+			<input id="gen" type="button" value="Regenerate"></input>
+			<a id="downloadLink" href="hoge.png" target="_blank"><input id="download" type="button" value="Download"></input></a>			
 		</div>
 		<hr />
 		<div id="docs"></div>
 		<script type="text/javascript" src="jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="../../Parsect/src/parsect.js"></script>
 		<script type="text/javascript" src="../../Parsect/src/globals.js"></script>
-		<script type="text/javascript" src="dtsdoc.js"></script>
+		<script type="text/javascript" src="generator.js"></script>
 	</body>
 </html>

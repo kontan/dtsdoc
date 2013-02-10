@@ -175,7 +175,7 @@ module DTSDoc{
 		return new ASTIIndexer(docs && new TSDocs(docs), name, type, retType);
 	});
 
-	var pClass = seq((s)=>{
+	export var pClass = seq((s)=>{
 		var docs = s(documentComment);
 		s(tsDeclare);
 		s(optExport);
@@ -245,7 +245,7 @@ module DTSDoc{
 		return retType && new ASTIMethod(docs && new TSDocs(docs), methodName, new ASTFuncionSignature(params, retType));
 	});
 
-	var pInterface = seq((s)=>{
+	export var pInterface = seq((s)=>{
 		var docs = s(documentComment);
 		s(optExport);
 		s(reserved("interface"));
@@ -262,7 +262,7 @@ module DTSDoc{
 	// Other module member elements
 	/////////////////////////////////////////////////////////////////////////////////////// 
 
-	var pEnum = seq((s)=>{
+	export var pEnum = seq((s)=>{
 		var docs = s(documentComment);		
 		s(optExport);
 		s(reserved("enum"));
@@ -277,7 +277,7 @@ module DTSDoc{
 		return new ASTEnum(docs && new TSDocs(docs), name, members);
 	});
 
-	var pFunction = seq((s)=>{
+	export var pFunction = seq((s)=>{
 		var docs = s(documentComment);
 		s(tsDeclare);		
 		s(optExport);
@@ -293,7 +293,7 @@ module DTSDoc{
 		return retType && new ASTFunction(docs && new TSDocs(docs), name, new ASTFuncionSignature(params, retType));
 	});
 
-	var pVar = seq((s)=>{
+	export var pVar = seq((s)=>{
 		var docs = s(documentComment);	
 		s(tsDeclare);			
 		s(optExport);
@@ -305,13 +305,7 @@ module DTSDoc{
 		return typeName && new ASTVar(docs && new TSDocs(docs), name, typeName);
 	});
 
-
-	function hoge{
-		var v = 0;
-	}
-
-	var pModule = seq((s)=>{
-		hoge();
+	export var pModule = seq((s)=>{
 		var docs = s(documentComment);
 		s(tsDeclare);		
 		s(optExport);
@@ -327,7 +321,7 @@ module DTSDoc{
 		}
 	});
 
-	var pModuleMembers = many(or(trying(pVar), trying(pModule), trying(pClass), trying(pFunction), trying(pInterface), pEnum));
+	var pModuleMembers:Parsect.Parser = many(or(trying(pVar), trying(pModule), trying(pClass), trying(pFunction), trying(pInterface), pEnum));
 
 	export var program = seq((s)=>{
 		s(spaces);
