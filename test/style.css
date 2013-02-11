@@ -110,6 +110,32 @@ footer{
 .ts_class{
 }
 
+
+
+.ts_classcontent{
+	margin-left: 2em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 1em;
+}
+.ts_classmember_description{
+	font-size: small;
+	margin-left: 2em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	width: 100%;
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
 .ts_enum{
 }
 

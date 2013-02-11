@@ -4,18 +4,32 @@
 /// <reference path="../Parsect/src/type.ts" />
 /// <reference path="../Parsect/src/parser.ts" />
 
+interface FileSystem{
+	root:any;
+}
+interface ErrorCallback {
+    (err:DOMError):void;
+}
+
+interface FileSystemCallback{
+	(filesystem:FileSystem):void;
+}
+
+interface RequestFileSystem{
+	(type:number, size:number, successCallback:FileSystemCallback, errorCallback?:ErrorCallback):void;
+}
+
 interface Window{
 	webkitURL:{
 		createObjectURL(blob:Blob):string;
 	};
-	TEMPORARY:number;
-	PERSISTENT:number;
-	requestFileSystem:any;
-	webkitRequestFileSystem:any;
+	TEMPORARY: number;
+	PERSISTENT: number;
+	requestFileSystem: RequestFileSystem;
+	webkitRequestFileSystem: RequestFileSystem;
+	mozRequestFileSystem: RequestFileSystem;
 }
-interface FileSystem{
-	root:any;
-}
+
 
 var fileInput  = <JQuery>$("#input_file"); 
 var openButton = <JQuery>$("#button_open"); 
@@ -34,12 +48,17 @@ function generateDocuments(){
 	
 	setTimeout(()=>{
 		var sourceCode = textarea.val();
-		var result = DTSDoc.program.parse(new Source(sourceCode, 0));
+		var result = DTSDoc.pProgram.parse(new Source(sourceCode, 0));
 		if(result.success){
 			docs.append("<p>Parsing finished</p><p>Document generating...</p>");
-			var global:DTSDoc.ASTModule = result.value;
+			var program:DTSDoc.ASTProgram = result.value;
+			var global:DTSDoc.ASTModule = program.global;
 			var members = global.members;
 			documentContent = $('<div/>');
+
+			if(program.docs){
+				documentContent.append($('<p>').html(program.docs.text));
+			}
 
 			documentContent.append($('<h2>Contents</h2>'));
 			documentContent.append($('<ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul>'));
@@ -79,12 +98,11 @@ function generateDocuments(){
 			//$('#downloadLink').attr('href', "data:text/html," + source);
 
 			var _Blob:any = Blob;
-			var blob = new _Blob([documentContent.html()], { "type" : "text/html" });
-			var requestFileSystem:any = window.requestFileSystem || window.webkitRequestFileSystem;
+			var requestFileSystem:any = window.requestFileSystem || window.webkitRequestFileSystem || window.mozRequestFileSystem;
 			
 			var downloadBlob = new _Blob([headerHTML + documentContent.html() + footerHTML], { "type" : "text/html" });
 
-			requestFileSystem(window.TEMPORARY, blob.size, (fileSystem:FileSystem)=>{
+			requestFileSystem(window.TEMPORARY, downloadBlob.size, (fileSystem:FileSystem)=>{
 				fileSystem.root.getFile("docs.html", {create: true}, (fileEntry)=>{
 					fileEntry.createWriter((fileWriter)=>{
 	                    fileWriter.onwriteend = (e)=>{
@@ -93,6 +111,8 @@ function generateDocuments(){
 	                    fileWriter.onerror = (e)=>{
 	                    	throw e;
 	                    };
+	                    fileWriter.seek(0);
+	                    fileWriter.truncate(downloadBlob.size);
 	                    fileWriter.write(downloadBlob);
 	                });
 	            }, (error)=>{
@@ -109,7 +129,11 @@ function generateDocuments(){
 			//$('#downloadLink').attr('href', url);
 		}else{
 			var pos = result.source.getPosition();
-			docs.append("<p>Parsing failed at line " + pos.line + ", column " + pos.column + ": \"" + result.source.source.slice(result.source.position, result.source.position + 128) +  "\"</p>");
+			var line = pos.line;
+			var column = pos.column;
+			var source = result.source.source.slice(result.source.position, result.source.position + 128);
+			var err = result.errorMesssage;
+			docs.append("<p>Parsing failed at line " + line + ", column " + column + ": \"" + source +  "\", " + err + "</p>");
 		}
 	}, 1);
 }
@@ -130,6 +154,7 @@ fileInput.change(()=>{
 });
 
 openButton.click(()=>{
+	fileInput.val(undefined);
 	fileInput.trigger('click');
 });
 
