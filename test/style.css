@@ -2,8 +2,9 @@
 *{
 	margin: 0px;
 	padding: 0px;
-	font-size: normal;
-	font-weight: normal;
+	font-size: inherit;
+	font-weight: inherit;
+	text-align: inherit;
 }
 
 body{
@@ -45,14 +46,35 @@ a:active {
     text-decoration:underline;
 }
 
+a.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+a.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+a.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+a.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+a.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
 h2{
-	font-family: Segoe UI, Verdana, Arial;	
+	font-family: Segoe UI, Oxygen, Verdana, Arial;	
 	font-size: x-large;
 	margin: 1em;
 }
 
 h3{
-	font-family: Segoe UI, Verdana, Arial;	
+	font-family: Segoe UI, Oxygen, Verdana, Arial;	
 	font-size: large;
 	margin: 0.5em;
 }
@@ -65,6 +87,39 @@ footer{
 	text-align: center;
 	font-size: small;
 	margin: 1em;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_left_brace:after{
+	content: " ";
 }
 
 .contents{
@@ -127,11 +182,11 @@ footer{
 }
 .ts_classmember_description{
 	font-size: small;
+	margin: 1em;
 	margin-left: 2em;
 }
 .ts_class_member_title{
 	background-color: rgba(128, 128, 128, 0.1);
-	width: 100%;
 	padding: 0.5em;
 	border-top: solid 1px rgba(0, 0, 0, 0.2);
 }
@@ -158,7 +213,7 @@ footer{
 }
 
 .ts_code{
-	font-family: monospace;
+	font-family: Courier New, monospace;
 	font-size: normal;	
 }
 
@@ -167,4 +222,31 @@ footer{
 }
 
 .ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
 }

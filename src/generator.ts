@@ -82,7 +82,6 @@ function generateDocuments(){
 	'<head>',
 		'<meta charset="utf-8">',
 		'<style type="text/css">',
-			'h5{ text-align: center; }',
 			cssText,
 		'</style>',
 		'<link rel="STYLESHEET" href="style.css" type="text/css"></link>',
@@ -178,10 +177,15 @@ function loadSourceFile(url:string):void{
 	});	
 }
 
-//loadSourceFile("../../three.d.ts/three.d.ts");
 
 function generateHierarchy(global:DTSDoc.ASTModule):JQuery{
 	var section = $('<section/>');
 
 	return section;
 }
+
+
+
+// For testing
+//loadSourceFile("../../three.d.ts/three.d.ts");
+loadSourceFile("sample.d.ts");

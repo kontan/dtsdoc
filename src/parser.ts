@@ -36,16 +36,17 @@ module DTSDoc{
 
 
 
-	var documentComment     = option(undefined, lexme(seq(s=>{
+	var pDocumentComment     = option(undefined, lexme(seq(s=>{
 		var text = s(regexp(/\/\*\*(\*(?!\/)|[^*])*\*\//));
 		s(whitespace);
 		if(s.success()){
 			var innerText = seq(s=>{
 				s(string("/**"));
+				var description = s(regexp(/[^*]/));
 				var lines = s(many(seq(s=>{
-					s(optional(regexp(/\s*\*(?!\/)\s*/)));
+					s(optional(regexp(/[ \t]*\*(?!\/)[ \t]*/)));	// asterisk at the line head
 					var line = s(regexp(/[^\r\n]*\n/));
-					s(whitespace);
+					s(regexp(/[ \t]*/));	// consume whitespaes at next line 
 					return line;
 				})));
 				s(string("*/"));
@@ -54,7 +55,19 @@ module DTSDoc{
 				}
 			});
 			var parsed = innerText.parse(text);
-			return new TSDocs(parsed.value);
+			var pDescription = /([^@]|\@(?![a-z]))*/mg;
+			var arr = pDescription.exec(parsed.value);
+			var description = arr[0];
+
+			var pTags = /\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
+			pTags.lastIndex = pDescription.lastIndex;
+			var tags = [];
+			while(pTags.lastIndex < parsed.value.length){
+				var arr = pTags.exec(parsed.value);
+				if(!arr) break;
+				tags.push(new ASTDocSection(arr[1], arr[2]));
+			}
+			return new ASTDocs(description, tags);
 		}
 	})));
 
@@ -66,13 +79,8 @@ module DTSDoc{
 	export var pParameter = seq((s)=>{
 		var isVarArg = s(optional(reserved("...")));
 		var varName = s(identifier);
-		var opt = s(option(false, map(()=>true, reserved("?"))));
-		
-		var typeName = s(option(new ASTTypeName("any"), seq((s)=>{
-			s(colon);
-			s(pType);
-		})));
-
+		var opt = s(option(false, map(()=>true, reserved("?"))));		
+		var typeName = s(option(new ASTTypeName("any"), pTypeAnnotation));
 		if(s.success()){
 			return new ASTParameter(varName, opt, typeName);
 		}
@@ -80,7 +88,7 @@ module DTSDoc{
 
 	var pParameters = between(
 		reserved("("),
-		sepBy(pParameter, comma),
+		map((ps)=>new ASTParameters(ps), sepBy(pParameter, comma)),
 		reserved(")")
 	);
 
@@ -93,7 +101,10 @@ module DTSDoc{
 
 	var pTypeAnnotation = option(new ASTTypeName("any"), seq((s)=>{
 		s(colon);
-		s(pType);
+		var type = s(pType);
+		if(s.success()){
+			return new ASTTypeAnnotation(type);
+		}
 	}));
 
 	var pOpt = option(false, map(()=>true, reserved("?")));
@@ -103,7 +114,7 @@ module DTSDoc{
 	/////////////////////////////////////////////////////////////////////////////////
 
 	var pSpecifyingTypeMember = seq(s=>{
-		var docs = s(documentComment);
+		var docs = s(pDocumentComment);
 		var member:ASTInterfaceMember = s(or(
 			pIConstructor,
 			trying(pIMethod),
@@ -145,7 +156,7 @@ module DTSDoc{
 		s(reserved("=>"));
 		var retType = s(pType);
 		if(s.success()){
-			return new ASTFunctionTypeRef(params, retType);
+			return new ASTFunctionType(params, retType);
 		}
 	});
 
@@ -173,7 +184,7 @@ module DTSDoc{
 		s(or(
 			// method
 			seq(s=>{
-				var params = s(pParameters);
+				var params:ASTParameters = s(pParameters);
 				var retType = s(pTypeAnnotation);
 				if(s.success()){
 					return new ASTMethod(access, isStatic, name, new ASTFuncionSignature(params, retType));
@@ -181,8 +192,7 @@ module DTSDoc{
 			}),
 			// field
 			seq(s=>{
-				s(colon);
-				var type = s(pType);
+				var type = s(pTypeAnnotation);
 				if(s.success()){
 					return new ASTField(access, isStatic, name, type);
 				}
@@ -201,18 +211,16 @@ module DTSDoc{
 	var pIIndexer = seq((s)=>{
 		s(reserved("["));
 		var name:string = s(identifier);
-		s(colon);
-		var type:ASTType = s(pType);
+		var type:ASTType = s(pTypeAnnotation);
 		s(reserved("]"));
-		s(colon);
-		var retType:ASTType = s(pType);
+		var retType:ASTType = s(pTypeAnnotation);
 		if(s.success()){
 			return new ASTIIndexer(name, type, retType);
 		}
 	});
 
 	var pClassMember = seq(s=>{
-		var docs = s(documentComment);
+		var docs = s(pDocumentComment);
 		var member:ASTClassMember = s(or(pConstructor, pMethodOrField, pIIndexer));
 		s(semi);
 		if(s.success()){
@@ -238,7 +246,7 @@ module DTSDoc{
 		var members = s(many(pClassMember));
 		s(reserved("}"));
 		if(s.success()){
-			var clazz = new ASTClass(name, superClasse, members);
+			var clazz = new ASTClass(name, superClasse, interfaces, members);
 			members.forEach((m)=>{ m.parent = clazz; });
 			return clazz;
 		}
@@ -276,7 +284,7 @@ module DTSDoc{
 		var methodName:string     = s(identifier);
 		var opt:bool              = s(pOpt);		
 		var params:ASTParameter[] = s(pParameters);
-		var retType:ASTType       = s(pTypeAnnotation);
+		var retType:ASTTypeAnnotation = s(pTypeAnnotation);
 		if(s.success()){
 			return new ASTIMethod(methodName, new ASTFuncionSignature(params, retType));
 		}
@@ -349,7 +357,7 @@ module DTSDoc{
 	});
 
 	export var pModuleMember:Parsect.Parser = seq((s)=>{
-		var docs = s(documentComment);
+		var docs = s(pDocumentComment);
 		s(tsDeclare);		
 		s(optExport);
 		var member:ASTModuleMember = s(or(pVar, pModule, pClass, pFunction, pInterface, pEnum));
@@ -363,7 +371,7 @@ module DTSDoc{
 
 	export var pProgram = seq((s)=>{
 		s(spaces);
-		var docs = s(documentComment);
+		var docs = s(pDocumentComment);
 		var members = s(pModuleMembers);
 		s(eof);
 		if(s.success()){

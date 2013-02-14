@@ -4,4 +4,4 @@
 ../Parsect/src/globals.ts
 src/type.ts
 src/parser.ts
-src/web.ts
+src/generator.ts

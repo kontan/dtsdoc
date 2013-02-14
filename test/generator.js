@@ -327,6 +327,13 @@ var Parsect;
         return new Parser("optional", option(undefined, p).parse);
     }
     Parsect.optional = optional;
+    function notFollowedBy(value, p) {
+        return new Parser("notFollowedBy " + p.name, function (source) {
+            var st = p.parse(source);
+            return st.success ? State.success(source, value) : st.source.fail('not expected ' + p.expected);
+        });
+    }
+    Parsect.notFollowedBy = notFollowedBy;
     function map(f, p) {
         return new Parser("map(" + p.name + ")", function (source) {
             var st = p.parse(source);
@@ -421,75 +428,110 @@ var __extends = this.__extends || function (d, b) {
 };
 var DTSDoc;
 (function (DTSDoc) {
-    (function (Accessibility) {
-        Accessibility._map = [];
-        Accessibility._map[0] = "Public";
-        Accessibility.Public = 0;
-        Accessibility._map[1] = "Private";
-        Accessibility.Private = 1;
-    })(DTSDoc.Accessibility || (DTSDoc.Accessibility = {}));
-    var Accessibility = DTSDoc.Accessibility;
-    ;
-    var TSDocs = (function () {
-        function TSDocs(text) {
+    var ASTDocSection = (function () {
+        function ASTDocSection(tag, text) {
+            this.tag = tag;
             this.text = text;
         }
-        return TSDocs;
+        ASTDocSection.prototype.toHTML = function (mod) {
+            if(this.tag == 'param') {
+                var arr = /([_a-zA-Z]+)(.*)/.exec(this.text);
+                var li = $('<dl class="ts_param"/>');
+                li.append($('<dt class="ts_code ts_param_name"/>').text(arr[1]));
+                li.append($('<dd class="ts_param_description"/>').text(arr[2]));
+                return li;
+            }
+        };
+        return ASTDocSection;
     })();
-    DTSDoc.TSDocs = TSDocs;    
+    DTSDoc.ASTDocSection = ASTDocSection;    
+    var ASTDocs = (function () {
+        function ASTDocs(text, sections) {
+            this.text = text;
+            this.sections = sections;
+        }
+        ASTDocs.prototype.toHTML = function (mod) {
+            var section = $('<section class="ts_classmember_description"/>');
+            var params = $('<div/>');
+            this.sections.forEach(function (s) {
+                params.append(s.toHTML(mod));
+            });
+            if(params.children().length > 0) {
+                section.append($('<h5 class="ts_parameters"/>').text('Parameters'));
+                section.append(params);
+            }
+            return section;
+        };
+        return ASTDocs;
+    })();
+    DTSDoc.ASTDocs = ASTDocs;    
+    var ASTTypeAnnotation = (function () {
+        function ASTTypeAnnotation(type) {
+            this.type = type;
+        }
+        ASTTypeAnnotation.prototype.toHTML = function (mod) {
+            var span = $('<span class="ts_type_annotation"/>');
+            span.append('<span class="ts_symbol ts_colon">:</span>');
+            span.append(this.type.toHTML(mod));
+            return span;
+        };
+        return ASTTypeAnnotation;
+    })();
+    DTSDoc.ASTTypeAnnotation = ASTTypeAnnotation;    
     var ASTParameter = (function () {
         function ASTParameter(name, optional, type) {
             this.name = name;
             this.optional = optional;
             this.type = type;
         }
-        ASTParameter.prototype.toString = function () {
-            return this.name + ":" + this.type;
-        };
         ASTParameter.prototype.toHTML = function (mod) {
             var span = $("<span/>");
-            span.append($("<span/>").text(this.name + (this.optional ? "?" : "")));
-            span.append(":");
+            span.append($("<span/>").text(this.name));
+            if(this.optional) {
+                span.append($('<span class="ts_symbol ts_optional">?</span>'));
+            }
             span.append(this.type.toHTML(mod));
             return span;
         };
         return ASTParameter;
     })();
     DTSDoc.ASTParameter = ASTParameter;    
+    var ASTParameters = (function () {
+        function ASTParameters(params) {
+            this.params = params;
+        }
+        ASTParameters.prototype.toHTML = function (mod) {
+            var span = $('<span class="ts_params"/>');
+            span.append("(");
+            for(var i = 0; i < this.params.length; i++) {
+                if(i > 0) {
+                    span.append(", ");
+                }
+                span.append(this.params[i].toHTML(mod));
+            }
+            span.append(")");
+            return span;
+        };
+        return ASTParameters;
+    })();
+    DTSDoc.ASTParameters = ASTParameters;    
     var ASTFuncionSignature = (function () {
         function ASTFuncionSignature(params, retType) {
             this.params = params;
             this.retType = retType;
+            if(!this.params.toHTML) {
+                console.log("");
+            }
         }
         ASTFuncionSignature.prototype.toHTML = function (mod) {
             var span = $('<span class="ts_signiture"/>');
-            span.append(genParameters(mod, this.params));
-            span.append(":");
+            span.append(this.params.toHTML(mod));
             span.append(this.retType.toHTML(mod));
             return span;
         };
         return ASTFuncionSignature;
     })();
     DTSDoc.ASTFuncionSignature = ASTFuncionSignature;    
-    function genParameters(mod, params) {
-        var span = $('<span class="ts_params"/>');
-        span.append("(");
-        for(var i = 0; i < params.length; i++) {
-            if(i > 0) {
-                span.append(", ");
-            }
-            span.append(params[i].toHTML(mod));
-        }
-        span.append(")");
-        return span;
-    }
-    function genFunctionSigniture(mod, params, retType) {
-        var span = $('<span class="ts_signiture"/>');
-        span.append(genParameters(mod, params));
-        span.append(":");
-        span.append(retType.toHTML(mod));
-        return span;
-    }
     var ASTType = (function () {
         function ASTType() { }
         ASTType.prototype.toHTML = function (mod) {
@@ -505,12 +547,12 @@ var DTSDoc;
             this.name = name;
         }
         ASTTypeName.prototype.toHTML = function (mod) {
-            if(this.name != "string" && this.name != "number" && this.name != "bool" && this.name != "any" && this.name != "void" && this.name != "Object") {
-                var a = $("<a/>");
-                a.attr("href", "#" + mod.getFullName(this.name));
-                return a.text(this.name);
-            } else {
+            if(this.name == "string" || this.name == "number" || this.name == "bool" || this.name == "Object") {
                 return $('<span/>').append(this.name);
+            } else if(this.name == "any" || this.name == "void") {
+                return $('<span class="ts_reserved"/>').append(this.name);
+            } else {
+                return $("<a/>").attr("href", "#" + mod.findFullName(this.name)).text(this.name);
             }
         };
         return ASTTypeName;
@@ -548,37 +590,48 @@ var DTSDoc;
             this.members = members;
         }
         ASTSpecifingType.prototype.toHTML = function (mod) {
-            var span = $("<span/>").append("{ ");
+            var span = $('<span />');
+            span.append($('<span class="ts_symbol ts_left_brace">{</span>'));
             this.members.forEach(function (m) {
                 span.append(m.toHTML(mod));
-                span.append("; ");
+                span.append($('<span class="ts_symbol ts_semi">;</span>'));
             });
-            span.append("}");
+            span.append($('<span class="ts_symbol ts_right_brace">}</span>'));
             return span;
         };
         return ASTSpecifingType;
     })(ASTType);
     DTSDoc.ASTSpecifingType = ASTSpecifingType;    
-    var ASTFunctionTypeRef = (function (_super) {
-        __extends(ASTFunctionTypeRef, _super);
-        function ASTFunctionTypeRef(params, retType) {
+    var ASTFunctionType = (function (_super) {
+        __extends(ASTFunctionType, _super);
+        function ASTFunctionType(params, retType) {
                 _super.call(this);
             this.params = params;
             this.retType = retType;
         }
-        ASTFunctionTypeRef.prototype.toHTML = function (mod) {
-            return $("<span/>").append(genParameters(mod, this.params)).append("=>").append(this.retType.toHTML(mod));
+        ASTFunctionType.prototype.toHTML = function (mod) {
+            return $("<span/>").append(this.params.toHTML(mod)).append($('<span class="ts_symbol ts_arrow">=&gt;</span>')).append(this.retType.toHTML(mod));
         };
-        return ASTFunctionTypeRef;
+        return ASTFunctionType;
     })(ASTType);
-    DTSDoc.ASTFunctionTypeRef = ASTFunctionTypeRef;    
+    DTSDoc.ASTFunctionType = ASTFunctionType;    
     var ASTModuleMember = (function () {
-        function ASTModuleMember() { }
+        function ASTModuleMember(name) {
+            this.name = name;
+        }
         ASTModuleMember.prototype.getGlobal = function () {
             return this.parent ? this.parent.getGlobal() : this instanceof ASTModule ? this : null;
         };
         ASTModuleMember.prototype.toHTML = function () {
             return undefined;
+        };
+        ASTModuleMember.prototype.getFullName = function () {
+            return this.parent.findFullName(this.name);
+        };
+        ASTModuleMember.prototype.createTitle = function (prefix) {
+            var fullName = this.getFullName();
+            var a = $('<a class="ts_modulemember_a"/>').attr("name", fullName).attr("href", '#' + fullName).text(prefix + " " + this.name);
+            return $('<h1 class="ts_modulemember_title ts_class_title" />').append(a);
         };
         return ASTModuleMember;
     })();
@@ -590,6 +643,7 @@ var DTSDoc;
             var div = $('<div class="ts_class_member_container">').append(title);
             if(this.docs) {
                 div.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
+                div.append(this.docs.toHTML(undefined));
             }
             return div;
         };
@@ -599,23 +653,15 @@ var DTSDoc;
         return ASTClassMember;
     })();
     DTSDoc.ASTClassMember = ASTClassMember;    
-    var ASTInterfaceMember = (function () {
-        function ASTInterfaceMember() { }
-        ASTInterfaceMember.prototype.toHTML = function (mod) {
-            return undefined;
-        };
-        return ASTInterfaceMember;
-    })();
-    DTSDoc.ASTInterfaceMember = ASTInterfaceMember;    
-    var ASTModuleType = (function (_super) {
-        __extends(ASTModuleType, _super);
-        function ASTModuleType(name) {
-                _super.call(this);
-            this.name = name;
-        }
-        return ASTModuleType;
-    })(ASTModuleMember);
-    DTSDoc.ASTModuleType = ASTModuleType;    
+    (function (Accessibility) {
+        Accessibility._map = [];
+        Accessibility._map[0] = "Public";
+        Accessibility.Public = 0;
+        Accessibility._map[1] = "Private";
+        Accessibility.Private = 1;
+    })(DTSDoc.Accessibility || (DTSDoc.Accessibility = {}));
+    var Accessibility = DTSDoc.Accessibility;
+    ;
     var ASTConstructor = (function (_super) {
         __extends(ASTConstructor, _super);
         function ASTConstructor(params) {
@@ -625,8 +671,8 @@ var DTSDoc;
         ASTConstructor.prototype.memberToHTML = function () {
             var title = $('<div class="ts_code ts_class_member_title ts_constructor"/>');
             title.append($('<a/>').attr("name", this.parent.name + "-constructor"));
-            title.append("constructor");
-            title.append(genParameters(this.parent.parent, this.params));
+            title.append($('<span class="ts_reserved ts_reserved_constructor">constructor</span>'));
+            title.append(this.params.toHTML(this.parent.parent));
             return title;
         };
         return ASTConstructor;
@@ -667,7 +713,7 @@ var DTSDoc;
         ASTField.prototype.memberToHTML = function () {
             var title = $('<div class="ts_code ts_class_member_title ts_field" />');
             title.append($('<a/>').attr("name", this.parent.name + "-" + this.name));
-            title.append((this.isStatic ? "static " : "") + this.name + ":");
+            title.append((this.isStatic ? "static " : "") + this.name);
             title.append(this.type.toHTML(this.parent.parent));
             return title;
         };
@@ -676,9 +722,10 @@ var DTSDoc;
     DTSDoc.ASTField = ASTField;    
     var ASTClass = (function (_super) {
         __extends(ASTClass, _super);
-        function ASTClass(name, superClass, members) {
+        function ASTClass(name, superClass, interfaces, members) {
                 _super.call(this, name);
             this.superClass = superClass;
+            this.interfaces = interfaces;
             this.members = members;
             this.derivedClasses = [];
         }
@@ -697,9 +744,6 @@ var DTSDoc;
                 }
             }
             return null;
-        };
-        ASTClass.prototype.getFullName = function () {
-            return this.parent.getFullName(this.name);
         };
         ASTClass.prototype.updateHierarchy = function () {
             var superClass = this.getSuperClass();
@@ -723,8 +767,7 @@ var DTSDoc;
         };
         ASTClass.prototype.toHTML = function () {
             var p = $('<section class="ts_modulemember ts_class"/>');
-            p.append($("<a/>").attr("name", this.getFullName()));
-            p.append($('<h1 class="ts_modulemember_title ts_class_title" />').text("class " + this.name));
+            p.append(this.createTitle('class'));
             var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
             if(this.docs) {
                 content.append($('<div class="ts_classcontent ts_classdescription">').html(this.docs.text));
@@ -742,9 +785,28 @@ var DTSDoc;
                         superClass = superClass.getSuperClass();
                     }
                 } else {
-                    hierarchy.append(" ← " + this.superClass);
+                    hierarchy.append(" ← " + this.superClass.name);
                 }
                 content.append(hierarchy);
+                content.append($('<hr/>'));
+            }
+            if(this.interfaces.length > 0) {
+                content.append('<h3>Implementing Interfaces</h3>');
+                var div = $('<div class="ts_classcontent ts_implementations"/>');
+                for(var i = 0; i < this.interfaces.length; i++) {
+                    if(i > 0) {
+                        div.append(", ");
+                    }
+                    var name = this.interfaces[i].name;
+                    var sc = this.parent.findType(name);
+                    if(sc instanceof ASTInterface) {
+                        var ifs = sc;
+                        div.append($('<a/>').attr('href', '#' + ifs.getFullName()).append(name));
+                    } else {
+                        div.append(name);
+                    }
+                }
+                content.append(div);
                 content.append($('<hr/>'));
             }
             if(this.derivedClasses.length > 0) {
@@ -775,8 +837,16 @@ var DTSDoc;
             return p;
         };
         return ASTClass;
-    })(ASTModuleType);
+    })(ASTModuleMember);
     DTSDoc.ASTClass = ASTClass;    
+    var ASTInterfaceMember = (function () {
+        function ASTInterfaceMember() { }
+        ASTInterfaceMember.prototype.toHTML = function (mod) {
+            return undefined;
+        };
+        return ASTInterfaceMember;
+    })();
+    DTSDoc.ASTInterfaceMember = ASTInterfaceMember;    
     var ASTIIndexer = (function (_super) {
         __extends(ASTIIndexer, _super);
         function ASTIIndexer(name, indexType, retType) {
@@ -787,9 +857,9 @@ var DTSDoc;
         }
         ASTIIndexer.prototype.toHTML = function (mod) {
             var span = $('<span class="ts_code ts_indexer"/>');
-            span.append("[" + this.name + ":");
+            span.append("[" + this.name);
             span.append(this.indexType.toHTML(mod));
-            span.append("]:");
+            span.append("]");
             span.append(this.retType.toHTML(mod));
             return span;
         };
@@ -822,7 +892,8 @@ var DTSDoc;
         ASTIConstructor.prototype.toHTML = function (mod) {
             var span = $('<span class="ts_code ts_constructor"/>');
             span.append("new");
-            span.append(genParameters(mod, this.params));
+            span.append(this.params.toHTML(mod));
+            span.append(this.type.toHTML(mod));
             return span;
         };
         return ASTIConstructor;
@@ -837,7 +908,7 @@ var DTSDoc;
             this.type = type;
         }
         ASTIField.prototype.toHTML = function (mod) {
-            return $('<span class="ts_code" />').append(this.name + (this.isOptional ? "?" : "") + ":").append(this.type.toHTML(mod));
+            return $('<span class="ts_code" />').append(this.name + (this.isOptional ? "?" : "")).append(this.type.toHTML(mod));
         };
         return ASTIField;
     })(ASTInterfaceMember);
@@ -850,8 +921,9 @@ var DTSDoc;
             this.retType = retType;
         }
         ASTIFunction.prototype.toHTML = function (mod) {
-            var span = $('<span class="ts_code ts_method"/>');
-            span.append(genFunctionSigniture(mod, this.params, this.retType));
+            var span = $('<span class="ts_code ts_method ts_signiture"/>');
+            span.append(this.params.toHTML(mod));
+            span.append(this.retType.toHTML(mod));
             return span;
         };
         return ASTIFunction;
@@ -864,14 +936,10 @@ var DTSDoc;
             this.interfaces = interfaces;
             this.type = type;
         }
-        ASTInterface.prototype.getFullName = function () {
-            return this.parent.getFullName(this.name);
-        };
         ASTInterface.prototype.toHTML = function () {
             var _this = this;
             var section = $('<section class="ts_modulemember ts_interface"/>');
-            section.append($("<a/>").attr("name", this.getFullName()));
-            section.append($('<h1 class="ts_modulemember_title ts_interface_title"/>').text("interface " + this.name));
+            section.append(this.createTitle('interface'));
             var content = $('<section class="ts_modulemember_content"/>');
             if(this.docs) {
                 content.append('<h3>Description</h3>');
@@ -889,19 +957,17 @@ var DTSDoc;
             return section;
         };
         return ASTInterface;
-    })(ASTModuleType);
+    })(ASTModuleMember);
     DTSDoc.ASTInterface = ASTInterface;    
     var ASTFunction = (function (_super) {
         __extends(ASTFunction, _super);
         function ASTFunction(name, sign) {
-                _super.call(this);
-            this.name = name;
+                _super.call(this, name);
             this.sign = sign;
         }
         ASTFunction.prototype.toHTML = function () {
             var p = $('<section class="ts_modulemember ts_function"/>');
-            p.append($("<a/>").attr("name", "func_" + this.name));
-            p.append($('<h1 class="ts_modulemember_title ts_function_title" />').text("function " + this.name));
+            p.append(this.createTitle('function'));
             var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
             var span = $('<span class="ts_code ts_method"/>').appendTo(content);
             span.append("function " + this.name);
@@ -918,25 +984,23 @@ var DTSDoc;
             this.members = members;
         }
         ASTEnum.prototype.getFullName = function () {
-            return this.parent.getFullName(this.name);
+            return this.parent.findFullName(this.name);
         };
         ASTEnum.prototype.toHTML = function () {
             var section = $('<section class="ts_modulemember ts_enum"/>');
-            section.append($("<a/>").attr("name", this.getFullName()));
-            section.append($('<h1 class="ts_modulemember_title ts_enum_title"/>').text("enum " + this.name));
+            section.append(this.createTitle('enum'));
             this.members.forEach(function (m) {
                 section.append($("<div/>").text(m));
             });
             return section;
         };
         return ASTEnum;
-    })(ASTModuleType);
+    })(ASTModuleMember);
     DTSDoc.ASTEnum = ASTEnum;    
     var ASTVar = (function (_super) {
         __extends(ASTVar, _super);
         function ASTVar(name, type) {
-                _super.call(this);
-            this.name = name;
+                _super.call(this, name);
             this.type = type;
         }
         ASTVar.prototype.toString = function () {
@@ -944,9 +1008,9 @@ var DTSDoc;
         };
         ASTVar.prototype.toHTML = function () {
             var section = $('<section class="ts_modulemember ts_var" />');
-            section.append($('<h1 class="ts_modulemember_title ts_var_title" />').text("var " + this.name));
+            section.append(this.createTitle('var'));
             var content = $('<section class="ts_modulemember_content"/>').appendTo(section);
-            content.append($('<span class="ts_code"/>').append('var ' + this.name).append(":").append(this.type.toHTML(this.parent)));
+            content.append($('<span class="ts_code"/>').append($('<span class="ts_reserved ts_reserved_var">var</span>')).append(this.name).append(this.type.toHTML(this.parent)));
             return section;
         };
         return ASTVar;
@@ -955,8 +1019,7 @@ var DTSDoc;
     var ASTModule = (function (_super) {
         __extends(ASTModule, _super);
         function ASTModule(name, members) {
-                _super.call(this);
-            this.name = name;
+                _super.call(this, name);
             this.members = members;
         }
         ASTModule.prototype.findType = function (name) {
@@ -965,10 +1028,9 @@ var DTSDoc;
                 var targetType = splitted[0];
                 for(var i = 0; i < this.members.length; i++) {
                     var member = this.members[i];
-                    if(member instanceof ASTModuleType) {
-                        var c = member;
-                        if(c.name == targetType) {
-                            return c;
+                    if(member instanceof ASTClass || member instanceof ASTInterface || member instanceof ASTEnum) {
+                        if(member.name == targetType) {
+                            return member;
                         }
                     }
                 }
@@ -998,10 +1060,9 @@ var DTSDoc;
                 var targetType = splitted[0];
                 for(var i = 0; i < this.members.length; i++) {
                     var member = this.members[i];
-                    if(member instanceof ASTModuleType) {
-                        var c = member;
-                        if(c.name == targetType) {
-                            return c;
+                    if(member instanceof ASTClass || member instanceof ASTInterface || member instanceof ASTEnum) {
+                        if(member.name == targetType) {
+                            return member;
                         }
                     }
                 }
@@ -1019,7 +1080,7 @@ var DTSDoc;
             }
             return null;
         };
-        ASTModule.prototype.getFullName = function (name) {
+        ASTModule.prototype.findFullName = function (name) {
             var type = this.findType(name);
             if(type) {
                 var n = type.name;
@@ -1065,7 +1126,7 @@ var DTSDoc;
         };
         ASTModule.prototype.toHTML = function () {
             var section = $('<section class="ts_modulemember ts_module"/>');
-            section.append($('<h1 class="ts_modulemember_title ts_module_title"/>').text("module " + this.name));
+            section.append(this.createTitle('module'));
             var content = $('<section />').appendTo(section);
             if(this.docs) {
                 content.append($('<p class="ts_modulemember_description"/>').html(this.docs.text));
@@ -1110,16 +1171,17 @@ var DTSDoc;
     var keyword = function (s) {
         return lexme(regexp(new RegExp(s + '(?!(\w|_))')));
     };
-    var documentComment = option(undefined, lexme(seq(function (s) {
+    var pDocumentComment = option(undefined, lexme(seq(function (s) {
         var text = s(regexp(/\/\*\*(\*(?!\/)|[^*])*\*\//));
         s(whitespace);
         if(s.success()) {
             var innerText = seq(function (s) {
                 s(string("/**"));
+                var description = s(regexp(/[^*]/));
                 var lines = s(many(seq(function (s) {
-                    s(optional(regexp(/\s*\*(?!\/)\s*/)));
+                    s(optional(regexp(/[ \t]*\*(?!\/)[ \t]*/)));
                     var line = s(regexp(/[^\r\n]*\n/));
-                    s(whitespace);
+                    s(regexp(/[ \t]*/));
                     return line;
                 })));
                 s(string("*/"));
@@ -1128,7 +1190,20 @@ var DTSDoc;
                 }
             });
             var parsed = innerText.parse(text);
-            return new DTSDoc.TSDocs(parsed.value);
+            var pDescription = /([^@]|\@(?![a-z]))*/gm;
+            var arr = pDescription.exec(parsed.value);
+            var description = arr[0];
+            var pTags = /\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/gm;
+            pTags.lastIndex = pDescription.lastIndex;
+            var tags = [];
+            while(pTags.lastIndex < parsed.value.length) {
+                var arr = pTags.exec(parsed.value);
+                if(!arr) {
+                    break;
+                }
+                tags.push(new DTSDoc.ASTDocSection(arr[1], arr[2]));
+            }
+            return new DTSDoc.ASTDocs(description, tags);
         }
     })));
     var reference = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
@@ -1140,15 +1215,14 @@ var DTSDoc;
         var opt = s(option(false, map(function () {
             return true;
         }, DTSDoc.reserved("?"))));
-        var typeName = s(option(new DTSDoc.ASTTypeName("any"), seq(function (s) {
-            s(colon);
-            s(pType);
-        })));
+        var typeName = s(option(new DTSDoc.ASTTypeName("any"), pTypeAnnotation));
         if(s.success()) {
             return new DTSDoc.ASTParameter(varName, opt, typeName);
         }
     });
-    var pParameters = between(DTSDoc.reserved("("), sepBy(DTSDoc.pParameter, DTSDoc.comma), DTSDoc.reserved(")"));
+    var pParameters = between(DTSDoc.reserved("("), map(function (ps) {
+        return new DTSDoc.ASTParameters(ps);
+    }, sepBy(DTSDoc.pParameter, DTSDoc.comma)), DTSDoc.reserved(")"));
     var pAccessibility = option(DTSDoc.Accessibility.Public, or(map(function () {
         return DTSDoc.Accessibility.Public;
     }, DTSDoc.reserved("public")), map(function () {
@@ -1159,13 +1233,16 @@ var DTSDoc;
     }, DTSDoc.reserved("static")));
     var pTypeAnnotation = option(new DTSDoc.ASTTypeName("any"), seq(function (s) {
         s(colon);
-        s(pType);
+        var type = s(pType);
+        if(s.success()) {
+            return new DTSDoc.ASTTypeAnnotation(type);
+        }
     }));
     var pOpt = option(false, map(function () {
         return true;
     }, DTSDoc.reserved("?")));
     var pSpecifyingTypeMember = seq(function (s) {
-        var docs = s(documentComment);
+        var docs = s(pDocumentComment);
         var member = s(or(pIConstructor, trying(pIMethod), pIField, pIIndexer, pIFunction));
         s(semi);
         if(s.success()) {
@@ -1198,7 +1275,7 @@ var DTSDoc;
         s(DTSDoc.reserved("=>"));
         var retType = s(pType);
         if(s.success()) {
-            return new DTSDoc.ASTFunctionTypeRef(params, retType);
+            return new DTSDoc.ASTFunctionType(params, retType);
         }
     });
     var pType = seq(function (s) {
@@ -1223,8 +1300,7 @@ var DTSDoc;
                 return new DTSDoc.ASTMethod(access, isStatic, name, new DTSDoc.ASTFuncionSignature(params, retType));
             }
         }), seq(function (s) {
-            s(colon);
-            var type = s(pType);
+            var type = s(pTypeAnnotation);
             if(s.success()) {
                 return new DTSDoc.ASTField(access, isStatic, name, type);
             }
@@ -1240,17 +1316,15 @@ var DTSDoc;
     var pIIndexer = seq(function (s) {
         s(DTSDoc.reserved("["));
         var name = s(identifier);
-        s(colon);
-        var type = s(pType);
+        var type = s(pTypeAnnotation);
         s(DTSDoc.reserved("]"));
-        s(colon);
-        var retType = s(pType);
+        var retType = s(pTypeAnnotation);
         if(s.success()) {
             return new DTSDoc.ASTIIndexer(name, type, retType);
         }
     });
     var pClassMember = seq(function (s) {
-        var docs = s(documentComment);
+        var docs = s(pDocumentComment);
         var member = s(or(pConstructor, pMethodOrField, pIIndexer));
         s(semi);
         if(s.success()) {
@@ -1275,7 +1349,7 @@ var DTSDoc;
         var members = s(many(pClassMember));
         s(DTSDoc.reserved("}"));
         if(s.success()) {
-            var clazz = new DTSDoc.ASTClass(name, superClasse, members);
+            var clazz = new DTSDoc.ASTClass(name, superClasse, interfaces, members);
             members.forEach(function (m) {
                 m.parent = clazz;
             });
@@ -1369,7 +1443,7 @@ var DTSDoc;
         }
     });
     DTSDoc.pModuleMember = seq(function (s) {
-        var docs = s(documentComment);
+        var docs = s(pDocumentComment);
         s(tsDeclare);
         s(optExport);
         var member = s(or(DTSDoc.pVar, DTSDoc.pModule, DTSDoc.pClass, DTSDoc.pFunction, DTSDoc.pInterface, DTSDoc.pEnum));
@@ -1381,7 +1455,7 @@ var DTSDoc;
     var pModuleMembers = many(or(DTSDoc.pModuleMember, DTSDoc.reserved(';')));
     DTSDoc.pProgram = seq(function (s) {
         s(spaces);
-        var docs = s(documentComment);
+        var docs = s(pDocumentComment);
         var members = s(pModuleMembers);
         s(eof);
         if(s.success()) {
@@ -1437,7 +1511,6 @@ function generateDocuments() {
                 '<head>', 
                 '<meta charset="utf-8">', 
                 '<style type="text/css">', 
-                'h5{ text-align: center; }', 
                 cssText, 
                 '</style>', 
                 '<link rel="STYLESHEET" href="style.css" type="text/css"></link>', 
@@ -1523,3 +1596,4 @@ function generateHierarchy(global) {
     var section = $('<section/>');
     return section;
 }
+loadSourceFile("sample.d.ts");
