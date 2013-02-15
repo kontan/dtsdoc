@@ -7,7 +7,7 @@ module DTSDoc{
 	////////////////////////////////////////////////////////////////////////////////////
 	// lex
 	////////////////////////////////////////////////////////////////////////////////////
-	var lineComment      = regexp(/^\/\/(?!>)[^\n]*\n/);
+	var lineComment      = regexp(/^\/\/[^\n]*(\n|$)/);
 	var blockComment     = regexp(/^\/\*(?!\*)(.|\r|\n)*?\*\//m);
 	var comment          = or(lineComment, blockComment);
 	var whitespace       = regexp(/^[ \t\r\n]+/);
@@ -32,38 +32,25 @@ module DTSDoc{
 
 	export var reserved:(s:string)=>Parsect.Parser = (s)=>lexme(string(s));
 
-	var keyword:(s:string)=>Parsect.Parser = (s)=>lexme(regexp(new RegExp(s + '(?!(\w|_))')));
+	var keyword:(s:string)=>Parsect.Parser = (s)=>lexme(regexp(new RegExp(s + '(?!(\\w|_))')));
 
 
 
 	var pDocumentComment     = option(undefined, lexme(seq(s=>{
-		var text = s(regexp(/\/\*\*(\*(?!\/)|[^*])*\*\//));
+		var pattern = /\/\*\*((\*(?!\/)|[^*])*)\*\//;
+		var text = s(regexp(pattern));
 		s(whitespace);
 		if(s.success()){
-			var innerText = seq(s=>{
-				s(string("/**"));
-				var description = s(regexp(/[^*]/));
-				var lines = s(many(seq(s=>{
-					s(optional(regexp(/[ \t]*\*(?!\/)[ \t]*/)));	// asterisk at the line head
-					var line = s(regexp(/[^\r\n]*\n/));
-					s(regexp(/[ \t]*/));	// consume whitespaes at next line 
-					return line;
-				})));
-				s(string("*/"));
-				if(s.success()){
-					return lines.join("");
-				}
-			});
-			var parsed = innerText.parse(text);
+			var innerText = pattern.exec(text)[1].split('*').join(' ');
 			var pDescription = /([^@]|\@(?![a-z]))*/mg;
-			var arr = pDescription.exec(parsed.value);
+			var arr = pDescription.exec(innerText);
 			var description = arr[0];
 
 			var pTags = /\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
 			pTags.lastIndex = pDescription.lastIndex;
 			var tags = [];
-			while(pTags.lastIndex < parsed.value.length){
-				var arr = pTags.exec(parsed.value);
+			while(pTags.lastIndex < innerText.length){
+				var arr = pTags.exec(innerText);
 				if(!arr) break;
 				tags.push(new ASTDocSection(arr[1], arr[2]));
 			}
@@ -71,14 +58,16 @@ module DTSDoc{
 		}
 	})));
 
-	var reference  = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
-	var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+	var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
+	var pIdentifier     = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+	var pStringRiteral  = lexme(regexp(/(\"[^\"]+\"|\'[^\']+\')/));
 
 	var tsDeclare = optional(reserved("declare"));
 
 	export var pParameter = seq((s)=>{
+		var docs = s(pDocumentComment);
 		var isVarArg = s(optional(reserved("...")));
-		var varName = s(identifier);
+		var varName = s(pIdentifier);
 		var opt = s(option(false, map(()=>true, reserved("?"))));		
 		var typeName = s(option(new ASTTypeName("any"), pTypeAnnotation));
 		if(s.success()){
@@ -97,9 +86,9 @@ module DTSDoc{
 		map(()=>Accessibility.Private, reserved("private"))
 	));
 
-	var modStatic = option(false, map(()=>true, reserved("static")));
+	var pStatic = option(false, map(()=>true, keyword("static")));
 
-	var pTypeAnnotation = option(new ASTTypeName("any"), seq((s)=>{
+	var pTypeAnnotation = option(new ASTTypeAnnotation(new ASTTypeName("any")), seq((s)=>{
 		s(colon);
 		var type = s(pType);
 		if(s.success()){
@@ -108,6 +97,17 @@ module DTSDoc{
 	}));
 
 	var pOpt = option(false, map(()=>true, reserved("?")));
+
+	var pImport = seq(s=>{
+		s(keyword('import'));
+		var id = s(pIdentifier);
+		s(reserved('='));
+		var mod = s(or(
+			trying(series(keyword('module'), between(reserved('('), pStringRiteral, reserved(')')))), 
+			pIdentifierPath
+		));
+		s(reserved(';'));
+	});
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Type parsers
@@ -139,11 +139,11 @@ module DTSDoc{
 	});
 
 	var pTypeName = lexme(seq((s)=>{
-		var name = s(identifier);
+		var name = s(pIdentifier);
 		var type:ASTType = new ASTTypeName(name);
 		s(many(seq((s)=>{
 			s(reserved("."));
-			s(identifier);
+			s(pIdentifier);
 			if(s.success()){
 				type = new ASTModulePrefix(name, type);
 			}
@@ -160,8 +160,18 @@ module DTSDoc{
 		}
 	});
 
+	var pConstructorTypeRiteral = seq(s=>{
+		s(keyword('new'));
+		var params = s(pParameters);
+		s(reserved("=>"));
+		var retType = s(pType);
+		if(s.success()){
+			return new ASTConstructorTypeLiteral(params, retType);
+		}
+	});
+
 	var pType = seq((s)=>{
-		var type = s(or(pSpecifyingType, pTypeName, pFunctionType));
+		var type = s(or(pSpecifyingType, pConstructorTypeRiteral, pTypeName, pFunctionType));
 		s(many(seq((s)=>{
 			s(reserved("["));
 			s(reserved("]"));
@@ -179,8 +189,8 @@ module DTSDoc{
 
 	var pMethodOrField = seq((s)=>{
 		var access = s(pAccessibility);		
-		var isStatic = s(modStatic);
-		var name = s(identifier);
+		var isStatic = s(pStatic);
+		var name = s(pIdentifier);
 		s(or(
 			// method
 			seq(s=>{
@@ -210,7 +220,7 @@ module DTSDoc{
 
 	var pIIndexer = seq((s)=>{
 		s(reserved("["));
-		var name:string = s(identifier);
+		var name:string = s(pIdentifier);
 		var type:ASTType = s(pTypeAnnotation);
 		s(reserved("]"));
 		var retType:ASTType = s(pTypeAnnotation);
@@ -233,7 +243,7 @@ module DTSDoc{
 		s(tsDeclare);
 		s(optExport);
 		s(reserved("class"));
-		var name = s(identifier);
+		var name = s(pIdentifier);
 		var superClasse = s(option(undefined, seq((s)=>{
 			s(reserved("extends"));
 			s(pTypeName);
@@ -257,7 +267,7 @@ module DTSDoc{
 	///////////////////////////////////////////////////////////////////////////////////	
 
 	var pIField = seq((s)=>{
-		var name = s(identifier);
+		var name = s(pIdentifier);
 		var opt  = s(pOpt);
 		var type = s(pTypeAnnotation);
 		return new ASTIField(name, opt, type);
@@ -281,7 +291,7 @@ module DTSDoc{
 	});
 
 	var pIMethod = seq((s)=>{
-		var methodName:string     = s(identifier);
+		var methodName:string     = s(pIdentifier);
 		var opt:bool              = s(pOpt);		
 		var params:ASTParameter[] = s(pParameters);
 		var retType:ASTTypeAnnotation = s(pTypeAnnotation);
@@ -292,7 +302,7 @@ module DTSDoc{
 
 	export var pInterface = seq((s)=>{
 		s(reserved("interface"));
-		var name:string = s(identifier);
+		var name:string = s(pIdentifier);
 		var ifs:ASTTypeName[] = s(option([], seq((s)=>{
 			s(reserved("extends"));
 			s(sepBy1(pTypeName, comma));
@@ -308,12 +318,12 @@ module DTSDoc{
 	/////////////////////////////////////////////////////////////////////////////////////// 
 
 	export var pEnum = seq((s)=>{
-		s(reserved("enum"));
-		var name = s(identifier);
+		s(keyword("enum"));
+		var name = s(pIdentifier);
 		s(reserved("{"));
 		var members = s(or(
-			trying(sepBy(identifier, comma)), 
-			endBy(identifier, comma)
+			trying(sepBy(pIdentifier, comma)), 
+			endBy(pIdentifier, comma)
 		));
 		s(optional(comma));
 		s(reserved("}"));
@@ -323,8 +333,8 @@ module DTSDoc{
 	});
 
 	export var pFunction = seq((s)=>{
-		s(reserved("function"));
-		var name    = s(identifier);
+		s(keyword("function"));
+		var name    = s(pIdentifier);
 		var params  = s(pParameters);
 		var retType = s(pTypeAnnotation);
 		s(semi);
@@ -334,8 +344,8 @@ module DTSDoc{
 	});
 
 	export var pVar = seq((s)=>{
-		s(reserved("var"));
-		var name = s(identifier);
+		s(keyword("var"));
+		var name = s(pIdentifier);
 		var typeName = s(pTypeAnnotation);
 		s(optional(semi));
 		if(s.success()){
@@ -343,9 +353,19 @@ module DTSDoc{
 		}
 	});
 
+	export var pCallable = seq((s)=>{
+		s(keyword("function"));
+		var params  = s(pParameters);
+		var retType = s(pTypeAnnotation);
+		s(semi);
+		if(s.success()){
+			return new ASTCallable(new ASTFuncionSignature(params, retType));
+		}
+	});
+
 	export var pModule = seq((s)=>{
-		s(reserved("module"));
-		var name = s(reference);
+		s(keyword("module"));
+		var name = s(or(pIdentifierPath, pStringRiteral));
 		s(reserved("{"));
 		var members = s(pModuleMembers);
 		s(reserved("}"));
@@ -360,17 +380,17 @@ module DTSDoc{
 		var docs = s(pDocumentComment);
 		s(tsDeclare);		
 		s(optExport);
-		var member:ASTModuleMember = s(or(pVar, pModule, pClass, pFunction, pInterface, pEnum));
+		var member:ASTModuleMember = s(or(pVar, pModule, pClass, trying(pFunction), pCallable, pInterface, pEnum));
 		if(s.success()){
 			member.docs = docs;
 			return member;
 		}
 	});
 
-	var pModuleMembers:Parsect.Parser = many(or(pModuleMember, reserved(';')));
+	var pModuleMembers:Parsect.Parser = map(ms=>ms.filter(m => m instanceof ASTModuleMember), many(or(pModuleMember, reserved(';'), pImport)));
 
 	export var pProgram = seq((s)=>{
-		s(spaces);
+		s(lexme(spaces));
 		var docs = s(pDocumentComment);
 		var members = s(pModuleMembers);
 		s(eof);

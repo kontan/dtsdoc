@@ -155,6 +155,11 @@ module DTSDoc{
     	toHTML(mod:ASTModule):JQuery{ return $("<span/>").append(this.params.toHTML(mod)).append($('<span class="ts_symbol ts_arrow">=&gt;</span>')).append(this.retType.toHTML(mod)); }
     }
 
+    export class ASTConstructorTypeLiteral extends ASTType{
+        constructor(public params:ASTParameters, public retType:ASTType){ super(); }
+        toHTML(mod:ASTModule):JQuery{ return $("<span/>").append($('<span class="ts_reserved">new</span>')).append(this.params.toHTML(mod)).append($('<span class="ts_symbol ts_arrow">=&gt;</span>')).append(this.retType.toHTML(mod)); }
+    }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     // Abstract classes
@@ -218,7 +223,7 @@ module DTSDoc{
             var title = $('<div class="ts_code ts_class_member_title ts_method"/>');
             title.append($('<a/>').attr("name", this.parent.name + "-" + this.name));
             //span.append((this.access == Accessibility.Public ? "public" : "private") + " ");
-            title.append(this.isStatic ? "static " : "");
+            title.append($(this.isStatic ? '<span class="ts_reserved">static</span>' : ''));
             title.append(this.name);
             title.append(this.sign.toHTML(this.parent.parent));
             return title;
@@ -454,6 +459,19 @@ module DTSDoc{
         }
     }
 
+    export class ASTCallable extends ASTModuleMember{ 
+        constructor(public sign:ASTFuncionSignature){ super(''); } 
+        toHTML():JQuery{
+            var p = $('<section class="ts_modulemember ts_function"/>');
+            p.append(this.createTitle('function()'));
+            var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
+            var span = $('<span class="ts_code ts_method"/>').appendTo(content);
+            span.append("function");
+            span.append(this.sign.toHTML(this.parent));
+            return p;
+        }
+    }
+
     export class ASTEnum extends ASTModuleMember{
         constructor(name:string, public members:string[]){ super(name); }
         getFullName(){
@@ -462,9 +480,16 @@ module DTSDoc{
         toHTML():JQuery{
         	var section = $('<section class="ts_modulemember ts_enum"/>');
         	section.append(this.createTitle('enum'));
-        	this.members.forEach((m)=>{
-        		section.append($("<div/>").text(m));
-        	});
+
+            if(this.members.length > 0){
+            	section.append($('<h3>Members</h3>'));
+                this.members.forEach((m)=>{
+                    var outer = $('<div class="ts_classcontent ts_classmember" />');
+                    var content = $('<div class="ts_code ts_class_member_title ts_method"/>').text(m).appendTo(outer);
+            		section.append(outer);
+            	});
+            }
+
         	return section;
         }
     }

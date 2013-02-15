@@ -4,31 +4,11 @@
 /// <reference path="../Parsect/src/type.ts" />
 /// <reference path="../Parsect/src/parser.ts" />
 
-interface FileSystem{
-	root:any;
-}
-interface ErrorCallback {
-    (err:DOMError):void;
-}
 
-interface FileSystemCallback{
-	(filesystem:FileSystem):void;
-}
 
-interface RequestFileSystem{
-	(type:number, size:number, successCallback:FileSystemCallback, errorCallback?:ErrorCallback):void;
-}
 
-interface Window{
-	webkitURL:{
-		createObjectURL(blob:Blob):string;
-	};
-	TEMPORARY: number;
-	PERSISTENT: number;
-	requestFileSystem: RequestFileSystem;
-	webkitRequestFileSystem: RequestFileSystem;
-	mozRequestFileSystem: RequestFileSystem;
-}
+
+
 
 
 var fileInput  = <JQuery>$("#input_file"); 
@@ -97,35 +77,38 @@ function generateDocuments(){
 			//$('#downloadLink').attr('href', "data:text/html," + source);
 
 			var _Blob:any = Blob;
-			var requestFileSystem:any = window.requestFileSystem || window.webkitRequestFileSystem || window.mozRequestFileSystem;
+			var requestFileSystem:any = window.requestFileSystem || window.webkitRequestFileSystem;
 			
 			var downloadBlob = new _Blob([headerHTML + documentContent.html() + footerHTML], { "type" : "text/html" });
 
-			requestFileSystem(window.TEMPORARY, downloadBlob.size, (fileSystem:FileSystem)=>{
-				fileSystem.root.getFile("docs.html", {create: true}, (fileEntry)=>{
-					fileEntry.createWriter((fileWriter)=>{
-	                    fileWriter.onwriteend = (e)=>{
-	                    	$('#downloadLink').attr('href', fileEntry.toURL());
-	                    };
-	                    fileWriter.onerror = (e)=>{
-	                    	throw e;
-	                    };
-	                    fileWriter.seek(0);
-	                    fileWriter.truncate(downloadBlob.size);
-	                    fileWriter.write(downloadBlob);
-	                });
-	            }, (error)=>{
-	                throw error;
-	            });
-			}, (err:DOMError)=>{
-				throw err;
-			});
+			var tempFileName = "docs.html";
+
 			
+			requestFileSystem(window.TEMPORARY, downloadBlob.size, (fileSystem:FileSystem)=>{
+				
+				function createTempFile(){
+					fileSystem.root.getFile(tempFileName, {create: true}, (fileEntry:FileEntry)=>{
+						fileEntry.createWriter((fileWriter)=>{
+		                    fileWriter.addEventListener('writeend', (e)=>{
+		                    	$('#downloadLink').attr('href', fileEntry.toURL());
+		                    });
+		                    fileWriter.write(downloadBlob);
+		                });
+		            }, (error)=>{
+		                throw error;
+		            });
+				}
 
+				// 非同期処理の不具合？
+				// 同じファイルを一時ファイルにするためにはファイルのサイズを調整しなければならないけど、
+				// truncate の直後に write するとエラーになる。
+				// (なぜかデバッガで一度止めるとエラーにならない。)
+				// やむを得ないのでいったんファイルを消去して　ファイルを作り直す
+				fileSystem.root.getFile(tempFileName, {}, (fileEntry:FileEntry)=>{
+					fileEntry.remove(createTempFile);
+				}, createTempFile);
 
-			//var _Blob:any = Blob;
-			//var url = window.webkitURL.createObjectURL(new _Blob([documentContent.html()], { "type" : "text/plain" }));
-			//$('#downloadLink').attr('href', url);
+			});
 		}else{
 			var pos = result.source.getPosition();
 			var line = pos.line;

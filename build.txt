@@ -2,6 +2,9 @@
 --out test/generator.js
 ../Parsect/src/parsect.ts
 ../Parsect/src/globals.ts
+src/cheerio.d.ts
 src/type.ts
 src/parser.ts
+src/filewriter.d.ts
+src/file.d.ts
 src/generator.ts

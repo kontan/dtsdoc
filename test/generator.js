@@ -615,6 +615,19 @@ var DTSDoc;
         return ASTFunctionType;
     })(ASTType);
     DTSDoc.ASTFunctionType = ASTFunctionType;    
+    var ASTConstructorTypeLiteral = (function (_super) {
+        __extends(ASTConstructorTypeLiteral, _super);
+        function ASTConstructorTypeLiteral(params, retType) {
+                _super.call(this);
+            this.params = params;
+            this.retType = retType;
+        }
+        ASTConstructorTypeLiteral.prototype.toHTML = function (mod) {
+            return $("<span/>").append($('<span class="ts_reserved">new</span>')).append(this.params.toHTML(mod)).append($('<span class="ts_symbol ts_arrow">=&gt;</span>')).append(this.retType.toHTML(mod));
+        };
+        return ASTConstructorTypeLiteral;
+    })(ASTType);
+    DTSDoc.ASTConstructorTypeLiteral = ASTConstructorTypeLiteral;    
     var ASTModuleMember = (function () {
         function ASTModuleMember(name) {
             this.name = name;
@@ -690,7 +703,7 @@ var DTSDoc;
         ASTMethod.prototype.memberToHTML = function () {
             var title = $('<div class="ts_code ts_class_member_title ts_method"/>');
             title.append($('<a/>').attr("name", this.parent.name + "-" + this.name));
-            title.append(this.isStatic ? "static " : "");
+            title.append($(this.isStatic ? '<span class="ts_reserved">static</span>' : ''));
             title.append(this.name);
             title.append(this.sign.toHTML(this.parent.parent));
             return title;
@@ -977,6 +990,24 @@ var DTSDoc;
         return ASTFunction;
     })(ASTModuleMember);
     DTSDoc.ASTFunction = ASTFunction;    
+    var ASTCallable = (function (_super) {
+        __extends(ASTCallable, _super);
+        function ASTCallable(sign) {
+                _super.call(this, '');
+            this.sign = sign;
+        }
+        ASTCallable.prototype.toHTML = function () {
+            var p = $('<section class="ts_modulemember ts_function"/>');
+            p.append(this.createTitle('function()'));
+            var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
+            var span = $('<span class="ts_code ts_method"/>').appendTo(content);
+            span.append("function");
+            span.append(this.sign.toHTML(this.parent));
+            return p;
+        };
+        return ASTCallable;
+    })(ASTModuleMember);
+    DTSDoc.ASTCallable = ASTCallable;    
     var ASTEnum = (function (_super) {
         __extends(ASTEnum, _super);
         function ASTEnum(name, members) {
@@ -989,9 +1020,14 @@ var DTSDoc;
         ASTEnum.prototype.toHTML = function () {
             var section = $('<section class="ts_modulemember ts_enum"/>');
             section.append(this.createTitle('enum'));
-            this.members.forEach(function (m) {
-                section.append($("<div/>").text(m));
-            });
+            if(this.members.length > 0) {
+                section.append($('<h3>Members</h3>'));
+                this.members.forEach(function (m) {
+                    var outer = $('<div class="ts_classcontent ts_classmember" />');
+                    var content = $('<div class="ts_code ts_class_member_title ts_method"/>').text(m).appendTo(outer);
+                    section.append(outer);
+                });
+            }
             return section;
         };
         return ASTEnum;
@@ -1149,7 +1185,7 @@ var DTSDoc;
 })(DTSDoc || (DTSDoc = {}));
 var DTSDoc;
 (function (DTSDoc) {
-    var lineComment = regexp(/^\/\/(?!>)[^\n]*\n/);
+    var lineComment = regexp(/^\/\/[^\n]*(\n|$)/);
     var blockComment = regexp(/^\/\*(?!\*)(.|\r|\n)*?\*\//m);
     var comment = or(lineComment, blockComment);
     var whitespace = regexp(/^[ \t\r\n]+/);
@@ -1169,35 +1205,22 @@ var DTSDoc;
         return lexme(string(s));
     };
     var keyword = function (s) {
-        return lexme(regexp(new RegExp(s + '(?!(\w|_))')));
+        return lexme(regexp(new RegExp(s + '(?!(\\w|_))')));
     };
     var pDocumentComment = option(undefined, lexme(seq(function (s) {
-        var text = s(regexp(/\/\*\*(\*(?!\/)|[^*])*\*\//));
+        var pattern = /\/\*\*((\*(?!\/)|[^*])*)\*\//;
+        var text = s(regexp(pattern));
         s(whitespace);
         if(s.success()) {
-            var innerText = seq(function (s) {
-                s(string("/**"));
-                var description = s(regexp(/[^*]/));
-                var lines = s(many(seq(function (s) {
-                    s(optional(regexp(/[ \t]*\*(?!\/)[ \t]*/)));
-                    var line = s(regexp(/[^\r\n]*\n/));
-                    s(regexp(/[ \t]*/));
-                    return line;
-                })));
-                s(string("*/"));
-                if(s.success()) {
-                    return lines.join("");
-                }
-            });
-            var parsed = innerText.parse(text);
+            var innerText = pattern.exec(text)[1].split('*').join(' ');
             var pDescription = /([^@]|\@(?![a-z]))*/gm;
-            var arr = pDescription.exec(parsed.value);
+            var arr = pDescription.exec(innerText);
             var description = arr[0];
             var pTags = /\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/gm;
             pTags.lastIndex = pDescription.lastIndex;
             var tags = [];
-            while(pTags.lastIndex < parsed.value.length) {
-                var arr = pTags.exec(parsed.value);
+            while(pTags.lastIndex < innerText.length) {
+                var arr = pTags.exec(innerText);
                 if(!arr) {
                     break;
                 }
@@ -1206,12 +1229,14 @@ var DTSDoc;
             return new DTSDoc.ASTDocs(description, tags);
         }
     })));
-    var reference = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
-    var identifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+    var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
+    var pIdentifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+    var pStringRiteral = lexme(regexp(/(\"[^\"]+\"|\'[^\']+\')/));
     var tsDeclare = optional(DTSDoc.reserved("declare"));
     DTSDoc.pParameter = seq(function (s) {
+        var docs = s(pDocumentComment);
         var isVarArg = s(optional(DTSDoc.reserved("...")));
-        var varName = s(identifier);
+        var varName = s(pIdentifier);
         var opt = s(option(false, map(function () {
             return true;
         }, DTSDoc.reserved("?"))));
@@ -1228,10 +1253,10 @@ var DTSDoc;
     }, DTSDoc.reserved("public")), map(function () {
         return DTSDoc.Accessibility.Private;
     }, DTSDoc.reserved("private"))));
-    var modStatic = option(false, map(function () {
+    var pStatic = option(false, map(function () {
         return true;
-    }, DTSDoc.reserved("static")));
-    var pTypeAnnotation = option(new DTSDoc.ASTTypeName("any"), seq(function (s) {
+    }, keyword("static")));
+    var pTypeAnnotation = option(new DTSDoc.ASTTypeAnnotation(new DTSDoc.ASTTypeName("any")), seq(function (s) {
         s(colon);
         var type = s(pType);
         if(s.success()) {
@@ -1241,6 +1266,13 @@ var DTSDoc;
     var pOpt = option(false, map(function () {
         return true;
     }, DTSDoc.reserved("?")));
+    var pImport = seq(function (s) {
+        s(keyword('import'));
+        var id = s(pIdentifier);
+        s(DTSDoc.reserved('='));
+        var mod = s(or(trying(series(keyword('module'), between(DTSDoc.reserved('('), pStringRiteral, DTSDoc.reserved(')')))), pIdentifierPath));
+        s(DTSDoc.reserved(';'));
+    });
     var pSpecifyingTypeMember = seq(function (s) {
         var docs = s(pDocumentComment);
         var member = s(or(pIConstructor, trying(pIMethod), pIField, pIIndexer, pIFunction));
@@ -1259,11 +1291,11 @@ var DTSDoc;
         }
     });
     var pTypeName = lexme(seq(function (s) {
-        var name = s(identifier);
+        var name = s(pIdentifier);
         var type = new DTSDoc.ASTTypeName(name);
         s(many(seq(function (s) {
             s(DTSDoc.reserved("."));
-            s(identifier);
+            s(pIdentifier);
             if(s.success()) {
                 type = new DTSDoc.ASTModulePrefix(name, type);
             }
@@ -1278,8 +1310,17 @@ var DTSDoc;
             return new DTSDoc.ASTFunctionType(params, retType);
         }
     });
+    var pConstructorTypeRiteral = seq(function (s) {
+        s(keyword('new'));
+        var params = s(pParameters);
+        s(DTSDoc.reserved("=>"));
+        var retType = s(pType);
+        if(s.success()) {
+            return new DTSDoc.ASTConstructorTypeLiteral(params, retType);
+        }
+    });
     var pType = seq(function (s) {
-        var type = s(or(pSpecifyingType, pTypeName, pFunctionType));
+        var type = s(or(pSpecifyingType, pConstructorTypeRiteral, pTypeName, pFunctionType));
         s(many(seq(function (s) {
             s(DTSDoc.reserved("["));
             s(DTSDoc.reserved("]"));
@@ -1291,8 +1332,8 @@ var DTSDoc;
     });
     var pMethodOrField = seq(function (s) {
         var access = s(pAccessibility);
-        var isStatic = s(modStatic);
-        var name = s(identifier);
+        var isStatic = s(pStatic);
+        var name = s(pIdentifier);
         s(or(seq(function (s) {
             var params = s(pParameters);
             var retType = s(pTypeAnnotation);
@@ -1315,7 +1356,7 @@ var DTSDoc;
     });
     var pIIndexer = seq(function (s) {
         s(DTSDoc.reserved("["));
-        var name = s(identifier);
+        var name = s(pIdentifier);
         var type = s(pTypeAnnotation);
         s(DTSDoc.reserved("]"));
         var retType = s(pTypeAnnotation);
@@ -1336,7 +1377,7 @@ var DTSDoc;
         s(tsDeclare);
         s(optExport);
         s(DTSDoc.reserved("class"));
-        var name = s(identifier);
+        var name = s(pIdentifier);
         var superClasse = s(option(undefined, seq(function (s) {
             s(DTSDoc.reserved("extends"));
             s(pTypeName);
@@ -1357,7 +1398,7 @@ var DTSDoc;
         }
     });
     var pIField = seq(function (s) {
-        var name = s(identifier);
+        var name = s(pIdentifier);
         var opt = s(pOpt);
         var type = s(pTypeAnnotation);
         return new DTSDoc.ASTIField(name, opt, type);
@@ -1378,7 +1419,7 @@ var DTSDoc;
         }
     });
     var pIMethod = seq(function (s) {
-        var methodName = s(identifier);
+        var methodName = s(pIdentifier);
         var opt = s(pOpt);
         var params = s(pParameters);
         var retType = s(pTypeAnnotation);
@@ -1388,7 +1429,7 @@ var DTSDoc;
     });
     DTSDoc.pInterface = seq(function (s) {
         s(DTSDoc.reserved("interface"));
-        var name = s(identifier);
+        var name = s(pIdentifier);
         var ifs = s(option([], seq(function (s) {
             s(DTSDoc.reserved("extends"));
             s(sepBy1(pTypeName, DTSDoc.comma));
@@ -1399,10 +1440,10 @@ var DTSDoc;
         }
     });
     DTSDoc.pEnum = seq(function (s) {
-        s(DTSDoc.reserved("enum"));
-        var name = s(identifier);
+        s(keyword("enum"));
+        var name = s(pIdentifier);
         s(DTSDoc.reserved("{"));
-        var members = s(or(trying(sepBy(identifier, DTSDoc.comma)), endBy(identifier, DTSDoc.comma)));
+        var members = s(or(trying(sepBy(pIdentifier, DTSDoc.comma)), endBy(pIdentifier, DTSDoc.comma)));
         s(optional(DTSDoc.comma));
         s(DTSDoc.reserved("}"));
         if(s.success()) {
@@ -1410,8 +1451,8 @@ var DTSDoc;
         }
     });
     DTSDoc.pFunction = seq(function (s) {
-        s(DTSDoc.reserved("function"));
-        var name = s(identifier);
+        s(keyword("function"));
+        var name = s(pIdentifier);
         var params = s(pParameters);
         var retType = s(pTypeAnnotation);
         s(semi);
@@ -1420,17 +1461,26 @@ var DTSDoc;
         }
     });
     DTSDoc.pVar = seq(function (s) {
-        s(DTSDoc.reserved("var"));
-        var name = s(identifier);
+        s(keyword("var"));
+        var name = s(pIdentifier);
         var typeName = s(pTypeAnnotation);
         s(optional(semi));
         if(s.success()) {
             return new DTSDoc.ASTVar(name, typeName);
         }
     });
+    DTSDoc.pCallable = seq(function (s) {
+        s(keyword("function"));
+        var params = s(pParameters);
+        var retType = s(pTypeAnnotation);
+        s(semi);
+        if(s.success()) {
+            return new DTSDoc.ASTCallable(new DTSDoc.ASTFuncionSignature(params, retType));
+        }
+    });
     DTSDoc.pModule = seq(function (s) {
-        s(DTSDoc.reserved("module"));
-        var name = s(reference);
+        s(keyword("module"));
+        var name = s(or(pIdentifierPath, pStringRiteral));
         s(DTSDoc.reserved("{"));
         var members = s(pModuleMembers);
         s(DTSDoc.reserved("}"));
@@ -1446,15 +1496,19 @@ var DTSDoc;
         var docs = s(pDocumentComment);
         s(tsDeclare);
         s(optExport);
-        var member = s(or(DTSDoc.pVar, DTSDoc.pModule, DTSDoc.pClass, DTSDoc.pFunction, DTSDoc.pInterface, DTSDoc.pEnum));
+        var member = s(or(DTSDoc.pVar, DTSDoc.pModule, DTSDoc.pClass, trying(DTSDoc.pFunction), DTSDoc.pCallable, DTSDoc.pInterface, DTSDoc.pEnum));
         if(s.success()) {
             member.docs = docs;
             return member;
         }
     });
-    var pModuleMembers = many(or(DTSDoc.pModuleMember, DTSDoc.reserved(';')));
+    var pModuleMembers = map(function (ms) {
+        return ms.filter(function (m) {
+            return m instanceof DTSDoc.ASTModuleMember;
+        });
+    }, many(or(DTSDoc.pModuleMember, DTSDoc.reserved(';'), pImport)));
     DTSDoc.pProgram = seq(function (s) {
-        s(spaces);
+        s(lexme(spaces));
         var docs = s(pDocumentComment);
         var members = s(pModuleMembers);
         s(eof);
@@ -1521,32 +1575,32 @@ function generateDocuments() {
             docs.children().remove();
             docs.append(documentContent);
             var _Blob = Blob;
-            var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem || window.mozRequestFileSystem;
+            var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
             var downloadBlob = new _Blob([
                 headerHTML + documentContent.html() + footerHTML
             ], {
                 "type": "text/html"
             });
+            var tempFileName = "docs.html";
             requestFileSystem(window.TEMPORARY, downloadBlob.size, function (fileSystem) {
-                fileSystem.root.getFile("docs.html", {
-                    create: true
-                }, function (fileEntry) {
-                    fileEntry.createWriter(function (fileWriter) {
-                        fileWriter.onwriteend = function (e) {
-                            $('#downloadLink').attr('href', fileEntry.toURL());
-                        };
-                        fileWriter.onerror = function (e) {
-                            throw e;
-                        };
-                        fileWriter.seek(0);
-                        fileWriter.truncate(downloadBlob.size);
-                        fileWriter.write(downloadBlob);
+                function createTempFile() {
+                    fileSystem.root.getFile(tempFileName, {
+                        create: true
+                    }, function (fileEntry) {
+                        fileEntry.createWriter(function (fileWriter) {
+                            fileWriter.addEventListener('writeend', function (e) {
+                                $('#downloadLink').attr('href', fileEntry.toURL());
+                            });
+                            fileWriter.write(downloadBlob);
+                        });
+                    }, function (error) {
+                        throw error;
                     });
-                }, function (error) {
-                    throw error;
-                });
-            }, function (err) {
-                throw err;
+                }
+                fileSystem.root.getFile(tempFileName, {
+                }, function (fileEntry) {
+                    fileEntry.remove(createTempFile);
+                }, createTempFile);
             });
         } else {
             var pos = result.source.getPosition();
