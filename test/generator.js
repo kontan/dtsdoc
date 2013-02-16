@@ -161,13 +161,13 @@ var Parsect;
         return new Parser("regexp \"" + pattern + "\"", function (s) {
             var input = s.source.slice(s.position);
             var ms = pattern.exec(input);
-            if(ms && ms.length > 0) {
+            if(ms && ms.index == 0 && ms.length > 0) {
                 var m = ms[0];
                 return input.indexOf(ms[0]) == 0 ? s.success(m.length, m) : s.fail("expected /" + pattern + "/");
             } else {
-                return s.fail("expected /" + pattern + "/");
+                return s.fail("expected " + pattern);
             }
-        }, "/" + pattern + "/");
+        }, pattern.toString());
     }
     Parsect.regexp = regexp;
     function satisfy(cond) {
@@ -452,6 +452,9 @@ var DTSDoc;
         }
         ASTDocs.prototype.toHTML = function (mod) {
             var section = $('<section class="ts_classmember_description"/>');
+            if(this.text) {
+                section.append($('<p/>').html(this.text));
+            }
             var params = $('<div/>');
             this.sections.forEach(function (s) {
                 params.append(s.toHTML(mod));
@@ -542,18 +545,25 @@ var DTSDoc;
     DTSDoc.ASTType = ASTType;    
     var ASTTypeName = (function (_super) {
         __extends(ASTTypeName, _super);
-        function ASTTypeName(name) {
+        function ASTTypeName(names) {
                 _super.call(this);
-            this.name = name;
+            this.names = names;
+            this.name = names[names.length - 1];
         }
         ASTTypeName.prototype.toHTML = function (mod) {
-            if(this.name == "string" || this.name == "number" || this.name == "bool" || this.name == "Object") {
-                return $('<span/>').append(this.name);
-            } else if(this.name == "any" || this.name == "void") {
-                return $('<span class="ts_reserved"/>').append(this.name);
-            } else {
-                return $("<a/>").attr("href", "#" + mod.findFullName(this.name)).text(this.name);
+            var span = $("<span/>");
+            for(var i = 0; i < this.names.length - 1; i++) {
+                span.append(this.names[i]);
+                span.append(".");
             }
+            if(this.name == "any" || this.name == "void") {
+                span.append($('<span class="ts_reserved"/>').append(this.name));
+            } else if(typeNameLinks[this.name]) {
+                span.append($("<a/>").attr("href", typeNameLinks[this.name]).text(this.name));
+            } else {
+                span.append($("<a/>").attr("href", "#" + mod.findFullName(this.name)).text(this.name));
+            }
+            return span;
         };
         return ASTTypeName;
     })(ASTType);
@@ -570,19 +580,6 @@ var DTSDoc;
         return ASTArrayType;
     })(ASTType);
     DTSDoc.ASTArrayType = ASTArrayType;    
-    var ASTModulePrefix = (function (_super) {
-        __extends(ASTModulePrefix, _super);
-        function ASTModulePrefix(name, type) {
-                _super.call(this);
-            this.name = name;
-            this.type = type;
-        }
-        ASTModulePrefix.prototype.toHTML = function (mod) {
-            return $("<span/>").append(this.name).append(".").append(this.type.toHTML(mod));
-        };
-        return ASTModulePrefix;
-    })(ASTType);
-    DTSDoc.ASTModulePrefix = ASTModulePrefix;    
     var ASTSpecifingType = (function (_super) {
         __extends(ASTSpecifingType, _super);
         function ASTSpecifingType(members) {
@@ -921,7 +918,10 @@ var DTSDoc;
             this.type = type;
         }
         ASTIField.prototype.toHTML = function (mod) {
-            return $('<span class="ts_code" />').append(this.name + (this.isOptional ? "?" : "")).append(this.type.toHTML(mod));
+            var span = $('<span class="ts_code" />');
+            span.append(this.name + (this.isOptional ? "?" : ""));
+            span.append(this.type.toHTML(mod));
+            return span;
         };
         return ASTIField;
     })(ASTInterfaceMember);
@@ -962,6 +962,9 @@ var DTSDoc;
                 content.append('<h3>Members</h3>');
                 this.type.members.forEach(function (m) {
                     content.append($('<div class="ts_classcontent ts_classmember ts_class_member_title"/>').append(m.toHTML(_this.parent)));
+                    if(m.docs) {
+                        content.append(m.docs.toHTML(_this.parent));
+                    }
                 });
             }
             if(content.children().length > 0) {
@@ -985,6 +988,10 @@ var DTSDoc;
             var span = $('<span class="ts_code ts_method"/>').appendTo(content);
             span.append("function " + this.name);
             span.append(this.sign.toHTML(this.parent));
+            if(this.docs) {
+                p.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
+                p.append(this.docs.toHTML(undefined));
+            }
             return p;
         };
         return ASTFunction;
@@ -1047,6 +1054,10 @@ var DTSDoc;
             section.append(this.createTitle('var'));
             var content = $('<section class="ts_modulemember_content"/>').appendTo(section);
             content.append($('<span class="ts_code"/>').append($('<span class="ts_reserved ts_reserved_var">var</span>')).append(this.name).append(this.type.toHTML(this.parent)));
+            if(this.docs) {
+                section.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
+                section.append(this.docs.toHTML(undefined));
+            }
             return section;
         };
         return ASTVar;
@@ -1203,10 +1214,22 @@ var DTSDoc;
     var keyword = function (s) {
         return lexme(regexp(new RegExp(s + '(?!(\\w|_))')));
     };
-    var colon = lexme(string(":"));
-    var semi = lexme(string(";"));
-    var comma = lexme(string(","));
-    var optExport = lexme(optional(string("export")));
+    var colon = DTSDoc.reserved(":");
+    var semi = DTSDoc.reserved(";");
+    var comma = DTSDoc.reserved(",");
+    var pExport = optional(DTSDoc.reserved("export"));
+    var pDeclare = optional(DTSDoc.reserved("declare"));
+    var pStatic = option(false, map(function () {
+        return true;
+    }, keyword("static")));
+    var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
+    var pIdentifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+    var pStringRiteral = lexme(regexp(/(\"[^\"]+\"|\'[^\']+\')/));
+    var pAccessibility = option(DTSDoc.Accessibility.Public, or(map(function () {
+        return DTSDoc.Accessibility.Public;
+    }, DTSDoc.reserved("public")), map(function () {
+        return DTSDoc.Accessibility.Private;
+    }, DTSDoc.reserved("private"))));
     var pDocumentComment = option(undefined, lexme(seq(function (s) {
         var pattern = /\/\*\*((\*(?!\/)|[^*])*)\*\//;
         var text = s(regexp(pattern));
@@ -1229,10 +1252,6 @@ var DTSDoc;
             return new DTSDoc.ASTDocs(description, tags);
         }
     })));
-    var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
-    var pIdentifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
-    var pStringRiteral = lexme(regexp(/(\"[^\"]+\"|\'[^\']+\')/));
-    var tsDeclare = optional(DTSDoc.reserved("declare"));
     DTSDoc.pParameter = seq(function (s) {
         var docs = s(pDocumentComment);
         var isVarArg = s(optional(DTSDoc.reserved("...")));
@@ -1240,7 +1259,9 @@ var DTSDoc;
         var opt = s(option(false, map(function () {
             return true;
         }, DTSDoc.reserved("?"))));
-        var typeName = s(option(new DTSDoc.ASTTypeName("any"), pTypeAnnotation));
+        var typeName = s(option(new DTSDoc.ASTTypeName([
+            "any"
+        ]), pTypeAnnotation));
         if(s.success()) {
             return new DTSDoc.ASTParameter(varName, opt, typeName);
         }
@@ -1248,15 +1269,9 @@ var DTSDoc;
     var pParameters = between(DTSDoc.reserved("("), map(function (ps) {
         return new DTSDoc.ASTParameters(ps);
     }, sepBy(DTSDoc.pParameter, comma)), DTSDoc.reserved(")"));
-    var pAccessibility = option(DTSDoc.Accessibility.Public, or(map(function () {
-        return DTSDoc.Accessibility.Public;
-    }, DTSDoc.reserved("public")), map(function () {
-        return DTSDoc.Accessibility.Private;
-    }, DTSDoc.reserved("private"))));
-    var pStatic = option(false, map(function () {
-        return true;
-    }, keyword("static")));
-    var pTypeAnnotation = option(new DTSDoc.ASTTypeAnnotation(new DTSDoc.ASTTypeName("any")), seq(function (s) {
+    var pTypeAnnotation = option(new DTSDoc.ASTTypeAnnotation(new DTSDoc.ASTTypeName([
+        "any"
+    ])), seq(function (s) {
         s(colon);
         var type = s(pType);
         if(s.success()) {
@@ -1273,41 +1288,23 @@ var DTSDoc;
         var mod = s(or(trying(series(keyword('module'), between(DTSDoc.reserved('('), pStringRiteral, DTSDoc.reserved(')')))), pIdentifierPath));
         s(DTSDoc.reserved(';'));
     });
-    var pSpecifyingTypeMember = seq(function (s) {
-        var docs = s(pDocumentComment);
-        var member = s(or(pIConstructor, trying(pIMethod), pIField, pIIndexer, pIFunction));
-        s(semi);
-        if(s.success()) {
-            member.docs = docs;
-            return member;
-        }
-    });
-    var pSpecifyingType = seq(function (s) {
-        s(DTSDoc.reserved("{"));
-        var members = s(many(pSpecifyingTypeMember));
-        s(DTSDoc.reserved("}"));
-        if(s.success()) {
-            return new DTSDoc.ASTSpecifingType(members);
-        }
-    });
     var pTypeName = lexme(seq(function (s) {
         var name = s(pIdentifier);
-        var type = new DTSDoc.ASTTypeName(name);
-        s(many(seq(function (s) {
-            s(DTSDoc.reserved("."));
-            s(pIdentifier);
-            if(s.success()) {
-                type = new DTSDoc.ASTModulePrefix(name, type);
-            }
-        })));
-        return type;
+        var names = s(many(series(DTSDoc.reserved('.'), pIdentifier)));
+        if(s.success()) {
+            names.unshift(name);
+            return new DTSDoc.ASTTypeName(names);
+        }
     }));
     var pFunctionType = seq(function (s) {
+        var docs = s(pDocumentComment);
         var params = s(pParameters);
         s(DTSDoc.reserved("=>"));
         var retType = s(pType);
         if(s.success()) {
-            return new DTSDoc.ASTFunctionType(params, retType);
+            var t = new DTSDoc.ASTFunctionType(params, retType);
+            t.docs = docs;
+            return t;
         }
     });
     var pConstructorTypeRiteral = seq(function (s) {
@@ -1329,6 +1326,23 @@ var DTSDoc;
             }
         })));
         return type;
+    });
+    var pSpecifyingTypeMember = seq(function (s) {
+        var docs = s(pDocumentComment);
+        var member = s(or(pIConstructor, trying(pIMethod), pIField, pIIndexer, pIFunction));
+        s(semi);
+        if(s.success()) {
+            member.docs = docs;
+            return member;
+        }
+    });
+    var pSpecifyingType = seq(function (s) {
+        s(DTSDoc.reserved("{"));
+        var members = s(many(pSpecifyingTypeMember));
+        s(DTSDoc.reserved("}"));
+        if(s.success()) {
+            return new DTSDoc.ASTSpecifingType(members);
+        }
     });
     var pMethodOrField = seq(function (s) {
         var access = s(pAccessibility);
@@ -1374,8 +1388,8 @@ var DTSDoc;
         }
     });
     DTSDoc.pClass = seq(function (s) {
-        s(tsDeclare);
-        s(optExport);
+        s(pDeclare);
+        s(pExport);
         s(DTSDoc.reserved("class"));
         var name = s(pIdentifier);
         var superClasse = s(option(undefined, seq(function (s) {
@@ -1499,8 +1513,8 @@ var DTSDoc;
     });
     DTSDoc.pModuleMember = seq(function (s) {
         var docs = s(pDocumentComment);
-        s(tsDeclare);
-        s(optExport);
+        s(pDeclare);
+        s(pExport);
         var member = s(or(DTSDoc.pVar, DTSDoc.pModule, DTSDoc.pClass, trying(DTSDoc.pFunction), DTSDoc.pCallable, DTSDoc.pInterface, DTSDoc.pEnum));
         if(s.success()) {
             member.docs = docs;
@@ -1529,6 +1543,610 @@ var DTSDoc;
         }
     });
 })(DTSDoc || (DTSDoc = {}));
+var typeNameLinks = {
+    "string": "lib.d.ts.html#String",
+    "bool": "lib.d.ts.html#Boolean",
+    "number": "lib.d.ts.html#Number",
+    "PropertyDescriptor": "lib.d.ts.html#PropertyDescriptor",
+    "PropertyDescriptorMap": "lib.d.ts.html#PropertyDescriptorMap",
+    "Object": "lib.d.ts.html#Object",
+    "Function": "lib.d.ts.html#Function",
+    "IArguments": "lib.d.ts.html#IArguments",
+    "String": "lib.d.ts.html#String",
+    "Boolean": "lib.d.ts.html#Boolean",
+    "Number": "lib.d.ts.html#Number",
+    "Math": "lib.d.ts.html#Math",
+    "Date": "lib.d.ts.html#Date",
+    "RegExpExecArray": "lib.d.ts.html#RegExpExecArray",
+    "RegExp": "lib.d.ts.html#RegExp",
+    "Error": "lib.d.ts.html#Error",
+    "EvalError": "lib.d.ts.html#EvalError",
+    "RangeError": "lib.d.ts.html#RangeError",
+    "ReferenceError": "lib.d.ts.html#ReferenceError",
+    "SyntaxError": "lib.d.ts.html#SyntaxError",
+    "TypeError": "lib.d.ts.html#TypeError",
+    "URIError": "lib.d.ts.html#URIError",
+    "JSON": "lib.d.ts.html#JSON",
+    "Array": "lib.d.ts.html#Array",
+    "ArrayBuffer": "lib.d.ts.html#ArrayBuffer",
+    "ArrayBufferView": "lib.d.ts.html#ArrayBufferView",
+    "Int8Array": "lib.d.ts.html#Int8Array",
+    "Uint8Array": "lib.d.ts.html#Uint8Array",
+    "Int16Array": "lib.d.ts.html#Int16Array",
+    "Uint16Array": "lib.d.ts.html#Uint16Array",
+    "Int32Array": "lib.d.ts.html#Int32Array",
+    "Uint32Array": "lib.d.ts.html#Uint32Array",
+    "Float32Array": "lib.d.ts.html#Float32Array",
+    "Float64Array": "lib.d.ts.html#Float64Array",
+    "DataView": "lib.d.ts.html#DataView",
+    "NavigatorID": "lib.d.ts.html#NavigatorID",
+    "HTMLTableElement": "lib.d.ts.html#HTMLTableElement",
+    "TreeWalker": "lib.d.ts.html#TreeWalker",
+    "GetSVGDocument": "lib.d.ts.html#GetSVGDocument",
+    "HTMLHtmlElementDOML2Deprecated": "lib.d.ts.html#HTMLHtmlElementDOML2Deprecated",
+    "SVGPathSegCurvetoQuadraticRel": "lib.d.ts.html#SVGPathSegCurvetoQuadraticRel",
+    "Performance": "lib.d.ts.html#Performance",
+    "SVGSVGElementEventHandlers": "lib.d.ts.html#SVGSVGElementEventHandlers",
+    "MSDataBindingTableExtensions": "lib.d.ts.html#MSDataBindingTableExtensions",
+    "DOML2DeprecatedAlignmentStyle_HTMLParagraphElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLParagraphElement",
+    "CompositionEvent": "lib.d.ts.html#CompositionEvent",
+    "SVGMarkerElement": "lib.d.ts.html#SVGMarkerElement",
+    "WindowTimers": "lib.d.ts.html#WindowTimers",
+    "CSSStyleDeclaration": "lib.d.ts.html#CSSStyleDeclaration",
+    "SVGGElement": "lib.d.ts.html#SVGGElement",
+    "MSStyleCSSProperties": "lib.d.ts.html#MSStyleCSSProperties",
+    "MSCSSStyleSheetExtensions": "lib.d.ts.html#MSCSSStyleSheetExtensions",
+    "Navigator": "lib.d.ts.html#Navigator",
+    "SVGPathSegCurvetoCubicSmoothAbs": "lib.d.ts.html#SVGPathSegCurvetoCubicSmoothAbs",
+    "MSBorderColorStyle_HTMLFrameSetElement": "lib.d.ts.html#MSBorderColorStyle_HTMLFrameSetElement",
+    "SVGZoomEvent": "lib.d.ts.html#SVGZoomEvent",
+    "NodeSelector": "lib.d.ts.html#NodeSelector",
+    "HTMLTableDataCellElement": "lib.d.ts.html#HTMLTableDataCellElement",
+    "MSHTMLDirectoryElementExtensions": "lib.d.ts.html#MSHTMLDirectoryElementExtensions",
+    "HTMLBaseElement": "lib.d.ts.html#HTMLBaseElement",
+    "ClientRect": "lib.d.ts.html#ClientRect",
+    "PositionErrorCallback": "lib.d.ts.html#PositionErrorCallback",
+    "DOMImplementation": "lib.d.ts.html#DOMImplementation",
+    "DOML2DeprecatedWidthStyle_HTMLBlockElement": "lib.d.ts.html#DOML2DeprecatedWidthStyle_HTMLBlockElement",
+    "SVGUnitTypes": "lib.d.ts.html#SVGUnitTypes",
+    "DocumentRange": "lib.d.ts.html#DocumentRange",
+    "MSHTMLDocumentExtensions": "lib.d.ts.html#MSHTMLDocumentExtensions",
+    "CSS2Properties": "lib.d.ts.html#CSS2Properties",
+    "MSImageResourceExtensions_HTMLInputElement": "lib.d.ts.html#MSImageResourceExtensions_HTMLInputElement",
+    "MSHTMLEmbedElementExtensions": "lib.d.ts.html#MSHTMLEmbedElementExtensions",
+    "MSHTMLModElementExtensions": "lib.d.ts.html#MSHTMLModElementExtensions",
+    "Element": "lib.d.ts.html#Element",
+    "SVGDocument": "lib.d.ts.html#SVGDocument",
+    "HTMLNextIdElement": "lib.d.ts.html#HTMLNextIdElement",
+    "SVGPathSegMovetoRel": "lib.d.ts.html#SVGPathSegMovetoRel",
+    "SVGLineElement": "lib.d.ts.html#SVGLineElement",
+    "HTMLParagraphElement": "lib.d.ts.html#HTMLParagraphElement",
+    "MSHTMLTextAreaElementExtensions": "lib.d.ts.html#MSHTMLTextAreaElementExtensions",
+    "ErrorFunction": "lib.d.ts.html#ErrorFunction",
+    "HTMLAreasCollection": "lib.d.ts.html#HTMLAreasCollection",
+    "SVGDescElement": "lib.d.ts.html#SVGDescElement",
+    "Node": "lib.d.ts.html#Node",
+    "MSHTMLLegendElementExtensions": "lib.d.ts.html#MSHTMLLegendElementExtensions",
+    "MSCSSStyleDeclarationExtensions": "lib.d.ts.html#MSCSSStyleDeclarationExtensions",
+    "SVGPathSegCurvetoQuadraticSmoothRel": "lib.d.ts.html#SVGPathSegCurvetoQuadraticSmoothRel",
+    "DOML2DeprecatedAlignmentStyle_HTMLTableRowElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLTableRowElement",
+    "DOML2DeprecatedBorderStyle_HTMLObjectElement": "lib.d.ts.html#DOML2DeprecatedBorderStyle_HTMLObjectElement",
+    "MSHTMLSpanElementExtensions": "lib.d.ts.html#MSHTMLSpanElementExtensions",
+    "MSHTMLObjectElementExtensions": "lib.d.ts.html#MSHTMLObjectElementExtensions",
+    "DOML2DeprecatedListSpaceReduction": "lib.d.ts.html#DOML2DeprecatedListSpaceReduction",
+    "CSS3Properties": "lib.d.ts.html#CSS3Properties",
+    "MSScriptHost": "lib.d.ts.html#MSScriptHost",
+    "SVGClipPathElement": "lib.d.ts.html#SVGClipPathElement",
+    "MouseEvent": "lib.d.ts.html#MouseEvent",
+    "DOML2DeprecatedAlignmentStyle_HTMLTableElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLTableElement",
+    "RangeException": "lib.d.ts.html#RangeException",
+    "DOML2DeprecatedAlignmentStyle_HTMLHRElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLHRElement",
+    "SVGTextPositioningElement": "lib.d.ts.html#SVGTextPositioningElement",
+    "HTMLAppletElement": "lib.d.ts.html#HTMLAppletElement",
+    "MSHTMLFieldSetElementExtensions": "lib.d.ts.html#MSHTMLFieldSetElementExtensions",
+    "DocumentEvent": "lib.d.ts.html#DocumentEvent",
+    "MSHTMLUnknownElementExtensions": "lib.d.ts.html#MSHTMLUnknownElementExtensions",
+    "TextMetrics": "lib.d.ts.html#TextMetrics",
+    "DOML2DeprecatedWordWrapSuppression_HTMLBodyElement": "lib.d.ts.html#DOML2DeprecatedWordWrapSuppression_HTMLBodyElement",
+    "HTMLOListElement": "lib.d.ts.html#HTMLOListElement",
+    "MSHTMLTableCaptionElementExtensions": "lib.d.ts.html#MSHTMLTableCaptionElementExtensions",
+    "SVGAnimatedString": "lib.d.ts.html#SVGAnimatedString",
+    "SVGPathSegLinetoVerticalRel": "lib.d.ts.html#SVGPathSegLinetoVerticalRel",
+    "CDATASection": "lib.d.ts.html#CDATASection",
+    "StyleMedia": "lib.d.ts.html#StyleMedia",
+    "TextRange": "lib.d.ts.html#TextRange",
+    "HTMLSelectElement": "lib.d.ts.html#HTMLSelectElement",
+    "CSSStyleSheet": "lib.d.ts.html#CSSStyleSheet",
+    "HTMLBlockElement": "lib.d.ts.html#HTMLBlockElement",
+    "SVGTests": "lib.d.ts.html#SVGTests",
+    "MSSelection": "lib.d.ts.html#MSSelection",
+    "MSHTMLDListElementExtensions": "lib.d.ts.html#MSHTMLDListElementExtensions",
+    "HTMLMetaElement": "lib.d.ts.html#HTMLMetaElement",
+    "Selection": "lib.d.ts.html#Selection",
+    "SVGAnimatedAngle": "lib.d.ts.html#SVGAnimatedAngle",
+    "SVGPatternElement": "lib.d.ts.html#SVGPatternElement",
+    "SVGScriptElement": "lib.d.ts.html#SVGScriptElement",
+    "HTMLDDElement": "lib.d.ts.html#HTMLDDElement",
+    "NodeIterator": "lib.d.ts.html#NodeIterator",
+    "CSSStyleRule": "lib.d.ts.html#CSSStyleRule",
+    "MSDataBindingRecordSetReadonlyExtensions": "lib.d.ts.html#MSDataBindingRecordSetReadonlyExtensions",
+    "HTMLLinkElement": "lib.d.ts.html#HTMLLinkElement",
+    "SVGViewElement": "lib.d.ts.html#SVGViewElement",
+    "MSHTMLAppletElementExtensions": "lib.d.ts.html#MSHTMLAppletElementExtensions",
+    "SVGLocatable": "lib.d.ts.html#SVGLocatable",
+    "HTMLFontElement": "lib.d.ts.html#HTMLFontElement",
+    "MSHTMLTableElementExtensions": "lib.d.ts.html#MSHTMLTableElementExtensions",
+    "SVGTitleElement": "lib.d.ts.html#SVGTitleElement",
+    "ControlRangeCollection": "lib.d.ts.html#ControlRangeCollection",
+    "DOML2DeprecatedAlignmentStyle_HTMLImageElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLImageElement",
+    "MSHTMLFrameElementExtensions": "lib.d.ts.html#MSHTMLFrameElementExtensions",
+    "MSNamespaceInfo": "lib.d.ts.html#MSNamespaceInfo",
+    "WindowSessionStorage": "lib.d.ts.html#WindowSessionStorage",
+    "SVGAnimatedTransformList": "lib.d.ts.html#SVGAnimatedTransformList",
+    "HTMLTableCaptionElement": "lib.d.ts.html#HTMLTableCaptionElement",
+    "HTMLOptionElement": "lib.d.ts.html#HTMLOptionElement",
+    "HTMLMapElement": "lib.d.ts.html#HTMLMapElement",
+    "HTMLMenuElement": "lib.d.ts.html#HTMLMenuElement",
+    "MouseWheelEvent": "lib.d.ts.html#MouseWheelEvent",
+    "SVGFitToViewBox": "lib.d.ts.html#SVGFitToViewBox",
+    "MSHTMLAnchorElementExtensions": "lib.d.ts.html#MSHTMLAnchorElementExtensions",
+    "SVGPointList": "lib.d.ts.html#SVGPointList",
+    "MSElementCSSInlineStyleExtensions": "lib.d.ts.html#MSElementCSSInlineStyleExtensions",
+    "SVGAnimatedLengthList": "lib.d.ts.html#SVGAnimatedLengthList",
+    "MSHTMLTableDataCellElementExtensions": "lib.d.ts.html#MSHTMLTableDataCellElementExtensions",
+    "Window": "lib.d.ts.html#Window",
+    "SVGAnimatedPreserveAspectRatio": "lib.d.ts.html#SVGAnimatedPreserveAspectRatio",
+    "MSSiteModeEvent": "lib.d.ts.html#MSSiteModeEvent",
+    "MSCSSStyleRuleExtensions": "lib.d.ts.html#MSCSSStyleRuleExtensions",
+    "StyleSheetPageList": "lib.d.ts.html#StyleSheetPageList",
+    "HTMLCollection": "lib.d.ts.html#HTMLCollection",
+    "MSCSSProperties": "lib.d.ts.html#MSCSSProperties",
+    "HTMLImageElement": "lib.d.ts.html#HTMLImageElement",
+    "HTMLAreaElement": "lib.d.ts.html#HTMLAreaElement",
+    "EventTarget": "lib.d.ts.html#EventTarget",
+    "SVGAngle": "lib.d.ts.html#SVGAngle",
+    "HTMLButtonElement": "lib.d.ts.html#HTMLButtonElement",
+    "MSHTMLLabelElementExtensions": "lib.d.ts.html#MSHTMLLabelElementExtensions",
+    "HTMLSourceElement": "lib.d.ts.html#HTMLSourceElement",
+    "CanvasGradient": "lib.d.ts.html#CanvasGradient",
+    "KeyboardEvent": "lib.d.ts.html#KeyboardEvent",
+    "Document": "lib.d.ts.html#Document",
+    "MessageEvent": "lib.d.ts.html#MessageEvent",
+    "SVGElement": "lib.d.ts.html#SVGElement",
+    "HTMLScriptElement": "lib.d.ts.html#HTMLScriptElement",
+    "MSHTMLBodyElementExtensions": "lib.d.ts.html#MSHTMLBodyElementExtensions",
+    "HTMLTableRowElement": "lib.d.ts.html#HTMLTableRowElement",
+    "MSCommentExtensions": "lib.d.ts.html#MSCommentExtensions",
+    "DOML2DeprecatedMarginStyle_HTMLMarqueeElement": "lib.d.ts.html#DOML2DeprecatedMarginStyle_HTMLMarqueeElement",
+    "MSCSSRuleList": "lib.d.ts.html#MSCSSRuleList",
+    "CanvasRenderingContext2D": "lib.d.ts.html#CanvasRenderingContext2D",
+    "SVGPathSegLinetoHorizontalAbs": "lib.d.ts.html#SVGPathSegLinetoHorizontalAbs",
+    "DOML2DeprecatedAlignmentStyle_HTMLObjectElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLObjectElement",
+    "DOML2DeprecatedBorderStyle_MSHTMLIFrameElementExtensions": "lib.d.ts.html#DOML2DeprecatedBorderStyle_MSHTMLIFrameElementExtensions",
+    "MSHTMLElementRangeExtensions": "lib.d.ts.html#MSHTMLElementRangeExtensions",
+    "SVGPathSegArcAbs": "lib.d.ts.html#SVGPathSegArcAbs",
+    "MSScreenExtensions": "lib.d.ts.html#MSScreenExtensions",
+    "HTMLHtmlElement": "lib.d.ts.html#HTMLHtmlElement",
+    "MSBorderColorStyle": "lib.d.ts.html#MSBorderColorStyle",
+    "SVGTransformList": "lib.d.ts.html#SVGTransformList",
+    "SVGPathSegClosePath": "lib.d.ts.html#SVGPathSegClosePath",
+    "DOML2DeprecatedMarginStyle_MSHTMLIFrameElementExtensions": "lib.d.ts.html#DOML2DeprecatedMarginStyle_MSHTMLIFrameElementExtensions",
+    "HTMLFrameElement": "lib.d.ts.html#HTMLFrameElement",
+    "SVGAnimatedLength": "lib.d.ts.html#SVGAnimatedLength",
+    "CSSMediaRule": "lib.d.ts.html#CSSMediaRule",
+    "HTMLQuoteElement": "lib.d.ts.html#HTMLQuoteElement",
+    "SVGDefsElement": "lib.d.ts.html#SVGDefsElement",
+    "SVGAnimatedPoints": "lib.d.ts.html#SVGAnimatedPoints",
+    "WindowModal": "lib.d.ts.html#WindowModal",
+    "MSHTMLButtonElementExtensions": "lib.d.ts.html#MSHTMLButtonElementExtensions",
+    "XMLHttpRequest": "lib.d.ts.html#XMLHttpRequest",
+    "HTMLTableHeaderCellElement": "lib.d.ts.html#HTMLTableHeaderCellElement",
+    "HTMLDListElement": "lib.d.ts.html#HTMLDListElement",
+    "MSDataBindingExtensions": "lib.d.ts.html#MSDataBindingExtensions",
+    "SVGEllipseElement": "lib.d.ts.html#SVGEllipseElement",
+    "SVGPathSegLinetoHorizontalRel": "lib.d.ts.html#SVGPathSegLinetoHorizontalRel",
+    "SVGAElement": "lib.d.ts.html#SVGAElement",
+    "MSHTMLMetaElementExtensions": "lib.d.ts.html#MSHTMLMetaElementExtensions",
+    "SVGStylable": "lib.d.ts.html#SVGStylable",
+    "MSHTMLTableCellElementExtensions": "lib.d.ts.html#MSHTMLTableCellElementExtensions",
+    "HTMLFrameSetElement": "lib.d.ts.html#HTMLFrameSetElement",
+    "SVGTransformable": "lib.d.ts.html#SVGTransformable",
+    "Screen": "lib.d.ts.html#Screen",
+    "NavigatorGeolocation": "lib.d.ts.html#NavigatorGeolocation",
+    "Coordinates": "lib.d.ts.html#Coordinates",
+    "DOML2DeprecatedAlignmentStyle_HTMLTableColElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLTableColElement",
+    "EventListener": "lib.d.ts.html#EventListener",
+    "SVGLangSpace": "lib.d.ts.html#SVGLangSpace",
+    "DataTransfer": "lib.d.ts.html#DataTransfer",
+    "FocusEvent": "lib.d.ts.html#FocusEvent",
+    "Range": "lib.d.ts.html#Range",
+    "MSHTMLPreElementExtensions": "lib.d.ts.html#MSHTMLPreElementExtensions",
+    "SVGPoint": "lib.d.ts.html#SVGPoint",
+    "MSPluginsCollection": "lib.d.ts.html#MSPluginsCollection",
+    "MSHTMLFontElementExtensions": "lib.d.ts.html#MSHTMLFontElementExtensions",
+    "SVGAnimatedNumberList": "lib.d.ts.html#SVGAnimatedNumberList",
+    "SVGSVGElement": "lib.d.ts.html#SVGSVGElement",
+    "HTMLLabelElement": "lib.d.ts.html#HTMLLabelElement",
+    "MSResourceMetadata": "lib.d.ts.html#MSResourceMetadata",
+    "MSHTMLQuoteElementExtensions": "lib.d.ts.html#MSHTMLQuoteElementExtensions",
+    "DOML2DeprecatedAlignmentStyle_HTMLIFrameElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLIFrameElement",
+    "HTMLLegendElement": "lib.d.ts.html#HTMLLegendElement",
+    "HTMLDirectoryElement": "lib.d.ts.html#HTMLDirectoryElement",
+    "NavigatorAbilities": "lib.d.ts.html#NavigatorAbilities",
+    "MSHTMLImageElementExtensions": "lib.d.ts.html#MSHTMLImageElementExtensions",
+    "SVGAnimatedInteger": "lib.d.ts.html#SVGAnimatedInteger",
+    "SVGTextElement": "lib.d.ts.html#SVGTextElement",
+    "SVGTSpanElement": "lib.d.ts.html#SVGTSpanElement",
+    "HTMLLIElement": "lib.d.ts.html#HTMLLIElement",
+    "SVGPathSegLinetoVerticalAbs": "lib.d.ts.html#SVGPathSegLinetoVerticalAbs",
+    "ViewCSS": "lib.d.ts.html#ViewCSS",
+    "MSAttrExtensions": "lib.d.ts.html#MSAttrExtensions",
+    "MSStorageExtensions": "lib.d.ts.html#MSStorageExtensions",
+    "SVGStyleElement": "lib.d.ts.html#SVGStyleElement",
+    "MSCurrentStyleCSSProperties": "lib.d.ts.html#MSCurrentStyleCSSProperties",
+    "MSLinkStyleExtensions": "lib.d.ts.html#MSLinkStyleExtensions",
+    "MSHTMLCollectionExtensions": "lib.d.ts.html#MSHTMLCollectionExtensions",
+    "DOML2DeprecatedWordWrapSuppression_HTMLDivElement": "lib.d.ts.html#DOML2DeprecatedWordWrapSuppression_HTMLDivElement",
+    "DocumentTraversal": "lib.d.ts.html#DocumentTraversal",
+    "Storage": "lib.d.ts.html#Storage",
+    "HTMLTableHeaderCellScope": "lib.d.ts.html#HTMLTableHeaderCellScope",
+    "HTMLIFrameElement": "lib.d.ts.html#HTMLIFrameElement",
+    "MSNavigatorAbilities": "lib.d.ts.html#MSNavigatorAbilities",
+    "TextRangeCollection": "lib.d.ts.html#TextRangeCollection",
+    "HTMLBodyElement": "lib.d.ts.html#HTMLBodyElement",
+    "DocumentType": "lib.d.ts.html#DocumentType",
+    "MSHTMLInputElementExtensions": "lib.d.ts.html#MSHTMLInputElementExtensions",
+    "DOML2DeprecatedAlignmentStyle_HTMLLegendElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLLegendElement",
+    "SVGRadialGradientElement": "lib.d.ts.html#SVGRadialGradientElement",
+    "MutationEvent": "lib.d.ts.html#MutationEvent",
+    "DragEvent": "lib.d.ts.html#DragEvent",
+    "DOML2DeprecatedWidthStyle_HTMLTableCellElement": "lib.d.ts.html#DOML2DeprecatedWidthStyle_HTMLTableCellElement",
+    "HTMLTableSectionElement": "lib.d.ts.html#HTMLTableSectionElement",
+    "DOML2DeprecatedListNumberingAndBulletStyle": "lib.d.ts.html#DOML2DeprecatedListNumberingAndBulletStyle",
+    "HTMLInputElement": "lib.d.ts.html#HTMLInputElement",
+    "HTMLAnchorElement": "lib.d.ts.html#HTMLAnchorElement",
+    "SVGImageElement": "lib.d.ts.html#SVGImageElement",
+    "MSElementExtensions": "lib.d.ts.html#MSElementExtensions",
+    "HTMLParamElement": "lib.d.ts.html#HTMLParamElement",
+    "MSHTMLDocumentViewExtensions": "lib.d.ts.html#MSHTMLDocumentViewExtensions",
+    "SVGAnimatedNumber": "lib.d.ts.html#SVGAnimatedNumber",
+    "PerformanceTiming": "lib.d.ts.html#PerformanceTiming",
+    "DOML2DeprecatedAlignmentStyle_HTMLInputElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLInputElement",
+    "HTMLPreElement": "lib.d.ts.html#HTMLPreElement",
+    "EventException": "lib.d.ts.html#EventException",
+    "MSBorderColorHighlightStyle_HTMLTableCellElement": "lib.d.ts.html#MSBorderColorHighlightStyle_HTMLTableCellElement",
+    "DOMHTMLImplementation": "lib.d.ts.html#DOMHTMLImplementation",
+    "NavigatorOnLine": "lib.d.ts.html#NavigatorOnLine",
+    "SVGElementEventHandlers": "lib.d.ts.html#SVGElementEventHandlers",
+    "WindowLocalStorage": "lib.d.ts.html#WindowLocalStorage",
+    "SVGMetadataElement": "lib.d.ts.html#SVGMetadataElement",
+    "SVGPathSegArcRel": "lib.d.ts.html#SVGPathSegArcRel",
+    "SVGPathSegMovetoAbs": "lib.d.ts.html#SVGPathSegMovetoAbs",
+    "SVGStringList": "lib.d.ts.html#SVGStringList",
+    "XDomainRequest": "lib.d.ts.html#XDomainRequest",
+    "DOML2DeprecatedBackgroundColorStyle": "lib.d.ts.html#DOML2DeprecatedBackgroundColorStyle",
+    "ElementTraversal": "lib.d.ts.html#ElementTraversal",
+    "SVGLength": "lib.d.ts.html#SVGLength",
+    "SVGPolygonElement": "lib.d.ts.html#SVGPolygonElement",
+    "HTMLPhraseElement": "lib.d.ts.html#HTMLPhraseElement",
+    "MSHTMLAreaElementExtensions": "lib.d.ts.html#MSHTMLAreaElementExtensions",
+    "SVGPathSegCurvetoCubicRel": "lib.d.ts.html#SVGPathSegCurvetoCubicRel",
+    "MSEventObj": "lib.d.ts.html#MSEventObj",
+    "SVGTextContentElement": "lib.d.ts.html#SVGTextContentElement",
+    "DOML2DeprecatedColorProperty": "lib.d.ts.html#DOML2DeprecatedColorProperty",
+    "MSHTMLLIElementExtensions": "lib.d.ts.html#MSHTMLLIElementExtensions",
+    "HTMLCanvasElement": "lib.d.ts.html#HTMLCanvasElement",
+    "HTMLTitleElement": "lib.d.ts.html#HTMLTitleElement",
+    "Location": "lib.d.ts.html#Location",
+    "HTMLStyleElement": "lib.d.ts.html#HTMLStyleElement",
+    "MSHTMLOptGroupElementExtensions": "lib.d.ts.html#MSHTMLOptGroupElementExtensions",
+    "MSBorderColorHighlightStyle": "lib.d.ts.html#MSBorderColorHighlightStyle",
+    "DOML2DeprecatedSizeProperty_HTMLBaseFontElement": "lib.d.ts.html#DOML2DeprecatedSizeProperty_HTMLBaseFontElement",
+    "SVGTransform": "lib.d.ts.html#SVGTransform",
+    "MSCSSFilter": "lib.d.ts.html#MSCSSFilter",
+    "UIEvent": "lib.d.ts.html#UIEvent",
+    "ViewCSS_SVGSVGElement": "lib.d.ts.html#ViewCSS_SVGSVGElement",
+    "SVGURIReference": "lib.d.ts.html#SVGURIReference",
+    "SVGPathSeg": "lib.d.ts.html#SVGPathSeg",
+    "WheelEvent": "lib.d.ts.html#WheelEvent",
+    "DOML2DeprecatedAlignmentStyle_HTMLDivElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLDivElement",
+    "MSEventAttachmentTarget": "lib.d.ts.html#MSEventAttachmentTarget",
+    "SVGNumber": "lib.d.ts.html#SVGNumber",
+    "SVGPathElement": "lib.d.ts.html#SVGPathElement",
+    "MSCompatibleInfo": "lib.d.ts.html#MSCompatibleInfo",
+    "MSHTMLDocumentEventExtensions": "lib.d.ts.html#MSHTMLDocumentEventExtensions",
+    "Text": "lib.d.ts.html#Text",
+    "SVGAnimatedRect": "lib.d.ts.html#SVGAnimatedRect",
+    "CSSNamespaceRule": "lib.d.ts.html#CSSNamespaceRule",
+    "HTMLUnknownElement": "lib.d.ts.html#HTMLUnknownElement",
+    "SVGPathSegList": "lib.d.ts.html#SVGPathSegList",
+    "HTMLAudioElement": "lib.d.ts.html#HTMLAudioElement",
+    "MSImageResourceExtensions": "lib.d.ts.html#MSImageResourceExtensions",
+    "MSBorderColorHighlightStyle_HTMLTableRowElement": "lib.d.ts.html#MSBorderColorHighlightStyle_HTMLTableRowElement",
+    "PositionError": "lib.d.ts.html#PositionError",
+    "BrowserPublic": "lib.d.ts.html#BrowserPublic",
+    "HTMLTableCellElement": "lib.d.ts.html#HTMLTableCellElement",
+    "MSNamespaceInfoCollection": "lib.d.ts.html#MSNamespaceInfoCollection",
+    "SVGElementInstance": "lib.d.ts.html#SVGElementInstance",
+    "MSHTMLUListElementExtensions": "lib.d.ts.html#MSHTMLUListElementExtensions",
+    "SVGCircleElement": "lib.d.ts.html#SVGCircleElement",
+    "HTMLBaseFontElement": "lib.d.ts.html#HTMLBaseFontElement",
+    "CustomEvent": "lib.d.ts.html#CustomEvent",
+    "CSSImportRule": "lib.d.ts.html#CSSImportRule",
+    "StyleSheetList": "lib.d.ts.html#StyleSheetList",
+    "HTMLTextAreaElement": "lib.d.ts.html#HTMLTextAreaElement",
+    "MSHTMLFormElementExtensions": "lib.d.ts.html#MSHTMLFormElementExtensions",
+    "DOML2DeprecatedMarginStyle": "lib.d.ts.html#DOML2DeprecatedMarginStyle",
+    "Geolocation": "lib.d.ts.html#Geolocation",
+    "MSWindowModeless": "lib.d.ts.html#MSWindowModeless",
+    "HTMLMarqueeElement": "lib.d.ts.html#HTMLMarqueeElement",
+    "SVGRect": "lib.d.ts.html#SVGRect",
+    "MSNodeExtensions": "lib.d.ts.html#MSNodeExtensions",
+    "KeyboardEventExtensions": "lib.d.ts.html#KeyboardEventExtensions",
+    "History": "lib.d.ts.html#History",
+    "DocumentStyle": "lib.d.ts.html#DocumentStyle",
+    "SVGPathSegCurvetoCubicAbs": "lib.d.ts.html#SVGPathSegCurvetoCubicAbs",
+    "TimeRanges": "lib.d.ts.html#TimeRanges",
+    "SVGPathSegCurvetoQuadraticAbs": "lib.d.ts.html#SVGPathSegCurvetoQuadraticAbs",
+    "MSHTMLSelectElementExtensions": "lib.d.ts.html#MSHTMLSelectElementExtensions",
+    "CSSRule": "lib.d.ts.html#CSSRule",
+    "SVGPathSegLinetoAbs": "lib.d.ts.html#SVGPathSegLinetoAbs",
+    "MSMouseEventExtensions": "lib.d.ts.html#MSMouseEventExtensions",
+    "HTMLModElement": "lib.d.ts.html#HTMLModElement",
+    "DOML2DeprecatedWordWrapSuppression": "lib.d.ts.html#DOML2DeprecatedWordWrapSuppression",
+    "BeforeUnloadEvent": "lib.d.ts.html#BeforeUnloadEvent",
+    "MSPopupWindow": "lib.d.ts.html#MSPopupWindow",
+    "SVGMatrix": "lib.d.ts.html#SVGMatrix",
+    "SVGUseElement": "lib.d.ts.html#SVGUseElement",
+    "Event": "lib.d.ts.html#Event",
+    "ImageData": "lib.d.ts.html#ImageData",
+    "MSHTMLElementExtensions": "lib.d.ts.html#MSHTMLElementExtensions",
+    "HTMLTableColElement": "lib.d.ts.html#HTMLTableColElement",
+    "HTMLDocument": "lib.d.ts.html#HTMLDocument",
+    "SVGException": "lib.d.ts.html#SVGException",
+    "DOML2DeprecatedTableCellHeight": "lib.d.ts.html#DOML2DeprecatedTableCellHeight",
+    "HTMLTableAlignment": "lib.d.ts.html#HTMLTableAlignment",
+    "SVGAnimatedEnumeration": "lib.d.ts.html#SVGAnimatedEnumeration",
+    "SVGLinearGradientElement": "lib.d.ts.html#SVGLinearGradientElement",
+    "DOML2DeprecatedSizeProperty": "lib.d.ts.html#DOML2DeprecatedSizeProperty",
+    "MSHTMLHeadingElementExtensions": "lib.d.ts.html#MSHTMLHeadingElementExtensions",
+    "MSBorderColorStyle_HTMLTableCellElement": "lib.d.ts.html#MSBorderColorStyle_HTMLTableCellElement",
+    "DOML2DeprecatedWidthStyle_HTMLHRElement": "lib.d.ts.html#DOML2DeprecatedWidthStyle_HTMLHRElement",
+    "HTMLUListElement": "lib.d.ts.html#HTMLUListElement",
+    "SVGRectElement": "lib.d.ts.html#SVGRectElement",
+    "DOML2DeprecatedBorderStyle": "lib.d.ts.html#DOML2DeprecatedBorderStyle",
+    "HTMLDivElement": "lib.d.ts.html#HTMLDivElement",
+    "NavigatorDoNotTrack": "lib.d.ts.html#NavigatorDoNotTrack",
+    "SVG1_1Properties": "lib.d.ts.html#SVG1_1Properties",
+    "NamedNodeMap": "lib.d.ts.html#NamedNodeMap",
+    "MediaList": "lib.d.ts.html#MediaList",
+    "SVGPathSegCurvetoQuadraticSmoothAbs": "lib.d.ts.html#SVGPathSegCurvetoQuadraticSmoothAbs",
+    "SVGLengthList": "lib.d.ts.html#SVGLengthList",
+    "SVGPathSegCurvetoCubicSmoothRel": "lib.d.ts.html#SVGPathSegCurvetoCubicSmoothRel",
+    "MSWindowExtensions": "lib.d.ts.html#MSWindowExtensions",
+    "ProcessingInstruction": "lib.d.ts.html#ProcessingInstruction",
+    "MSBehaviorUrnsCollection": "lib.d.ts.html#MSBehaviorUrnsCollection",
+    "CSSFontFaceRule": "lib.d.ts.html#CSSFontFaceRule",
+    "DOML2DeprecatedBackgroundStyle": "lib.d.ts.html#DOML2DeprecatedBackgroundStyle",
+    "TextEvent": "lib.d.ts.html#TextEvent",
+    "MSHTMLHRElementExtensions": "lib.d.ts.html#MSHTMLHRElementExtensions",
+    "AbstractView": "lib.d.ts.html#AbstractView",
+    "DocumentFragment": "lib.d.ts.html#DocumentFragment",
+    "DOML2DeprecatedAlignmentStyle_HTMLFieldSetElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLFieldSetElement",
+    "SVGPolylineElement": "lib.d.ts.html#SVGPolylineElement",
+    "DOML2DeprecatedWidthStyle": "lib.d.ts.html#DOML2DeprecatedWidthStyle",
+    "DOML2DeprecatedAlignmentStyle_HTMLHeadingElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLHeadingElement",
+    "SVGAnimatedPathData": "lib.d.ts.html#SVGAnimatedPathData",
+    "Position": "lib.d.ts.html#Position",
+    "BookmarkCollection": "lib.d.ts.html#BookmarkCollection",
+    "CSSPageRule": "lib.d.ts.html#CSSPageRule",
+    "WindowPerformance": "lib.d.ts.html#WindowPerformance",
+    "HTMLBRElement": "lib.d.ts.html#HTMLBRElement",
+    "MSHTMLDivElementExtensions": "lib.d.ts.html#MSHTMLDivElementExtensions",
+    "DOML2DeprecatedBorderStyle_HTMLInputElement": "lib.d.ts.html#DOML2DeprecatedBorderStyle_HTMLInputElement",
+    "HTMLSpanElement": "lib.d.ts.html#HTMLSpanElement",
+    "HTMLHRElementDOML2Deprecated": "lib.d.ts.html#HTMLHRElementDOML2Deprecated",
+    "HTMLHeadElement": "lib.d.ts.html#HTMLHeadElement",
+    "NodeFilterCallback": "lib.d.ts.html#NodeFilterCallback",
+    "HTMLHeadingElement": "lib.d.ts.html#HTMLHeadingElement",
+    "HTMLFormElement": "lib.d.ts.html#HTMLFormElement",
+    "SVGZoomAndPan": "lib.d.ts.html#SVGZoomAndPan",
+    "MSEventExtensions": "lib.d.ts.html#MSEventExtensions",
+    "HTMLMediaElement": "lib.d.ts.html#HTMLMediaElement",
+    "ElementCSSInlineStyle": "lib.d.ts.html#ElementCSSInlineStyle",
+    "DOMParser": "lib.d.ts.html#DOMParser",
+    "MSMimeTypesCollection": "lib.d.ts.html#MSMimeTypesCollection",
+    "StyleSheet": "lib.d.ts.html#StyleSheet",
+    "DOML2DeprecatedBorderStyle_HTMLTableElement": "lib.d.ts.html#DOML2DeprecatedBorderStyle_HTMLTableElement",
+    "DOML2DeprecatedWidthStyle_HTMLAppletElement": "lib.d.ts.html#DOML2DeprecatedWidthStyle_HTMLAppletElement",
+    "SVGTextPathElement": "lib.d.ts.html#SVGTextPathElement",
+    "NodeList": "lib.d.ts.html#NodeList",
+    "HTMLDTElement": "lib.d.ts.html#HTMLDTElement",
+    "XMLSerializer": "lib.d.ts.html#XMLSerializer",
+    "StyleSheetPage": "lib.d.ts.html#StyleSheetPage",
+    "DOML2DeprecatedWordWrapSuppression_HTMLDDElement": "lib.d.ts.html#DOML2DeprecatedWordWrapSuppression_HTMLDDElement",
+    "MSHTMLTableRowElementExtensions": "lib.d.ts.html#MSHTMLTableRowElementExtensions",
+    "SVGGradientElement": "lib.d.ts.html#SVGGradientElement",
+    "DOML2DeprecatedTextFlowControl_HTMLBRElement": "lib.d.ts.html#DOML2DeprecatedTextFlowControl_HTMLBRElement",
+    "MSHTMLParagraphElementExtensions": "lib.d.ts.html#MSHTMLParagraphElementExtensions",
+    "NodeFilter": "lib.d.ts.html#NodeFilter",
+    "MSBorderColorStyle_HTMLFrameElement": "lib.d.ts.html#MSBorderColorStyle_HTMLFrameElement",
+    "MSHTMLOListElementExtensions": "lib.d.ts.html#MSHTMLOListElementExtensions",
+    "DOML2DeprecatedWordWrapSuppression_HTMLDTElement": "lib.d.ts.html#DOML2DeprecatedWordWrapSuppression_HTMLDTElement",
+    "ScreenView": "lib.d.ts.html#ScreenView",
+    "DOML2DeprecatedMarginStyle_HTMLObjectElement": "lib.d.ts.html#DOML2DeprecatedMarginStyle_HTMLObjectElement",
+    "DOML2DeprecatedMarginStyle_HTMLInputElement": "lib.d.ts.html#DOML2DeprecatedMarginStyle_HTMLInputElement",
+    "MSHTMLTableSectionElementExtensions": "lib.d.ts.html#MSHTMLTableSectionElementExtensions",
+    "HTMLFieldSetElement": "lib.d.ts.html#HTMLFieldSetElement",
+    "MediaError": "lib.d.ts.html#MediaError",
+    "SVGNumberList": "lib.d.ts.html#SVGNumberList",
+    "HTMLBGSoundElement": "lib.d.ts.html#HTMLBGSoundElement",
+    "HTMLElement": "lib.d.ts.html#HTMLElement",
+    "Comment": "lib.d.ts.html#Comment",
+    "CanvasPattern": "lib.d.ts.html#CanvasPattern",
+    "HTMLHRElement": "lib.d.ts.html#HTMLHRElement",
+    "MSHTMLFrameSetElementExtensions": "lib.d.ts.html#MSHTMLFrameSetElementExtensions",
+    "DOML2DeprecatedTextFlowControl_HTMLBlockElement": "lib.d.ts.html#DOML2DeprecatedTextFlowControl_HTMLBlockElement",
+    "PositionOptions": "lib.d.ts.html#PositionOptions",
+    "HTMLObjectElement": "lib.d.ts.html#HTMLObjectElement",
+    "MSHTMLMenuElementExtensions": "lib.d.ts.html#MSHTMLMenuElementExtensions",
+    "DocumentView": "lib.d.ts.html#DocumentView",
+    "StorageEvent": "lib.d.ts.html#StorageEvent",
+    "HTMLEmbedElement": "lib.d.ts.html#HTMLEmbedElement",
+    "CharacterData": "lib.d.ts.html#CharacterData",
+    "DOML2DeprecatedAlignmentStyle_HTMLTableSectionElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLTableSectionElement",
+    "HTMLOptGroupElement": "lib.d.ts.html#HTMLOptGroupElement",
+    "HTMLIsIndexElement": "lib.d.ts.html#HTMLIsIndexElement",
+    "SVGPathSegLinetoRel": "lib.d.ts.html#SVGPathSegLinetoRel",
+    "MSHTMLDocumentSelection": "lib.d.ts.html#MSHTMLDocumentSelection",
+    "DOMException": "lib.d.ts.html#DOMException",
+    "MSCompatibleInfoCollection": "lib.d.ts.html#MSCompatibleInfoCollection",
+    "MSHTMLIsIndexElementExtensions": "lib.d.ts.html#MSHTMLIsIndexElementExtensions",
+    "SVGAnimatedBoolean": "lib.d.ts.html#SVGAnimatedBoolean",
+    "SVGSwitchElement": "lib.d.ts.html#SVGSwitchElement",
+    "MSHTMLIFrameElementExtensions": "lib.d.ts.html#MSHTMLIFrameElementExtensions",
+    "SVGPreserveAspectRatio": "lib.d.ts.html#SVGPreserveAspectRatio",
+    "Attr": "lib.d.ts.html#Attr",
+    "MSBorderColorStyle_HTMLTableRowElement": "lib.d.ts.html#MSBorderColorStyle_HTMLTableRowElement",
+    "DOML2DeprecatedAlignmentStyle_HTMLTableCaptionElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLTableCaptionElement",
+    "PerformanceNavigation": "lib.d.ts.html#PerformanceNavigation",
+    "HTMLBodyElementDOML2Deprecated": "lib.d.ts.html#HTMLBodyElementDOML2Deprecated",
+    "SVGStopElement": "lib.d.ts.html#SVGStopElement",
+    "PositionCallback": "lib.d.ts.html#PositionCallback",
+    "SVGSymbolElement": "lib.d.ts.html#SVGSymbolElement",
+    "SVGElementInstanceList": "lib.d.ts.html#SVGElementInstanceList",
+    "MSDataBindingRecordSetExtensions": "lib.d.ts.html#MSDataBindingRecordSetExtensions",
+    "CSSRuleList": "lib.d.ts.html#CSSRuleList",
+    "MSHTMLTableColElementExtensions": "lib.d.ts.html#MSHTMLTableColElementExtensions",
+    "LinkStyle": "lib.d.ts.html#LinkStyle",
+    "MSHTMLMarqueeElementExtensions": "lib.d.ts.html#MSHTMLMarqueeElementExtensions",
+    "HTMLVideoElement": "lib.d.ts.html#HTMLVideoElement",
+    "MSXMLHttpRequestExtensions": "lib.d.ts.html#MSXMLHttpRequestExtensions",
+    "ClientRectList": "lib.d.ts.html#ClientRectList",
+    "DOML2DeprecatedAlignmentStyle_HTMLTableCellElement": "lib.d.ts.html#DOML2DeprecatedAlignmentStyle_HTMLTableCellElement",
+    "SVGMaskElement": "lib.d.ts.html#SVGMaskElement",
+    "MSGestureEvent": "lib.d.ts.html#MSGestureEvent",
+    "ErrorEvent": "lib.d.ts.html#ErrorEvent",
+    "SVGFilterElement": "lib.d.ts.html#SVGFilterElement",
+    "TrackEvent": "lib.d.ts.html#TrackEvent",
+    "SVGFEMergeNodeElement": "lib.d.ts.html#SVGFEMergeNodeElement",
+    "SVGFEFloodElement": "lib.d.ts.html#SVGFEFloodElement",
+    "MSCSSScrollTranslationProperties": "lib.d.ts.html#MSCSSScrollTranslationProperties",
+    "MSGesture": "lib.d.ts.html#MSGesture",
+    "TextTrackCue": "lib.d.ts.html#TextTrackCue",
+    "MSStreamReader": "lib.d.ts.html#MSStreamReader",
+    "CSSFlexibleBoxProperties": "lib.d.ts.html#CSSFlexibleBoxProperties",
+    "DOMTokenList": "lib.d.ts.html#DOMTokenList",
+    "SVGFEFuncAElement": "lib.d.ts.html#SVGFEFuncAElement",
+    "SVGFETileElement": "lib.d.ts.html#SVGFETileElement",
+    "SVGFEBlendElement": "lib.d.ts.html#SVGFEBlendElement",
+    "MessageChannel": "lib.d.ts.html#MessageChannel",
+    "SVGFEMergeElement": "lib.d.ts.html#SVGFEMergeElement",
+    "TransitionEvent": "lib.d.ts.html#TransitionEvent",
+    "MediaQueryList": "lib.d.ts.html#MediaQueryList",
+    "DOMError": "lib.d.ts.html#DOMError",
+    "SVGFEPointLightElement": "lib.d.ts.html#SVGFEPointLightElement",
+    "CSSFontsProperties": "lib.d.ts.html#CSSFontsProperties",
+    "CloseEvent": "lib.d.ts.html#CloseEvent",
+    "WebSocket": "lib.d.ts.html#WebSocket",
+    "ProgressEvent": "lib.d.ts.html#ProgressEvent",
+    "IDBObjectStore": "lib.d.ts.html#IDBObjectStore",
+    "ObjectURLOptions": "lib.d.ts.html#ObjectURLOptions",
+    "SVGFEGaussianBlurElement": "lib.d.ts.html#SVGFEGaussianBlurElement",
+    "MSCSSSelectionBoundaryProperties": "lib.d.ts.html#MSCSSSelectionBoundaryProperties",
+    "SVGFilterPrimitiveStandardAttributes": "lib.d.ts.html#SVGFilterPrimitiveStandardAttributes",
+    "IDBVersionChangeEvent": "lib.d.ts.html#IDBVersionChangeEvent",
+    "IDBIndex": "lib.d.ts.html#IDBIndex",
+    "FileList": "lib.d.ts.html#FileList",
+    "IDBCursor": "lib.d.ts.html#IDBCursor",
+    "CSSAnimationsProperties": "lib.d.ts.html#CSSAnimationsProperties",
+    "SVGFESpecularLightingElement": "lib.d.ts.html#SVGFESpecularLightingElement",
+    "File": "lib.d.ts.html#File",
+    "URL": "lib.d.ts.html#URL",
+    "IDBCursorWithValue": "lib.d.ts.html#IDBCursorWithValue",
+    "XMLHttpRequestEventTarget": "lib.d.ts.html#XMLHttpRequestEventTarget",
+    "IDBEnvironment": "lib.d.ts.html#IDBEnvironment",
+    "AudioTrackList": "lib.d.ts.html#AudioTrackList",
+    "MSBaseReader": "lib.d.ts.html#MSBaseReader",
+    "MSProtocol": "lib.d.ts.html#MSProtocol",
+    "SVGFEMorphologyElement": "lib.d.ts.html#SVGFEMorphologyElement",
+    "CSSTransitionsProperties": "lib.d.ts.html#CSSTransitionsProperties",
+    "SVGFEFuncRElement": "lib.d.ts.html#SVGFEFuncRElement",
+    "WindowTimersExtension": "lib.d.ts.html#WindowTimersExtension",
+    "SVGFEDisplacementMapElement": "lib.d.ts.html#SVGFEDisplacementMapElement",
+    "MSCSSContentZoomProperties": "lib.d.ts.html#MSCSSContentZoomProperties",
+    "AnimationEvent": "lib.d.ts.html#AnimationEvent",
+    "SVGComponentTransferFunctionElement": "lib.d.ts.html#SVGComponentTransferFunctionElement",
+    "MSRangeCollection": "lib.d.ts.html#MSRangeCollection",
+    "MSCSSPositionedFloatsProperties": "lib.d.ts.html#MSCSSPositionedFloatsProperties",
+    "SVGFEDistantLightElement": "lib.d.ts.html#SVGFEDistantLightElement",
+    "MSCSSRegionProperties": "lib.d.ts.html#MSCSSRegionProperties",
+    "SVGFEFuncBElement": "lib.d.ts.html#SVGFEFuncBElement",
+    "IDBKeyRange": "lib.d.ts.html#IDBKeyRange",
+    "WindowConsole": "lib.d.ts.html#WindowConsole",
+    "IDBTransaction": "lib.d.ts.html#IDBTransaction",
+    "AudioTrack": "lib.d.ts.html#AudioTrack",
+    "SVGFEConvolveMatrixElement": "lib.d.ts.html#SVGFEConvolveMatrixElement",
+    "TextTrackCueList": "lib.d.ts.html#TextTrackCueList",
+    "CSSKeyframesRule": "lib.d.ts.html#CSSKeyframesRule",
+    "MSCSSTouchManipulationProperties": "lib.d.ts.html#MSCSSTouchManipulationProperties",
+    "SVGFETurbulenceElement": "lib.d.ts.html#SVGFETurbulenceElement",
+    "TextTrackList": "lib.d.ts.html#TextTrackList",
+    "WindowAnimationTiming": "lib.d.ts.html#WindowAnimationTiming",
+    "SVGFEFuncGElement": "lib.d.ts.html#SVGFEFuncGElement",
+    "SVGFEColorMatrixElement": "lib.d.ts.html#SVGFEColorMatrixElement",
+    "Console": "lib.d.ts.html#Console",
+    "SVGFESpotLightElement": "lib.d.ts.html#SVGFESpotLightElement",
+    "DocumentVisibility": "lib.d.ts.html#DocumentVisibility",
+    "WindowBase64": "lib.d.ts.html#WindowBase64",
+    "IDBDatabase": "lib.d.ts.html#IDBDatabase",
+    "MSProtocolsCollection": "lib.d.ts.html#MSProtocolsCollection",
+    "DOMStringList": "lib.d.ts.html#DOMStringList",
+    "CSSMultiColumnProperties": "lib.d.ts.html#CSSMultiColumnProperties",
+    "IDBOpenDBRequest": "lib.d.ts.html#IDBOpenDBRequest",
+    "HTMLProgressElement": "lib.d.ts.html#HTMLProgressElement",
+    "SVGFEOffsetElement": "lib.d.ts.html#SVGFEOffsetElement",
+    "MSUnsafeFunctionCallback": "lib.d.ts.html#MSUnsafeFunctionCallback",
+    "TextTrack": "lib.d.ts.html#TextTrack",
+    "MediaQueryListListener": "lib.d.ts.html#MediaQueryListListener",
+    "IDBRequest": "lib.d.ts.html#IDBRequest",
+    "MessagePort": "lib.d.ts.html#MessagePort",
+    "FileReader": "lib.d.ts.html#FileReader",
+    "Blob": "lib.d.ts.html#Blob",
+    "ApplicationCache": "lib.d.ts.html#ApplicationCache",
+    "MSHTMLVideoElementExtensions": "lib.d.ts.html#MSHTMLVideoElementExtensions",
+    "FrameRequestCallback": "lib.d.ts.html#FrameRequestCallback",
+    "CSS3DTransformsProperties": "lib.d.ts.html#CSS3DTransformsProperties",
+    "PopStateEvent": "lib.d.ts.html#PopStateEvent",
+    "CSSKeyframeRule": "lib.d.ts.html#CSSKeyframeRule",
+    "CSSGridProperties": "lib.d.ts.html#CSSGridProperties",
+    "MSFileSaver": "lib.d.ts.html#MSFileSaver",
+    "MSStream": "lib.d.ts.html#MSStream",
+    "MSBlobBuilder": "lib.d.ts.html#MSBlobBuilder",
+    "MSRangeExtensions": "lib.d.ts.html#MSRangeExtensions",
+    "DOMSettableTokenList": "lib.d.ts.html#DOMSettableTokenList",
+    "IDBFactory": "lib.d.ts.html#IDBFactory",
+    "MSPointerEvent": "lib.d.ts.html#MSPointerEvent",
+    "CSSTextProperties": "lib.d.ts.html#CSSTextProperties",
+    "CSS2DTransformsProperties": "lib.d.ts.html#CSS2DTransformsProperties",
+    "MSCSSHighContrastProperties": "lib.d.ts.html#MSCSSHighContrastProperties",
+    "MSManipulationEvent": "lib.d.ts.html#MSManipulationEvent",
+    "FormData": "lib.d.ts.html#FormData",
+    "MSHTMLMediaElementExtensions": "lib.d.ts.html#MSHTMLMediaElementExtensions",
+    "SVGFEImageElement": "lib.d.ts.html#SVGFEImageElement",
+    "HTMLDataListElement": "lib.d.ts.html#HTMLDataListElement",
+    "AbstractWorker": "lib.d.ts.html#AbstractWorker",
+    "SVGFECompositeElement": "lib.d.ts.html#SVGFECompositeElement",
+    "ValidityState": "lib.d.ts.html#ValidityState",
+    "HTMLTrackElement": "lib.d.ts.html#HTMLTrackElement",
+    "MSApp": "lib.d.ts.html#MSApp",
+    "SVGFEDiffuseLightingElement": "lib.d.ts.html#SVGFEDiffuseLightingElement",
+    "SVGFEComponentTransferElement": "lib.d.ts.html#SVGFEComponentTransferElement",
+    "MSCSSMatrix": "lib.d.ts.html#MSCSSMatrix",
+    "Worker": "lib.d.ts.html#Worker",
+    "MSMediaErrorExtensions": "lib.d.ts.html#MSMediaErrorExtensions",
+    "ITextWriter": "lib.d.ts.html#ITextWriter"
+};
 var fileInput = $("#input_file");
 var openButton = $("#button_open");
 var genButton = $("#gen");
@@ -1654,5 +2272,25 @@ function loadSourceFile(url) {
 function generateHierarchy(global) {
     var section = $('<section/>');
     return section;
+}
+function generateTypeList(path, global) {
+    var list = {
+    };
+    function generateTypeListFromModule(m) {
+        list[m.name] = path + "#" + m.name;
+        m.members.forEach(function (m) {
+            if(m instanceof DTSDoc.ASTInterface) {
+                list[m.name] = path + "#" + m.name;
+            } else if(m instanceof DTSDoc.ASTClass) {
+                list[m.name] = path + "#" + m.name;
+            } else if(m instanceof DTSDoc.ASTEnum) {
+                list[m.name] = path + "#" + m.name;
+            } else if(m instanceof DTSDoc.ASTModule) {
+                generateTypeListFromModule(m);
+            }
+        });
+    }
+    generateTypeListFromModule(global);
+    return JSON.stringify(list);
 }
 loadSourceFile("sample.d.ts");

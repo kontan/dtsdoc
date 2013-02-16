@@ -4,13 +4,6 @@
 /// <reference path="../Parsect/src/type.ts" />
 /// <reference path="../Parsect/src/parser.ts" />
 
-
-
-
-
-
-
-
 var fileInput  = <JQuery>$("#input_file"); 
 var openButton = <JQuery>$("#button_open"); 
 var genButton = <JQuery>$("#gen");
@@ -109,6 +102,9 @@ function generateDocuments(){
 				}, createTempFile);
 
 			});
+
+
+			//console.log(generateTypeList('lib.d.ts.html', global));
 		}else{
 			var pos = result.source.getPosition();
 			var line = pos.line;
@@ -167,8 +163,37 @@ function generateHierarchy(global:DTSDoc.ASTModule):JQuery{
 	return section;
 }
 
+interface TypeList{
+	[name:string]:string;
+}
+
+
+
+function generateTypeList(path:string, global:DTSDoc.ASTModule):string{
+	var list:TypeList = {};
+
+	function generateTypeListFromModule(m:DTSDoc.ASTModule){
+		list[m.name] = path + "#" + m.name;
+		m.members.forEach(m=>{
+			if(m instanceof DTSDoc.ASTInterface){
+				list[m.name] = path + "#" + m.name;
+			}else if(m instanceof DTSDoc.ASTClass){
+				list[m.name] = path + "#" + m.name;
+			}else if(m instanceof DTSDoc.ASTEnum){
+				list[m.name] = path + "#" + m.name;
+			}else if(m instanceof DTSDoc.ASTModule){
+				generateTypeListFromModule(<DTSDoc.ASTModule>m);
+			}
+		});	
+	}
+
+	generateTypeListFromModule(global);
+
+	return JSON.stringify(list);
+}
 
 
 // For testing
 //loadSourceFile("../../three.d.ts/three.d.ts");
 loadSourceFile("sample.d.ts");
+

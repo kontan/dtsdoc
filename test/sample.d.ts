@@ -2,6 +2,22 @@
  * <h1>dtsdoc/TypeScript Ambient Source File Documentation Generator</h1>
  */
 
+module X{
+    module Y{
+        module Z{
+            class G{
+            }
+        }
+    }
+}
+
+var g:X. Y.Z.G;
+
+
+interface SVGZoomEvent extends UIEvent {
+    newScale: number;
+}
+
 var ctor: new () => M.C;
 
 // express,marked,sammyjs function()
@@ -48,9 +64,12 @@ module M{
     }
 
 
+    enum E{
+        X, Y, Z
+    }
+
+
     module N{
-        enum E{
-            X, Y, Z
-        }        
+                
     }
 }

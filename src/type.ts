@@ -24,6 +24,10 @@ module DTSDoc{
         toHTML(mod:ASTModule):JQuery{
             var section = $('<section class="ts_classmember_description"/>');
 
+            if(this.text){
+                section.append($('<p/>').html(this.text));
+            }
+
             var params = $('<div/>');
             this.sections.forEach(s=>{
                 params.append(s.toHTML(mod));
@@ -98,42 +102,37 @@ module DTSDoc{
     }
 
     export class ASTTypeName extends ASTType { 
-    	constructor(public name:string){ super(); } 
+    	name:string;
+        constructor(public names:string[]){ 
+            super(); 
+            this.name = names[names.length - 1];
+        } 
     	toHTML(mod:ASTModule):JQuery{ 
-	    	if(
-	            this.name == "string" ||
-	            this.name == "number" ||
-	            this.name == "bool"   ||
-                this.name == "Object"
-            ){
-                return $('<span/>').append(this.name);
-            }else if(
+            var span = $("<span/>");
+
+            for(var i = 0; i < this.names.length - 1; i++){
+                span.append(this.names[i]);
+                span.append(".");
+            }
+
+            if(
 	            this.name == "any" ||
 	            this.name == "void"
 	        ){
-                return $('<span class="ts_reserved"/>').append(this.name);
+                span.append($('<span class="ts_reserved"/>').append(this.name));
+            }else if(typeNameLinks[this.name]){
+                span.append($("<a/>").attr("href", typeNameLinks[this.name]).text(this.name));
             }else{
-                return $("<a/>").attr("href", "#" + mod.findFullName(this.name)).text(this.name);
+                span.append($("<a/>").attr("href", "#" + mod.findFullName(this.name)).text(this.name));
 	        }
+
+            return span;
     	}
     }
 
     export class ASTArrayType extends ASTType { 
     	constructor(public type:ASTType){ super(); } 
     	toHTML(mod:ASTModule):JQuery{ return $("<span/>").append(this.type.toHTML(mod)).append("[]"); }
-    }
-
-    export class ASTModulePrefix extends ASTType {
-        name: string;
-        type: ASTType;
-        constructor(name:string, type:ASTTypeName);
-        constructor(name:string, type:ASTModulePrefix);
-    	constructor(name:string, type:any){ 
-            super(); 
-            this.name = name;
-            this.type = type;
-        } 
-    	toHTML(mod:ASTModule):JQuery{ return $("<span/>").append(this.name).append(".").append(this.type.toHTML(mod)); }
     }
 
     export class ASTSpecifingType extends ASTType{
@@ -399,7 +398,10 @@ module DTSDoc{
     export class ASTIField extends ASTInterfaceMember{
         constructor(public name:string, public isOptional:bool, public type:ASTTypeAnnotation){ super(); }
         toHTML(mod:ASTModule):JQuery{ 
-            return $('<span class="ts_code" />').append(this.name + (this.isOptional ? "?" : "")).append(this.type.toHTML(mod)); 
+            var span = $('<span class="ts_code" />');
+            span.append(this.name + (this.isOptional ? "?" : ""));
+            span.append(this.type.toHTML(mod));
+            return span;
         }
     }
 
@@ -431,7 +433,9 @@ module DTSDoc{
                 content.append('<h3>Members</h3>');
             	this.type.members.forEach((m)=>{
             		content.append($('<div class="ts_classcontent ts_classmember ts_class_member_title"/>').append(m.toHTML(this.parent)));
-            	});
+            	
+                    if(m.docs) content.append(m.docs.toHTML(this.parent));
+                });
             }
 
             if(content.children().length > 0){
@@ -455,6 +459,12 @@ module DTSDoc{
             var span = $('<span class="ts_code ts_method"/>').appendTo(content);
             span.append("function " + this.name);
             span.append(this.sign.toHTML(this.parent));
+
+            if(this.docs){
+                p.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
+                p.append(this.docs.toHTML(undefined));
+            }
+
             return p;
         }
     }
@@ -504,6 +514,12 @@ module DTSDoc{
         	content.append(
         		$('<span class="ts_code"/>').append($('<span class="ts_reserved ts_reserved_var">var</span>')).append(this.name).append(this.type.toHTML(this.parent))
         	);
+
+            if(this.docs){
+                section.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
+                section.append(this.docs.toHTML(undefined));
+            }
+
         	return section;
         }
     }
