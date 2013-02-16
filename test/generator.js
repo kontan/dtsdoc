@@ -1197,16 +1197,16 @@ var DTSDoc;
             return v;
         });
     }
-    var colon = lexme(string(":"));
-    var semi = lexme(string(";"));
-    DTSDoc.comma = lexme(string(","));
-    var optExport = lexme(optional(string("export")));
     DTSDoc.reserved = function (s) {
         return lexme(string(s));
     };
     var keyword = function (s) {
         return lexme(regexp(new RegExp(s + '(?!(\\w|_))')));
     };
+    var colon = lexme(string(":"));
+    var semi = lexme(string(";"));
+    var comma = lexme(string(","));
+    var optExport = lexme(optional(string("export")));
     var pDocumentComment = option(undefined, lexme(seq(function (s) {
         var pattern = /\/\*\*((\*(?!\/)|[^*])*)\*\//;
         var text = s(regexp(pattern));
@@ -1247,7 +1247,7 @@ var DTSDoc;
     });
     var pParameters = between(DTSDoc.reserved("("), map(function (ps) {
         return new DTSDoc.ASTParameters(ps);
-    }, sepBy(DTSDoc.pParameter, DTSDoc.comma)), DTSDoc.reserved(")"));
+    }, sepBy(DTSDoc.pParameter, comma)), DTSDoc.reserved(")"));
     var pAccessibility = option(DTSDoc.Accessibility.Public, or(map(function () {
         return DTSDoc.Accessibility.Public;
     }, DTSDoc.reserved("public")), map(function () {
@@ -1384,7 +1384,7 @@ var DTSDoc;
         })));
         var interfaces = s(option([], seq(function (s) {
             s(DTSDoc.reserved("implements"));
-            s(sepBy1(pTypeName, DTSDoc.comma));
+            s(sepBy1(pTypeName, comma));
         })));
         s(DTSDoc.reserved("{"));
         var members = s(many(pClassMember));
@@ -1432,7 +1432,7 @@ var DTSDoc;
         var name = s(pIdentifier);
         var ifs = s(option([], seq(function (s) {
             s(DTSDoc.reserved("extends"));
-            s(sepBy1(pTypeName, DTSDoc.comma));
+            s(sepBy1(pTypeName, comma));
         })));
         var type = s(pSpecifyingType);
         if(s.success()) {
@@ -1443,21 +1443,27 @@ var DTSDoc;
         s(keyword("enum"));
         var name = s(pIdentifier);
         s(DTSDoc.reserved("{"));
-        var members = s(or(trying(sepBy(pIdentifier, DTSDoc.comma)), endBy(pIdentifier, DTSDoc.comma)));
-        s(optional(DTSDoc.comma));
+        var members = s(or(trying(sepBy(pIdentifier, comma)), endBy(pIdentifier, comma)));
+        s(optional(comma));
         s(DTSDoc.reserved("}"));
         if(s.success()) {
             return new DTSDoc.ASTEnum(name, members);
         }
     });
+    var pFunctionSigniture = seq(function (s) {
+        var params = s(pParameters);
+        var retType = s(pTypeAnnotation);
+        if(s.success()) {
+            return new DTSDoc.ASTFuncionSignature(params, retType);
+        }
+    });
     DTSDoc.pFunction = seq(function (s) {
         s(keyword("function"));
         var name = s(pIdentifier);
-        var params = s(pParameters);
-        var retType = s(pTypeAnnotation);
+        var sign = s(pFunctionSigniture);
         s(semi);
         if(s.success()) {
-            return new DTSDoc.ASTFunction(name, new DTSDoc.ASTFuncionSignature(params, retType));
+            return new DTSDoc.ASTFunction(name, sign);
         }
     });
     DTSDoc.pVar = seq(function (s) {
@@ -1471,11 +1477,10 @@ var DTSDoc;
     });
     DTSDoc.pCallable = seq(function (s) {
         s(keyword("function"));
-        var params = s(pParameters);
-        var retType = s(pTypeAnnotation);
+        var sign = s(pFunctionSigniture);
         s(semi);
         if(s.success()) {
-            return new DTSDoc.ASTCallable(new DTSDoc.ASTFuncionSignature(params, retType));
+            return new DTSDoc.ASTCallable(sign);
         }
     });
     DTSDoc.pModule = seq(function (s) {
