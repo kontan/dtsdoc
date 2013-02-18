@@ -6,7 +6,7 @@ module DTSDoc{
     // Common Nodes
     ////////////////////////////////////////////////////////////////
 
-    export class ASTDocSection{
+    export class ASTDoctagSection{
         constructor(public tag:string, public text:string){}
         toHTML(mod:ASTModule):JQuery{
             if(this.tag == 'param'){
@@ -20,7 +20,7 @@ module DTSDoc{
     }
 
     export class ASTDocs{
-        constructor(public text:string, public sections:ASTDocSection[]){}
+        constructor(public text:string, public sections:ASTDoctagSection[]){}
         toHTML(mod:ASTModule):JQuery{
             var section = $('<section class="ts_classmember_description"/>');
 
@@ -110,10 +110,10 @@ module DTSDoc{
     	toHTML(mod:ASTModule):JQuery{ 
             var span = $("<span/>");
 
-            for(var i = 0; i < this.names.length - 1; i++){
-                span.append(this.names[i]);
-                span.append(".");
-            }
+            //for(var i = 0; i < this.names.length - 1; i++){
+            //    span.append(this.names[i]);
+            //    span.append(".");
+            //}
 
             if(
 	            this.name == "any" ||
@@ -121,9 +121,16 @@ module DTSDoc{
 	        ){
                 span.append($('<span class="ts_reserved"/>').append(this.name));
             }else if(typeNameLinks[this.name]){
+                // External Link
                 span.append($("<a/>").attr("href", typeNameLinks[this.name]).text(this.name));
             }else{
-                span.append($("<a/>").attr("href", "#" + mod.findFullName(this.name)).text(this.name));
+                // Internal Link
+                var member = mod.searchType(this);
+                if(member){
+                    span.append($("<a/>").attr("href", "#" + member.getLinkString()).text(this.name));                    
+                }else{
+                    span.append(this.name);
+                }
 	        }
 
             return span;
@@ -165,7 +172,7 @@ module DTSDoc{
     //////////////////////////////////////////////////////////////////////////////////////////
 
     export class ASTModuleMember{
-        constructor(public name:string){}
+        constructor(public memberKind:string, public name:string){}
         parent:ASTModule; 
         docs:ASTDocs;       
         getGlobal():ASTModule{
@@ -177,9 +184,17 @@ module DTSDoc{
             return this.parent.findFullName(this.name);
         }
 
-        createTitle(prefix:string):JQuery{
+        getLinkString():string{
+            return encodeURIComponent(this.memberKind + ' ' + this.getFullName());
+        }
+
+        createTitle():JQuery{
             var fullName = this.getFullName();
-            var a = $('<a class="ts_modulemember_a"/>').attr("name", fullName).attr("href", '#' + fullName).text(prefix + " " + this.name);
+            var linkURL = this.getLinkString();
+            var a = $('<a class="ts_modulemember_a"/>');
+            a.attr("name", linkURL);
+            a.attr("href", '#' + linkURL);
+            a.text(this.memberKind + " " + this.name);
             return $('<h1 class="ts_modulemember_title ts_class_title" />').append(a);
         }
     }
@@ -195,7 +210,6 @@ module DTSDoc{
             var title = this.memberToHTML();
             var div = $('<div class="ts_class_member_container">').append(title); 
             if(this.docs){
-                div.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
                 div.append(this.docs.toHTML(undefined));
             }
             return div;
@@ -243,7 +257,9 @@ module DTSDoc{
 
     export class ASTClass extends ASTModuleMember{
         derivedClasses:ASTClass[] = [];
-        constructor(name:string, public superClass:ASTTypeName, private interfaces:ASTTypeName[], public members:ASTClassMember[]){ super(name); };
+        constructor(name:string, public superClass:ASTTypeName, private interfaces:ASTTypeName[], public members:ASTClassMember[]){ 
+            super('class', name); 
+        };
         toString():string{
             var s = "class " + this.name + "{";
             this.members.forEach((m)=>{ s += m.toString(); });
@@ -269,7 +285,7 @@ module DTSDoc{
         toHierarchyHTML():JQuery{
             if(this.getSuperClass() || this.derivedClasses.length > 0){
                 var div = $('<div class="ts_hierarchey"/>');
-                div.append($('<a/>').attr("href", '#' + this.getFullName()).append(this.name));
+                div.append($('<a/>').attr("href", '#' + this.getLinkString()).append(this.name));
                 if(this.derivedClasses.length > 0){
                     div.append(this.derivedClasses.map((m)=>m.toHierarchyHTML()));
                 }
@@ -280,9 +296,28 @@ module DTSDoc{
         }
         toHTML():JQuery{
             var p = $('<section class="ts_modulemember ts_class"/>');
-            p.append(this.createTitle('class'));
+            p.append(this.createTitle());
             var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
 
+            // definition
+            /*
+            var def = 'class ' + this.getFullName();
+            if(this.superClass){
+                var superClassType = this.parent.searchType(this.superClass);
+                def += ' extends ' + (superClassType ? superClassType.getFullName() : this.superClass.name);
+            }
+            if(this.interfaces.length > 0){
+                def += ' implements ';
+                for(var i = 0; i < this.interfaces.length; i++){
+                    if(i > 0) def += ', ';
+                    var interfaceType = this.parent.searchType(this.interfaces[i]);
+                    def += interfaceType ? interfaceType.getFullName() : this.interfaces[i].name;
+                }
+            }
+            content.append($('<p class="ts_code" />').text(def));
+            */
+
+            // description
             if(this.docs){
                 content.append($('<div class="ts_classcontent ts_classdescription">').html(this.docs.text));
                 content.append('<hr/>');
@@ -296,7 +331,7 @@ module DTSDoc{
                 if(superClass){
                     while(superClass){
                         hierarchy.append(" ← ");
-                        hierarchy.append($('<a/>').attr('href', "#" + superClass.getFullName()).append(superClass.name));
+                        hierarchy.append($('<a/>').attr('href', "#" + superClass.getLinkString()).append(superClass.name));
                         superClass = superClass.getSuperClass();
                     }
                 }else{
@@ -316,7 +351,7 @@ module DTSDoc{
                     var sc = this.parent.findType(name);
                     if(sc instanceof ASTInterface){
                         var ifs:ASTInterface = <ASTInterface> sc;
-                        div.append($('<a/>').attr('href', '#' + ifs.getFullName()).append(name));
+                        div.append($('<a/>').attr('href', '#' + ifs.getLinkString()).append(name));
                     }else{
                         div.append(name);
                     }
@@ -417,11 +452,13 @@ module DTSDoc{
     }
 
     export class ASTInterface extends ASTModuleMember{
-        constructor(name:string, public interfaces:ASTTypeName[], public type:ASTSpecifingType){ super(name); }
+        constructor(name:string, public interfaces:ASTTypeName[], public type:ASTSpecifingType){ 
+            super('interface', name); 
+        }
     
         toHTML():JQuery{
         	var section = $('<section class="ts_modulemember ts_interface"/>');
-        	section.append(this.createTitle('interface'));
+        	section.append(this.createTitle());
         	var content = $('<section class="ts_modulemember_content"/>');
 
             if(this.docs){
@@ -451,10 +488,12 @@ module DTSDoc{
     ////////////////////////////////////////////////////////////////////// 
     
     export class ASTFunction extends ASTModuleMember{ 
-        constructor(name:string, public sign:ASTFuncionSignature){ super(name); } 
+        constructor(name:string, public sign:ASTFuncionSignature){ 
+            super('function', name); 
+        } 
         toHTML():JQuery{
             var p = $('<section class="ts_modulemember ts_function"/>');
-            p.append(this.createTitle('function'));
+            p.append(this.createTitle());
             var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
             var span = $('<span class="ts_code ts_method"/>').appendTo(content);
             span.append("function " + this.name);
@@ -470,10 +509,10 @@ module DTSDoc{
     }
 
     export class ASTCallable extends ASTModuleMember{ 
-        constructor(public sign:ASTFuncionSignature){ super(''); } 
+        constructor(public sign:ASTFuncionSignature){ super('function()', ''); } 
         toHTML():JQuery{
             var p = $('<section class="ts_modulemember ts_function"/>');
-            p.append(this.createTitle('function()'));
+            p.append(this.createTitle());
             var content = $('<section class="ts_modulemember_content"/>').appendTo(p);
             var span = $('<span class="ts_code ts_method"/>').appendTo(content);
             span.append("function");
@@ -483,13 +522,15 @@ module DTSDoc{
     }
 
     export class ASTEnum extends ASTModuleMember{
-        constructor(name:string, public members:string[]){ super(name); }
+        constructor(name:string, public members:string[]){ 
+            super('enum', name); 
+        }
         getFullName(){
             return this.parent.findFullName(this.name);
         }
         toHTML():JQuery{
         	var section = $('<section class="ts_modulemember ts_enum"/>');
-        	section.append(this.createTitle('enum'));
+        	section.append(this.createTitle());
 
             if(this.members.length > 0){
             	section.append($('<h3>Members</h3>'));
@@ -505,11 +546,13 @@ module DTSDoc{
     }
 
     export class ASTVar extends ASTModuleMember{
-        constructor(name:string, public type:ASTTypeAnnotation){ super(name); } 
+        constructor(name:string, public type:ASTTypeAnnotation){ 
+            super('var', name); 
+        } 
         toString():string{ return this.name; };
         toHTML():JQuery{
         	var section = $('<section class="ts_modulemember ts_var" />');
-            section.append(this.createTitle('var'));
+            section.append(this.createTitle());
         	var content = $('<section class="ts_modulemember_content"/>').appendTo(section);
         	content.append(
         		$('<span class="ts_code"/>').append($('<span class="ts_reserved ts_reserved_var">var</span>')).append(this.name).append(this.type.toHTML(this.parent))
@@ -525,7 +568,62 @@ module DTSDoc{
     }
 
     export class ASTModule extends ASTModuleMember{
-        constructor(name:string, public members:ASTModuleMember[]){ super(name); }
+        constructor(name:string, public members:ASTModuleMember[]){ 
+            super('module', name); 
+        }
+
+        getMember(name:string):ASTModuleMember{
+            for(var i = 0; i < this.members.length; i++){
+                var member = this.members[i];    
+                if(member.name == name){
+                    return member;
+                }
+            } 
+            return null;
+        }
+
+        searchType(typeName:ASTTypeName):ASTModuleMember{
+            
+            var topMember = ((prefix:string):ASTModuleMember=>{
+                for(var scope = this; scope; scope = scope.parent){
+                    for(var i = 0; i < scope.members.length; i++){
+                        var member = scope.members[i];
+                        if(
+                            member instanceof ASTClass || 
+                            member instanceof ASTInterface ||
+                            member instanceof ASTEnum
+                        ){
+                            if(member.name == prefix){
+                                return member;
+                            }
+                        }
+                        if(member instanceof ASTModule){
+                            var mod = <ASTModule> member;
+                            if(mod.name == prefix){
+                                return mod;
+                            }
+                        }
+                    } 
+                }
+                return null;
+            })(typeName.names[0]);
+
+            if(topMember){
+                var focused:ASTModuleMember = topMember;
+                for(var i = 1; i < typeName.names.length && focused; i++){
+                    if(focused instanceof ASTModuleMember){
+                        var m = <ASTModule> focused;
+                        focused = m.getMember(typeName.names[i]);
+                    }else{
+                        return null;
+                    }
+                }
+                return focused;
+            }
+            
+            return null;
+        }
+
         findType(name:string):ASTModuleMember{
             var splitted = name.split('.'); 
             if(splitted.length == 1){
@@ -636,7 +734,7 @@ module DTSDoc{
         }
         toHTML():JQuery{
             var section = $('<section class="ts_modulemember ts_module"/>');
-            section.append(this.createTitle('module'));        
+            section.append(this.createTitle());        
             var content = $('<section />').appendTo(section);
             if(this.docs){
             	content.append($('<p class="ts_modulemember_description"/>').html(this.docs.text));

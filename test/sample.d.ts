@@ -2,6 +2,12 @@
  * <h1>dtsdoc/TypeScript Ambient Source File Documentation Generator</h1>
  */
 
+module S.T.U{
+    class V{
+    }
+}
+
+
 module X{
     module Y{
         module Z{
@@ -41,6 +47,7 @@ module M{
         constructor();
 
         /**
+         * class M.C is absolutely hoge.
          * @param a 1st parameter.
          * @param b 2nd parameter.
          * @param c 3rd parameter.
