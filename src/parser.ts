@@ -7,14 +7,18 @@ module DTSDoc{
 	////////////////////////////////////////////////////////////////////////////////////
 	// lex
 	////////////////////////////////////////////////////////////////////////////////////
-	var lineComment      = regexp(/\/\/[^\n]*(\n|$)/g);
-	var blockComment     = regexp(/\/\*(?!\*)(.|\r|\n)*?\*\//mg);
+	
+	var lineComment      = regexp(/^\/\/[^\n]*(\n|$)/);
+	var blockComment     = regexp(/^\/\*(?!\*)([^*]|\r|\n|\*(?!\/))*?\*\//m);
 	var comment          = or(lineComment, blockComment);
-	var whitespace       = regexp(/[ \t\r\n]+/mg);
+	var whitespace       = regexp(/^[ \t\r\n]+/m);
 	var spaces           = many(or(whitespace, comment));
+
+	var logger:Parsect.Parser;
 
 	function lexme(p:Parsect.Parser):Parsect.Parser{
 		return seq(s=>{
+			s(logger);
 			var v = s(p);
 			s(spaces);
 			return v;
@@ -22,7 +26,7 @@ module DTSDoc{
 	}
 
 	export var reserved:(s:string)=>Parsect.Parser = s=>lexme(string(s));
-	var keyword:(s:string)=>Parsect.Parser = s=>lexme(regexp(new RegExp(s + '(?!(\\w|_))', 'g')));
+	var keyword:(s:string)=>Parsect.Parser = s=>lexme(regexp(new RegExp('^' + s + '(?!(\\w|_))', '')));
 	
 	////////////////////////////////////////////////////////////////////////
 	// Common parsers
@@ -34,17 +38,17 @@ module DTSDoc{
 	var pExport  = optional(reserved("export"));
 	var pDeclare = optional(reserved("declare"));
 	var pStatic  = option(false, map(()=>true, keyword("static")));
-	var pIdentifierPath = lexme(regexp(/([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/g));
-	var pIdentifier     = lexme(regexp(/[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/g));
-	var pStringRiteral  = lexme(regexp(/(\"[^\"]+\"|\'[^\']+\')/g));
+	var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
+	var pIdentifier     = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+	var pStringRiteral  = lexme(regexp(/^(\"[^\"]+\"|\'[^\']+\')/));
 
 	var pAccessibility = option(Accessibility.Public, or(
 		map(()=>Accessibility.Public,  reserved("public")), 
 		map(()=>Accessibility.Private, reserved("private"))
 	));
 
-	var rDocumentComment = /\/\*\*((\*(?!\/)|[^*])*)\*\//mg;
-	var rTags = /\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
+	var rDocumentComment = /^\/\*\*((\*(?!\/)|[^*])*)\*\//m;
+	var rTags = /^\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
 
 	var pDocumentComment     = option(undefined, lexme(seq(s=>{
 		var text = s(regexp(rDocumentComment));
@@ -52,7 +56,7 @@ module DTSDoc{
 		if(s.success()){
 			rDocumentComment.lastIndex = 0;
 			var innerText = rDocumentComment.exec(text)[1].split('*').join(' ');
-			var pDescription = /([^@]|\@(?![a-z]))*/mg;
+			var pDescription = /^([^@]|\@(?![a-z]))*/m;
 			var arr = pDescription.exec(innerText);
 			var description = arr[0];
 
@@ -391,6 +395,8 @@ module DTSDoc{
 	var pModuleMembers:Parsect.Parser = map(ms=>ms.filter(m => m instanceof ASTModuleMember), many(or(pModuleMember, reserved(';'), pImport)));
 
 	export var pProgram = seq(s=>{
+		logger = Parsect.log(n=>{ console.log('dtsdoc: ' + n + '%'); });
+
 		s(lexme(spaces));
 		var docs = s(pDocumentComment);
 		var members = s(pModuleMembers);

@@ -500,7 +500,6 @@ module DTSDoc{
             span.append(this.sign.toHTML(this.parent));
 
             if(this.docs){
-                p.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
                 p.append(this.docs.toHTML(undefined));
             }
 
@@ -559,7 +558,6 @@ module DTSDoc{
         	);
 
             if(this.docs){
-                section.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
                 section.append(this.docs.toHTML(undefined));
             }
 

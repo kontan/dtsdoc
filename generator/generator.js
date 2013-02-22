@@ -159,11 +159,11 @@ var Parsect;
     Parsect.string = string;
     function regexp(pattern) {
         return new Parser("regexp \"" + pattern + "\"", function (s) {
-            pattern.lastIndex = s.position;
-            var ms = pattern.exec(s.source);
-            if(ms && ms.length > 0 && ms.index == s.position) {
+            var input = s.source.slice(s.position);
+            var ms = pattern.exec(input);
+            if(ms && ms.index == 0 && ms.length > 0) {
                 var m = ms[0];
-                return s.success(m.length, m);
+                return input.indexOf(ms[0]) == 0 ? s.success(m.length, m) : s.fail("expected /" + pattern + "/");
             } else {
                 return s.fail("expected " + pattern);
             }
@@ -198,11 +198,24 @@ var Parsect;
                     }
                 }
             };
+            s.followedBy = function (p) {
+                var _st = p.parse(st.source);
+                if(!_st.success) {
+                    st = st.source.fail('unexpected \"' + _st.source.source.slice(_st.position, _st.position + 1) + '\"');
+                }
+            };
+            s.notFollowedBy = function (p) {
+                var _st = p.parse(st.source);
+                if(_st.success) {
+                    st = st.source.fail('unexpected ' + p.expected);
+                }
+            };
             s.success = function () {
                 return st.success;
             };
-            s.source = function () {
-                return st.source.source.slice(st.source.position);
+            s.source = function (n) {
+                if (typeof n === "undefined") { n = 32; }
+                return st.source.source.slice(st.source.position, st.source.position + n);
             };
             s.result = function () {
                 return st.value;
@@ -302,6 +315,11 @@ var Parsect;
         for (var _i = 0; _i < (arguments.length - 0); _i++) {
             ps[_i] = arguments[_i + 0];
         }
+        for(var i = 0; i < arguments.length; i++) {
+            if(!arguments[i]) {
+                throw 'Invalid Argument';
+            }
+        }
         var ps = arguments;
         return new Parser("or", function (source) {
             for(var i = 0; i < ps.length; i++) {
@@ -327,13 +345,6 @@ var Parsect;
         return new Parser("optional", option(undefined, p).parse);
     }
     Parsect.optional = optional;
-    function notFollowedBy(value, p) {
-        return new Parser("notFollowedBy " + p.name, function (source) {
-            var st = p.parse(source);
-            return st.success ? State.success(source, value) : st.source.fail('not expected ' + p.expected);
-        });
-    }
-    Parsect.notFollowedBy = notFollowedBy;
     function map(f, p) {
         return new Parser("map(" + p.name + ")", function (source) {
             var st = p.parse(source);
@@ -384,6 +395,18 @@ var Parsect;
             return v;
         });
     };
+    function log(f) {
+        var count = 0;
+        return new Parser("log", function (source) {
+            var pos = Math.floor(100 * source.position / source.source.length);
+            if(pos > count) {
+                count = pos;
+                f(count);
+            }
+            return source.success(0);
+        });
+    }
+    Parsect.log = log;
     Parsect.eof = new Parser('eof', function (source) {
         return source.position === source.source.length ? source.success(1) : source.fail();
     });
@@ -997,7 +1020,6 @@ var DTSDoc;
             span.append("function " + this.name);
             span.append(this.sign.toHTML(this.parent));
             if(this.docs) {
-                p.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
                 p.append(this.docs.toHTML(undefined));
             }
             return p;
@@ -1063,7 +1085,6 @@ var DTSDoc;
             var content = $('<section class="ts_modulemember_content"/>').appendTo(section);
             content.append($('<span class="ts_code"/>').append($('<span class="ts_reserved ts_reserved_var">var</span>')).append(this.name).append(this.type.toHTML(this.parent)));
             if(this.docs) {
-                section.append($('<p class="ts_classmember_description"/>').html(this.docs.text));
                 section.append(this.docs.toHTML(undefined));
             }
             return section;
@@ -1248,13 +1269,15 @@ var DTSDoc;
 })(DTSDoc || (DTSDoc = {}));
 var DTSDoc;
 (function (DTSDoc) {
-    var lineComment = regexp(/\/\/[^\n]*(\n|$)/g);
-    var blockComment = regexp(/\/\*(?!\*)(.|\r|\n)*?\*\//gm);
+    var lineComment = regexp(/^\/\/[^\n]*(\n|$)/);
+    var blockComment = regexp(/^\/\*(?!\*)([^*]|\r|\n|\*(?!\/))*?\*\//m);
     var comment = or(lineComment, blockComment);
-    var whitespace = regexp(/[ \t\r\n]+/gm);
+    var whitespace = regexp(/^[ \t\r\n]+/m);
     var spaces = many(or(whitespace, comment));
+    var logger;
     function lexme(p) {
         return seq(function (s) {
+            s(logger);
             var v = s(p);
             s(spaces);
             return v;
@@ -1264,7 +1287,7 @@ var DTSDoc;
         return lexme(string(s));
     };
     var keyword = function (s) {
-        return lexme(regexp(new RegExp(s + '(?!(\\w|_))', 'g')));
+        return lexme(regexp(new RegExp('^' + s + '(?!(\\w|_))', '')));
     };
     var colon = DTSDoc.reserved(":");
     var semi = DTSDoc.reserved(";");
@@ -1274,23 +1297,23 @@ var DTSDoc;
     var pStatic = option(false, map(function () {
         return true;
     }, keyword("static")));
-    var pIdentifierPath = lexme(regexp(/([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/g));
-    var pIdentifier = lexme(regexp(/[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/g));
-    var pStringRiteral = lexme(regexp(/(\"[^\"]+\"|\'[^\']+\')/g));
+    var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
+    var pIdentifier = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
+    var pStringRiteral = lexme(regexp(/^(\"[^\"]+\"|\'[^\']+\')/));
     var pAccessibility = option(DTSDoc.Accessibility.Public, or(map(function () {
         return DTSDoc.Accessibility.Public;
     }, DTSDoc.reserved("public")), map(function () {
         return DTSDoc.Accessibility.Private;
     }, DTSDoc.reserved("private"))));
-    var rDocumentComment = /\/\*\*((\*(?!\/)|[^*])*)\*\//gm;
-    var rTags = /\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/gm;
+    var rDocumentComment = /^\/\*\*((\*(?!\/)|[^*])*)\*\//m;
+    var rTags = /^\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/gm;
     var pDocumentComment = option(undefined, lexme(seq(function (s) {
         var text = s(regexp(rDocumentComment));
         s(whitespace);
         if(s.success()) {
             rDocumentComment.lastIndex = 0;
             var innerText = rDocumentComment.exec(text)[1].split('*').join(' ');
-            var pDescription = /([^@]|\@(?![a-z]))*/gm;
+            var pDescription = /^([^@]|\@(?![a-z]))*/m;
             var arr = pDescription.exec(innerText);
             var description = arr[0];
             rTags.lastIndex = pDescription.lastIndex;
@@ -1586,6 +1609,9 @@ var DTSDoc;
         });
     }, many(or(DTSDoc.pModuleMember, DTSDoc.reserved(';'), pImport)));
     DTSDoc.pProgram = seq(function (s) {
+        logger = Parsect.log(function (n) {
+            console.log('dtsdoc: ' + n + '%');
+        });
         s(lexme(spaces));
         var docs = s(pDocumentComment);
         var members = s(pModuleMembers);

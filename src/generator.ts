@@ -1,4 +1,6 @@
-/// <reference path="../typings/jquery.d.ts" />
+/// <reference path="../..DefinitelyTyped/jquery/jquery.d.ts" />
+/// <reference path="../../DefinitelyTyped/filewriter/filewriter.d.ts" />
+/// <reference path="../../DefinitelyTyped/filesystem/filesystem.d.ts" />
 /// <reference path="../Parsect/src/parsect.ts" />
 /// <reference path="../Parsect/src/globals.ts" />
 /// <reference path="../Parsect/src/type.ts" />

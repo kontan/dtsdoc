@@ -1,10 +1,8 @@
 --target ES5
---out test/generator.js
+--out generator/generator.js
 ../Parsect/src/parsect.ts
 ../Parsect/src/globals.ts
 src/type.ts
 src/parser.ts
-src/filewriter.d.ts
-src/file.d.ts
 src/links.ts
 src/generator.ts
