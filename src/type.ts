@@ -203,7 +203,10 @@ module DTSDoc{
             b.elem('h1', "ts_modulemember_title ts_class_title", {}, ()=>{
                 var fullName = this.getFullName();
                 var linkURL = this.getLinkString();
-                b.elem('a', 'ts_modulemember_a', { "name": linkURL, "href": '#' + linkURL }, this.memberKind + " " + this.name);
+                b.anchor(linkURL);
+                b.link('#' + linkURL, ()=>{
+                    b.span('ts_modulemember_a', this.memberKind + " " + this.name);
+                });
             });
         }
     }

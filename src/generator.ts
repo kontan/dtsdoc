@@ -202,7 +202,7 @@ loadSourceFile("sample.d.ts");
 $.ajax('lib.d.ts', {
     success: (data)=>{
         var result = DTSDoc.pProgram().parse(new Source(data, 0));
-        console.log(generateTypeList('lib.d.ts.html', result.value.global));
+        console.log(generateTypeList('http://phyzkit.net/docs/lib.d.ts.html', result.value.global));
     }
 });
 */

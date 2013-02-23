@@ -46,23 +46,23 @@ a:active {
     text-decoration:underline;
 }
 
-a.ts_modulemember_a{
+.ts_modulemember_a{
     color: black;
     text-decoration:none;
 }
-a.ts_modulemember_a:link{
+.ts_modulemember_a:link{
     color: black;
     text-decoration:none;
 }
-a.ts_modulemember_a:visited {
+.ts_modulemember_a:visited {
     color: black;
     text-decoration:none;
 }
-a.ts_modulemember_a:hover {
+.ts_modulemember_a:hover {
     color: black;
     text-decoration:underline;
 }
-a.ts_modulemember_a:active {
+.ts_modulemember_a:active {
     color: black;	
     text-decoration:underline;
 }

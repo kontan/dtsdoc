@@ -70,7 +70,9 @@ module DTSDoc{
 			this.elem('a', '', {'name': name});
 		}
 
-		link(url:string, content:string):void{
+		link(url:string, content:string):void;
+		link(url:string, content:()=>void):void;
+		link(url:string, content:any):void{
 			this.elem('a', '', { 'href': url }, content);
 		}
 
