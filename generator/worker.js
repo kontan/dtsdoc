@@ -2371,139 +2371,60 @@ var typeNameLinks = {
     "MSMediaErrorExtensions": "lib.d.ts.html#MSMediaErrorExtensions",
     "ITextWriter": "lib.d.ts.html#ITextWriter"
 };
-var fileInput = $("#input_file");
-var openButton = $("#button_open");
-var genButton = $("#gen");
-var textarea = $("#source");
-var docs = $("#docs");
-textarea.val("");
-function getFullHTML(bodyHTML, callback) {
-    var cssText;
-    var templete;
-    function onAjaxComplete() {
-        if(cssText && templete) {
-            templete = templete.replace('<!-- CSS Content -->', cssText);
-            templete = templete.replace('<!-- Document Content -->', bodyHTML);
-            callback(templete);
-        }
-    }
-    $.ajax("style.css", {
-        contentType: "text/plain",
-        dataType: "text",
-        success: function (data) {
-            cssText = data;
-            onAjaxComplete();
-        }
-    });
-    $.ajax('templete.html', {
-        dataType: 'text',
-        success: function (data, dataType) {
-            templete = data;
-            onAjaxComplete();
-        }
-    });
-}
-function updateDocument(documentContent) {
-    var _Blob = Blob;
-    var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-    getFullHTML(documentContent, function (content) {
-        var downloadBlob = new _Blob([
-            content
-        ], {
-            "type": "text/html"
-        });
-        var tempFileName = "docs.html";
-        requestFileSystem(window.TEMPORARY, downloadBlob.size, function (fileSystem) {
-            function createTempFile() {
-                fileSystem.root.getFile(tempFileName, {
-                    create: true
-                }, function (fileEntry) {
-                    fileEntry.createWriter(function (fileWriter) {
-                        fileWriter.addEventListener('writeend', function (e) {
-                            $('#downloadLink').attr('href', fileEntry.toURL());
-                        });
-                        fileWriter.write(downloadBlob);
-                    });
-                }, function (error) {
-                    throw error;
+self.onmessage = function (event) {
+    var sourceCode = event.data;
+    var result = DTSDoc.pProgram.parse(new Source(sourceCode, 0));
+    if(result.success) {
+        var program = result.value;
+        var global = program.global;
+        var members = global.members;
+        var b = new DTSDoc.HTMLBuilder();
+        b.div('', function () {
+            if(global.docs) {
+                b.p('', function () {
+                    global.docs.build(b);
                 });
             }
-            fileSystem.root.getFile(tempFileName, {
-            }, function (fileEntry) {
-                fileEntry.remove(createTempFile);
-            }, createTempFile);
+            b.h2('Contents');
+            b.ul("contents", function () {
+                b.li(function () {
+                    b.link("#members", 'Members');
+                });
+                b.li(function () {
+                    b.link("#hierarchy", 'Class Hierarchy');
+                });
+            });
+            b.anchor("members");
+            b.h2('Members');
+            b.div('', function () {
+                members.map(function (m) {
+                    m.build(b);
+                });
+            });
+            b.hr();
+            b.anchor("hierarchy");
+            b.h2('Class Hierarchy');
+            b.div('', function () {
+                global.buildHierarchy(b);
+            });
+            b.hr();
+            b.elem('footer', '', {
+            }, function () {
+                b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
+            });
         });
-    });
-}
-function generateDocuments() {
-    docs.children().remove();
-    docs.append("<p>Parsing...</p>");
-    setTimeout(function () {
-        var sourceCode = textarea.val();
-        var worker = new Worker("worker.js");
-        worker.addEventListener('message', function (event) {
-            var dat = event.data;
-            docs.children().remove();
-            if(dat['type'] === 'success') {
-                var documentContent = event.data['docs'];
-                docs.html(documentContent);
-                updateDocument(documentContent);
-            } else {
-                docs.html("<p>Parsing failed at line " + dat.line + ", column " + dat.column + ": \"" + dat.source + "\", " + dat.message + "</p>");
-            }
-        });
-        worker.postMessage(sourceCode);
-    }, 1);
-}
-genButton.click(function () {
-    generateDocuments();
-});
-fileInput.change(function () {
-    var input = fileInput[0];
-    var files = input.files;
-    var reader = new FileReader();
-    reader.addEventListener('load', function (e) {
-        textarea.val(reader.result);
-        generateDocuments();
-    });
-    reader.readAsText(files[0]);
-});
-openButton.click(function () {
-    fileInput.val(undefined);
-    fileInput.trigger('click');
-});
-function loadSourceFile(url) {
-    $.ajax(url, {
-        contentType: "text/plain",
-        dataType: "text",
-        success: function (data) {
-            textarea.val(data);
-            generateDocuments();
-        }
-    });
-}
-function generateHierarchy(global) {
-    var section = $('<section/>');
-    return section;
-}
-function generateTypeList(path, global) {
-    var list = {
-    };
-    function generateTypeListFromModule(m) {
-        list[m.name] = path + "#" + m.name;
-        m.members.forEach(function (m) {
-            if(m instanceof DTSDoc.ASTInterface) {
-                list[m.name] = path + "#" + m.name;
-            } else if(m instanceof DTSDoc.ASTClass) {
-                list[m.name] = path + "#" + m.name;
-            } else if(m instanceof DTSDoc.ASTEnum) {
-                list[m.name] = path + "#" + m.name;
-            } else if(m instanceof DTSDoc.ASTModule) {
-                generateTypeListFromModule(m);
-            }
-        });
+        postMessage({
+            "type": 'success',
+            "docs": b.buildString()
+        }, undefined);
+    } else {
+        var pos = result.source.getPosition();
+        postMessage({
+            "type": 'fail',
+            'line': pos.line,
+            'column': pos.column,
+            'source': result.source.source.slice(result.source.position, result.source.position + 128),
+            'message': result.errorMesssage
+        }, undefined);
     }
-    generateTypeListFromModule(global);
-    return JSON.stringify(list);
-}
-loadSourceFile("sample.d.ts");
+};

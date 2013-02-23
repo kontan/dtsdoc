@@ -395,7 +395,11 @@ module DTSDoc{
 	var pModuleMembers:Parsect.Parser = map(ms=>ms.filter(m => m instanceof ASTModuleMember), many(or(pModuleMember, reserved(';'), pImport)));
 
 	export var pProgram = seq(s=>{
-		logger = Parsect.log(n=>{ console.log('dtsdoc: ' + n + '%'); });
+		logger = Parsect.log(n=>{ 
+			//if(window.console && window.console.log){
+			//	console.log('dtsdoc: ' + n + '%'); 
+			//}
+		});
 
 		s(lexme(spaces));
 		var docs = s(pDocumentComment);

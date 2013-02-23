@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<style type="text/css">
-			h5.generatorTitle{ text-align: center; }
+			.gen_title{ text-align: center; font-size: large; }
 		</style>
 
 		<!-- Web fonts -->
@@ -14,19 +14,26 @@
 
 	</head>
 	<body>
-		<h5 class="generatorTitle"><a href="https://github.com/kontan/dtsdoc" target="_blank">DTSDoc - Documentation Generator for TypeScript Ambient Source File</a></h5>
+		<section style="margin:2em;">
+			<h1 class="gen_title"><a href="https://github.com/kontan/dtsdoc" target="_blank">DTSDoc - Documentation Generator for TypeScript Ambient Source File</a></h1>
+			<h2>Ussage</h2>
+			<ul>
+				<li>You can directly input your definition in the textarea. Push the Regenerate button to generate a document.</li>
+				<li>You can also load your local definition file. Push to Open button to show a file dialog. </li>
+				<li>Downloading a generated file is available only Chorme with "--enable-experimental-extension-apis" option because it uses File System API. </li>
+			</ul>
+			<p></p>
+		</section>
 		<textarea id="source"></textarea>
 		<div>
 			<input id="input_file" type="file" value=""></input>
 			<input id="button_open" type="button" value="Open"></input>
-			<input id="gen" type="button" value="Regenerate"></input>
+			<input id="gen" type="button" value="Generate"></input>
 			<a id="downloadLink" href="hoge.png" target="_blank"><input id="download" type="button" value="Download"></input></a>			
 		</div>
 		<hr />
 		<div id="docs"></div>
 		<script type="text/javascript" src="jquery-1.8.3.js"></script>
-		<script type="text/javascript" src="../../Parsect/src/parsect.js"></script>
-		<script type="text/javascript" src="../../Parsect/src/globals.js"></script>
 		<script type="text/javascript" src="generator.js"></script>
 	</body>
 </html>
