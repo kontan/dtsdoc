@@ -112,12 +112,12 @@ module DTSDoc{
                     b.span('ts_reserved', this.name);
                 }else if(typeNameLinks[this.name]){
                     // External Link
-                    b.a('', typeNameLinks[this.name], this.name);
+                    b.link(typeNameLinks[this.name], this.name);
                 }else{
                     // Internal Link
                     var member = scope.searchType(this);
                     if(member){
-                        b.a('', "#" + member.getLinkString(), this.name);                    
+                        b.link("#" + member.getLinkString(), this.name);                    
                     }else{
                         b.span('', this.name);
                     }
@@ -215,14 +215,6 @@ module DTSDoc{
     export class ASTClassMember{
         parent:ASTClass;
         docs:ASTDocs;
-        build(b:HTMLBuilder, scope:ASTModule):void{
-            b.div('ts_class_member_container', ()=>{
-                this.buildMember(b);
-                if(this.docs){
-                    this.docs.build(b);
-                }
-            });
-        }
         buildMember(b:HTMLBuilder):void{}
     }
 
@@ -353,9 +345,9 @@ module DTSDoc{
 
                     b.h3('Members');
                     this.members.forEach((m:ASTClassMember)=>{
-                        if(m.build){
+                        if(m.buildMember){
                             b.div("ts_classcontent ts_classmember", ()=>{
-                                m.build(b, this.parent);
+                                m.buildMember(b);
                                 if(m.docs){
                                     b.div("ts_classmemberdescription", ()=>{
                                         m.docs.build(b);
@@ -724,4 +716,66 @@ module DTSDoc{
             this.global.build(b);
         }
     }
+
+
+    export function generateDocument(sourceCode:string, watcher?:(v:number)=>void):any{
+        var result = DTSDoc.pProgram(watcher).parse(new Source(sourceCode, 0));
+        if(result.success){
+            var program:DTSDoc.ASTProgram = result.value;
+            var global:DTSDoc.ASTModule = program.global;
+            var members = global.members;
+
+            var b = new DTSDoc.HTMLBuilder();
+            
+            b.div('', ()=>{
+                if(global.docs){
+                    b.p('', ()=>{
+                        global.docs.build(b);
+                    });
+                }
+                b.h2('Contents');
+                b.ul("contents", ()=>{
+                    b.li(()=>{
+                        b.link("#members", 'Members');
+                    });
+                    b.li(()=>{
+                        b.link("#hierarchy", 'Class Hierarchy');
+                    });
+                });
+
+                b.anchor("members");
+                b.h2('Members');        
+                b.div('', ()=>{
+                    members.map((m)=>{
+                        m.build(b);
+                    });
+                });                         
+                b.hr();
+                b.anchor("hierarchy");
+                b.h2('Class Hierarchy');
+                b.div('', ()=>{
+                    global.buildHierarchy(b);
+                });
+                b.hr();
+                b.elem('footer', '', {}, ()=>{
+                    b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
+                });
+                
+            });
+
+            return {
+                "type": 'success',
+                "docs": b.buildString()
+            };
+        }else{
+            var pos = result.source.getPosition();
+            return {
+                "type": 'fail',
+                'line': pos.line,
+                'column': pos.column,
+                'source': result.source.source.slice(result.source.position, result.source.position + 128),
+                'message': result.errorMesssage
+            };
+        }
+    };
 }

@@ -3,7 +3,12 @@
 	<head>
 		<meta charset="utf-8">
 		<style type="text/css">
-			.gen_title{ text-align: center; font-size: large; }
+			.gen_title{ 
+				text-align: center; font-size: large; 
+			}
+			input{
+				vertical-align: top;
+			}
 		</style>
 
 		<!-- Web fonts -->
@@ -29,7 +34,9 @@
 			<input id="input_file" type="file" value=""></input>
 			<input id="button_open" type="button" value="Open"></input>
 			<input id="gen" type="button" value="Generate"></input>
-			<a id="downloadLink" href="hoge.png" target="_blank"><input id="download" type="button" value="Download"></input></a>			
+			<a id="downloadLink" href="hoge.png" target="_blank"><input id="download" type="button" value="Download"></input></a>	
+			<canvas id="progressbar" width="300" height="40" style="border:solid 1px black; margin: 4px; display: inline;"></canvas>	
+			<div id="performance" style="vertical-align: top; padding: 12px;"></div>	
 		</div>
 		<hr />
 		<div id="docs"></div>

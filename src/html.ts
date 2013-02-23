@@ -71,7 +71,7 @@ module DTSDoc{
 		}
 
 		link(url:string, content:string):void{
-			this.elem('a', '', {}, content);
+			this.elem('a', '', { 'href': url }, content);
 		}
 
 		hr():void{

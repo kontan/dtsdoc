@@ -394,26 +394,28 @@ module DTSDoc{
 
 	var pModuleMembers:Parsect.Parser = map(ms=>ms.filter(m => m instanceof ASTModuleMember), many(or(pModuleMember, reserved(';'), pImport)));
 
-	export var pProgram = seq(s=>{
-		logger = Parsect.log(n=>{ 
-			//if(window.console && window.console.log){
-			//	console.log('dtsdoc: ' + n + '%'); 
-			//}
+	export function pProgram(watcher?:(v:number)=>void):Parsect.Parser{
+		return seq(s=>{
+			logger = Parsect.log(n=>{ 
+				if(watcher){
+					watcher(n);
+				}
+			});
+
+			s(lexme(spaces));
+			var docs = s(pDocumentComment);
+			var members = s(pModuleMembers);
+			s(eof);
+			if(s.success()){
+				var mod = new ASTModule("(global)", members);
+				members.forEach((m)=>{ m.parent = mod; });
+				mod.updateHierarchy();
+				//return mod;
+
+				var prog = new ASTProgram(mod);
+				prog.docs = docs;
+				return prog;
+			}
 		});
-
-		s(lexme(spaces));
-		var docs = s(pDocumentComment);
-		var members = s(pModuleMembers);
-		s(eof);
-		if(s.success()){
-			var mod = new ASTModule("(global)", members);
-			members.forEach((m)=>{ m.parent = mod; });
-			mod.updateHierarchy();
-			//return mod;
-
-			var prog = new ASTProgram(mod);
-			prog.docs = docs;
-			return prog;
-		}
-	});
+	}
 }
