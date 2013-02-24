@@ -2,6 +2,21 @@
  * <h1>dtsdoc/TypeScript Ambient Source File Documentation Generator</h1>
  */
 
+
+/**
+ * - hoge
+ * - piyo
+ * - foo
+ *
+ * ----
+ */
+class Hoge{
+}
+
+
+/**** Comment *****/
+
+
 module S.T.U{
     class V{
     }

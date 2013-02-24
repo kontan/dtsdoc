@@ -79,7 +79,7 @@ function updateDocument(documentContent:string){
 }
 
 function generateDocuments(sync?:bool, watcher?:(v:number)=>void){
-    //sync = true;
+    sync = true;
 
     docs.children().remove();
     var canvas = $('#progressbar');

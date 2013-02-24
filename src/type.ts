@@ -1,5 +1,9 @@
-
+/// <reference path="../../DefinitelyTyped/marked/marked.d.ts" />
 /// <reference path="html.ts" />
+
+//import markedmod = module("marked");
+
+//import hoge = module("marked");
 
 module DTSDoc{
 
@@ -25,7 +29,9 @@ module DTSDoc{
         build(b:HTMLBuilder):void{
             b.elem('section', 'ts_classmember_description', {}, ()=>{
                 if(this.text){
-                    b.elem('p', '', {}, this.text);
+                    //b.elem('p', '', {}, markedmod(this.text));
+                    //b.elem('p', '', {}, this.text);
+                    b.elem('p', '', {}, window['marked'](this.text));
                 }
                 if(this.sections.length > 0){
                     
@@ -57,7 +63,6 @@ module DTSDoc{
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
                 b.span('', this.name);
-                b.span('ts_symbol ts_colon', ':');
                 this.type.build(b, scope);
             });
         }
@@ -294,7 +299,9 @@ module DTSDoc{
                 b.section("ts_modulemember_content", ()=>{
                     // description
                     if(this.docs){
-                        b.div("ts_classcontent ts_classdescription", this.docs.text);
+                        b.div("ts_classcontent ts_classdescription", ()=>{
+                            this.docs.build(b);
+                        });
                         b.hr();
                     }
 

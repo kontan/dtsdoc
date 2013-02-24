@@ -18,3 +18,15 @@ See [my Web Site](http://phyzkit.net/).
 * Interface is structual: Finding of subtype of interface is difficult because all combination of Classed and Interfaces have to be checked. 
 
 * Module is open: One-to-one mapping of a module and a source file does not hold true. I want to keep this docs generator simple but never seems to get there...
+
+* javadoc/jsdoc style start/end tag (/** */) is so bad...("@tag" is good!), because:
+    * Needs Addtional lines
+    * Complicating parsers
+    * Break nested block comment
+    * Ugly, jaggy indentation
+    * no uniformity: asterisks on line top is needed or not?
+    * Break other markup like markdown (ex:  
+
+    /*
+     * *hoge* <- ???
+     */

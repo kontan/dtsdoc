@@ -9,7 +9,7 @@ module DTSDoc{
 	////////////////////////////////////////////////////////////////////////////////////
 	
 	var lineComment      = regexp(/^\/\/[^\n]*(\n|$)/);
-	var blockComment     = regexp(/^\/\*(?!\*)([^*]|\r|\n|\*(?!\/))*?\*\//m);
+	var blockComment     = regexp(/^\/(\*(?!\*)|\*\*\*+)([^*]|\r|\n|\*(?!\/))*?\*\//m);
 	var comment          = or(lineComment, blockComment);
 	var whitespace       = regexp(/^[ \t\r\n]+/m);
 	var spaces           = many(or(whitespace, comment));
@@ -47,7 +47,7 @@ module DTSDoc{
 		map(()=>Accessibility.Private, reserved("private"))
 	));
 
-	var rDocumentComment = /^\/\*\*((\*(?!\/)|[^*])*)\*\//m;
+	var rDocumentComment = /^\/\*(\*(?!\*))((\*(?!\/)|[^*])*)\*\//m;
 	var rTags = /^\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
 
 	var pDocumentComment     = option(undefined, lexme(seq(s=>{
@@ -55,7 +55,7 @@ module DTSDoc{
 		s(whitespace);
 		if(s.success()){
 			rDocumentComment.lastIndex = 0;
-			var innerText = rDocumentComment.exec(text)[1].split('*').join(' ');
+			var innerText = rDocumentComment.exec(text)[2].split(/\n[ \t]*\*[ ]?/).join('\n');
 			var pDescription = /^([^@]|\@(?![a-z]))*/m;
 			var arr = pDescription.exec(innerText);
 			var description = arr[0];
