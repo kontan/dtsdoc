@@ -3,10 +3,11 @@ var fs = require('fs');
 
 function copyFile(from, to){
 	var fromFile = fs.createReadStream(from);
-	var toFile = fs.createWriteStream(to);
+	var toFile = fs.createWriteStream(to, { flags: 'w+'});
 	toFile.once('open', function(fd){
 	    require('util').pump(fromFile, toFile);
 	});
+	console.log('copying from ' + from + ' to ' + to);
 }
 
 function concatFiles(out, files){
@@ -17,21 +18,40 @@ function concatFiles(out, files){
 	fs.writeFileSync(out, result);
 }
 
+
+function exec(command, func){
+	console.log(command);
+	//jake.exec(command, {printStdout: true, printStderr: true }, func);
+
+	var ex = jake.createExec([command], {printStdout: true, printStderr: true });
+	ex.addListener('stdout', function (msg) {
+		console.log('stdout: ' + msg.toString());
+	});
+	ex.addListener('stderr', function (msg) {
+		console.log('stderr: ' + msg.toString());
+	});
+	ex.addListener('error', function (msg, code) {
+		console.log('error(' + code + '): ' + msg.toString());
+	});
+	ex.addListener('cmdEnd', func);
+	ex.run();
+}
+
 var commonOptions = [
 	'--target ES5',
-	'--out temp',
-	'../Parsect/src/parsect.ts',
-	'../Parsect/src/globals.ts',
-	'src/html.ts',
-	'src/primitives.ts',
-	'src/links.ts',
-	'src/type.ts',
+	//'src/html.ts',
+	//'src/primitives.ts',
+	//'src/links.ts',
+	//'src/type.ts',
 	'src/parser.ts'
 ];
 
 task('node', function(){
-	var options = commonOptions.concat(['--out temp', 'src/node.ts']).join(' ');
-	jake.exec('tsc ' + options, function(){
+	exec('tsc ' + commonOptions.concat(['--out temp', 'src/command.ts']).join(' '), function(){
+		copyFile('src/marked.js', 'build/node/marked.js');
+		copyFile('src/template.html', 'build/node/template.html');
+		copyFile('src/style.css', 'build/node/style.css');
+		copyFile('temp/dtsdoc/src/command.js', 'build/node/command.js');
 		concatFiles('build/node/dtsdoc.js', [
 			'temp/Parsect/src/parsect.js',
 			'temp/Parsect/src/globals.js',
@@ -40,32 +60,31 @@ task('node', function(){
 			'temp/dtsdoc/src/links.js',
 			'temp/dtsdoc/src/type.js',
 			'temp/dtsdoc/src/parser.js',
-			'temp/dtsdoc/src/node.js'
+			'temp/dtsdoc/src/paralet.js',
+			'temp/dtsdoc/src/dtsdoc.js'
 		]);
+
 	});
-	copyFile('src/marked.js', 'build/node/marked.js');
 });
 
 task('web', function(){
-	var options = commonOptions.concat(['--out build/web/generator.js', 'src/generator.ts']).join(' ');
-	jake.exec('tsc ' + options, function(){
+	exec('tsc ' + commonOptions.concat(['--out build/web/generator.js', 'src/generator.ts']).join(' '), function(){
 		concatFiles('build/web/generator.js', ['src/marked.js', 'build/web/generator.js']);
+		copyFile('src/style.css', 'build/web/style.css');
+		copyFile('src/template.html', 'build/web/template.html');
+		copyFile('src/index.html', 'build/web/index.html');
+		copyFile('src/sample.d.ts', 'build/web/sample.d.ts');
+		copyFile('src/jquery-1.8.3.js', 'build/web/jquery-1.8.3.js');	
 	});
-	copyFile('src/style.css', 'build/web/style.css');
-	copyFile('src/templete.html', 'build/web/templete.html');
-	copyFile('src/index.html', 'build/web/index.html');
-	copyFile('src/sample.d.ts', 'build/web/sample.d.ts');
-	copyFile('src/jquery-1.8.3.js', 'build/web/jquery-1.8.3.js');
 });
 
 task('worker', function(){
-	var options = commonOptions.concat(['--out build/web/worker.js', 'src/worker.ts']).join(' ');
-	jake.exec('tsc ' + options, function(){
-		concatFiles('build/web/worker.js', ['src/marked.js', 'build/web/worker.js']);
+	exec('tsc ' + commonOptions.concat(['--out build/web/worker.js', 'src/worker.ts']).join(' '), function(){
+		concatFiles('build/web/worker.js', ['src/marked.js', 'build/web/worker.js']);	
 	});
 });
 
-task('default', function() {
+task('default', {async: true}, function() {
 	jake.Task['web'].invoke();
 	jake.Task['worker'].invoke();
 	jake.Task['node'].invoke();

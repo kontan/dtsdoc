@@ -2,6 +2,8 @@
 /// <reference path="../../Parsect/src/globals.ts" />
 /// <reference path="../../Parsect/src/type.ts" />
 
+/// <reference path="type.ts" />
+
 module DTSDoc{	
 
 	////////////////////////////////////////////////////////////////////////////////////

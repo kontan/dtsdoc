@@ -13,27 +13,44 @@ See [my Web Site](http://phyzkit.net/).
 
 # Build
 
-In node.js,
+In node.js command line,
 
 1. `npm install -g jakefile`
 2. `jake`
 
+# Usage
+
+## From command line
+To run dtsdoc in node.js, you needs 5 files in build/node dir. `command.js` is command line script, so: 
+
+`node build/node/command source_file_path`
+
+will generate document in the same directory of the input file.
+
+## As node.js module
+
+See `build/node/command.js` or `src/command.ts` as example.
+
+## In Web browser
+
+Open `build/web/index.html` in your browser. In Chrome, `--allow-file-access-from-files` option is needed to run locally.
+
 #Problems
 
-## Interface is open:
+## Interface is open
 Multiple interfaces with the same name exist together. Merge or split them in documents? Which definition should be linked from a interface name? 
 
-## Interface is structual: 
+## Interface is structual
 Finding of subtype of interface is difficult because all combination of Classed and Interfaces have to be checked. 
 
-## Module is open: 
+## Module is open
 One-to-one mapping of a module and a source file does not hold true. I want to keep this docs generator simple but never seems to get there...
 
 ## Ugly tags
 javadoc/jsdoc style start/end tag (from `/**` to `*/`) is not good...(though `@tag` is good!), because:
   
 ### Needs Addtional lines
-Generally a single line description needes three lines in the documents.
+Generally a single line code needes three lines of the document.
 
     /**                               <- Boo!
      *  Variable hoge is bad.
@@ -68,7 +85,7 @@ C#-style document comment is simple:
 		     */                               
 		    hoge:Hoge;
 		}
-	*/							              <- Oops! Check format of expression term!
+	*/							              <- Oops! "Check format of expression term"!
 
 ### Jaggy indentation
 

@@ -1,6 +1,8 @@
 /// <reference path="html.ts" />
+/// <reference path="primitives.ts" />
+/// <reference path="links.ts" />
 
-declare function require(name:string):any;
+declare var require:any;
 
 var marked:(markdown:string)=>string;
 

@@ -33,7 +33,7 @@ function getFullHTML(bodyHTML:string, callback:(html:string)=>void){
             onAjaxComplete();
         }
     });
-    $.ajax('templete.html', {
+    $.ajax('template.html', {
         contentType: "text/plain",
         dataType: 'text',
         success: (data:string, dataType:string)=>{
