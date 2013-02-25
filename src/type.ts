@@ -1,9 +1,6 @@
-/// <reference path="../../DefinitelyTyped/marked/marked.d.ts" />
 /// <reference path="html.ts" />
 
-//import markedmod = module("marked");
-
-//import hoge = module("marked");
+var marked:(markdown:string)=>string = this.marked;
 
 module DTSDoc{
 
@@ -15,10 +12,10 @@ module DTSDoc{
         constructor(public tag:string, public text:string){}
         build(b:HTMLBuilder):void{
             if(this.tag == 'param'){
-                b.elem('dl', 'ts_param', {}, ()=>{
+                b.dl('ts_param', ()=>{
                     var arr = /([_a-zA-Z]+)(.*)/.exec(this.text);
-                    b.elem('dt', 'ts_code ts_param_name', {}, arr[1]);
-                    b.elem('dt', 'ts_param_description', {}, arr[2]);
+                    b.dt('ts_code ts_param_name', arr[1]);
+                    b.dd('ts_param_description', arr[2]);
                 });
             }
         }
@@ -31,7 +28,8 @@ module DTSDoc{
                 if(this.text){
                     //b.elem('p', '', {}, markedmod(this.text));
                     //b.elem('p', '', {}, this.text);
-                    b.elem('p', '', {}, window['marked'](this.text));
+                    
+                    b.elem('p', '', {}, marked(this.text));
                 }
                 if(this.sections.length > 0){
                     
@@ -115,15 +113,18 @@ module DTSDoc{
                     this.name == "void"
                 ){
                     b.span('ts_reserved', this.name);
-                }else if(typeNameLinks[this.name]){
-                    // External Link
-                    b.link(typeNameLinks[this.name], this.name);
+                }else if(primitiveTypeNameLinks[this.name]){
+                    b.link(primitiveTypeNameLinks[this.name], this.name);
                 }else{
-                    // Internal Link
                     var member = scope.searchType(this);
                     if(member){
+                        // Internal Link
                         b.link("#" + member.getLinkString(), this.name);                    
+                    }else if(typeNameLinks[this.name]){
+                        // External Link
+                        b.link(typeNameLinks[this.name], this.name);
                     }else{
+                        // Not found...
                         b.span('', this.name);
                     }
                 }
@@ -205,7 +206,7 @@ module DTSDoc{
             return encodeURIComponent(this.memberKind + ' ' + this.getFullName());
         }
         buildTitle(b:HTMLBuilder):void{
-            b.elem('h1', "ts_modulemember_title ts_class_title", {}, ()=>{
+            b.h1("ts_modulemember_title ts_class_title", ()=>{
                 var fullName = this.getFullName();
                 var linkURL = this.getLinkString();
                 b.anchor(linkURL);
@@ -232,7 +233,7 @@ module DTSDoc{
         constructor(public params:ASTParameters){ super(); }
         buildMember(b:HTMLBuilder):void{
             b.div("ts_code ts_class_member_title ts_constructor", ()=>{
-                b.elem('a', '', {"name": this.parent.name + "-constructor"});
+                b.anchor(this.parent.name + "-constructor");
                 b.span("ts_reserved ts_reserved_constructor", 'constructor');
                 this.params.build(b, this.parent.parent); 
             });
@@ -433,11 +434,11 @@ module DTSDoc{
                 this.buildTitle(b);
                 b.section("ts_modulemember_content", ()=>{
                     if(this.docs){
-                        b.elem('h3', '', {}, 'Description');
+                        b.h3('Description');
                         b.div("ts_classcontent ts_classdescription", this.docs.text);
                     }
                     if(this.type.members.length > 0){
-                        b.elem('h3', '', {}, 'Members');
+                        b.h3('Members');
                         this.type.members.forEach((m)=>{
                             b.div("ts_classcontent ts_classmember ts_class_member_title", ()=>{
                                 m.build(b, this.parent);
@@ -510,7 +511,7 @@ module DTSDoc{
             b.section("ts_modulemember ts_enum", ()=>{
                 this.buildTitle(b);
                 if(this.members.length > 0){
-                    b.elem('h3', '', {}, 'Members');
+                    b.h3('Members');
                     this.members.forEach((m)=>{
                         b.div('ts_classcontent ts_classmember', ()=>{
                            b.div("ts_code ts_class_member_title ts_method", m);
@@ -728,7 +729,31 @@ module DTSDoc{
     }
 
 
-    export function generateDocument(sourceCode:string, watcher?:(v:number)=>void):any{
+    export enum GenerationResultType{
+        Success = <any> "success",
+        Fail = <any> "fail",
+        State = <any> "state"
+    }
+
+    // JSON data
+    export interface GenerationResult{
+        type: GenerationResultType;
+
+        // on state report
+        state?: number;
+        
+        // on succeed
+        docs?: string;
+
+        // on failed
+        line?: number;
+        column?: number;
+        source?: string;
+        message?: string;
+    }
+
+
+    export function generateDocument(sourceCode:string, watcher?:(v:number)=>void):GenerationResult{
         var result = DTSDoc.pProgram(watcher).parse(new Source(sourceCode, 0));
         if(result.success){
             var program:DTSDoc.ASTProgram = result.value;
@@ -767,20 +792,19 @@ module DTSDoc{
                     global.buildHierarchy(b);
                 });
                 b.hr();
-                b.elem('footer', '', {}, ()=>{
+                b.footer(()=>{
                     b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
                 });
-                
             });
 
             return {
-                "type": 'success',
+                "type": GenerationResultType.Success,
                 "docs": b.buildString()
             };
         }else{
             var pos = result.source.getPosition();
             return {
-                "type": 'fail',
+                "type": GenerationResultType.Fail,
                 'line': pos.line,
                 'column': pos.column,
                 'source': result.source.source.slice(result.source.position, result.source.position + 128),

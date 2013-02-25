@@ -1,9 +1,10 @@
 --target ES5
---out generator/worker.js
+--out temp
 ../Parsect/src/parsect.ts
 ../Parsect/src/globals.ts
-src/type.ts
-src/parser.ts
+src/html.ts
 src/primitives.ts
 src/links.ts
-src/worker.ts
+src/type.ts
+src/parser.ts
+src/node.ts

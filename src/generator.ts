@@ -6,13 +6,12 @@
 /// <reference path="../Parsect/src/type.ts" />
 /// <reference path="../Parsect/src/parser.ts" />
 
-
-
 var fileInput  = <JQuery>$("#input_file"); 
 var openButton = <JQuery>$("#button_open"); 
 var genButton = <JQuery>$("#gen");
 var textarea  = <JQuery>$("#source");
 var docs      = <JQuery>$("#docs");
+var async     = <JQuery>$("#async");
 
 textarea.val("");
 
@@ -35,6 +34,7 @@ function getFullHTML(bodyHTML:string, callback:(html:string)=>void){
         }
     });
     $.ajax('templete.html', {
+        contentType: "text/plain",
         dataType: 'text',
         success: (data:string, dataType:string)=>{
             templete = data;
@@ -68,8 +68,9 @@ function updateDocument(documentContent:string){
             // 非同期処理の不具合？
             // 同じファイルを一時ファイルにするためにはファイルのサイズを調整しなければならないけど、
             // truncate の直後に write するとエラーになる。
-            // (なぜかデバッガで一度止めるとエラーにならない。)
-            // やむを得ないのでいったんファイルを消去して　ファイルを作り直す
+            // デバッガで一度止めるとエラーにならないので、truncate の完了を待たなければならないんだけど、
+            // 待ち方が不明。
+            // やむを得ないのでいったんファイルを消去して、ファイルを作り直す
             fileSystem.root.getFile(tempFileName, {}, (fileEntry:FileEntry)=>{
                 fileEntry.remove(createTempFile);
             }, createTempFile);
@@ -79,7 +80,6 @@ function updateDocument(documentContent:string){
 }
 
 function generateDocuments(sync?:bool, watcher?:(v:number)=>void){
-    sync = true;
 
     docs.children().remove();
     var canvas = $('#progressbar');
@@ -116,10 +116,14 @@ function generateDocuments(sync?:bool, watcher?:(v:number)=>void){
     }else{
         var worker = new Worker("worker.js");
         worker.addEventListener('message', (event:MessageEvent)=>{
-            if(watcher && event.data['type'] === 'state'){
-                watcher(event.data['state']);
-            }else if(event.data['type'] === 'success' || event.data['type'] === 'fail'){
-                showResult(event.data);
+            var result:DTSDoc.GenerationResult = event.data;
+            if(watcher && result.type === DTSDoc.GenerationResultType.State){
+                watcher(result.state);
+            }else if(
+                result.type === DTSDoc.GenerationResultType.Success || 
+                result.type === DTSDoc.GenerationResultType.Fail
+            ){
+                showResult(result);
             }
         });
         worker.postMessage(sourceCode);
@@ -127,7 +131,7 @@ function generateDocuments(sync?:bool, watcher?:(v:number)=>void){
 }
 
 genButton.click(()=>{
-    generateDocuments();
+    generateDocuments( ! async.attr('checked'));
 });
 
 fileInput.change(()=>{
@@ -136,7 +140,7 @@ fileInput.change(()=>{
     var reader:FileReader = new FileReader();
     reader.addEventListener('load', (e)=>{
         textarea.val(reader.result);
-        generateDocuments();
+        generateDocuments( ! async.attr('checked'));
     });
     reader.readAsText(files[0]);
 });

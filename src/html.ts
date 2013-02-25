@@ -80,6 +80,12 @@ module DTSDoc{
 			this.elem('hr', '', {});
 		}
 
+		h1(content:string):void;
+		h1(classes:string, content:string):void;
+		h1(classes:string, content:()=>void):void;
+		h1(x:string, y?:any):void{
+			this.elem('h1', y ? x : '', {}, y ? y : x);
+		}
 		h2(content:string):void{
 			this.elem('h2', '', {}, content);
 		}
@@ -92,11 +98,31 @@ module DTSDoc{
 		ul(classes:string, content:any):void{
 			this.elem('ul', classes, {}, content);
 		}
-		
+
 		li(content:()=>void):void;
 		li(content:string):void;
 		li(content:any):void{
 			this.elem('li', '', {}, content);
+		}
+
+		dl(classes:string, content:()=>void):void{
+			this.elem('dl', classes, {}, content);
+		}	
+
+		dt(classes:string, content:()=>void):void;
+		dt(classes:string, content:string):void;
+		dt(classes:string, content:any):void{
+			this.elem('dt', classes, {}, content);
+		}		
+
+		dd(classes:string, content:()=>void):void;
+		dd(classes:string, content:string):void;
+		dd(classes:string, content:any):void{
+			this.elem('dd', classes, {}, content);
+		}	
+	
+		footer(content:()=>void):void{
+			this.elem('footer', '', {}, content);
 		}
 
 		buildString():string{
