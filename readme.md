@@ -32,7 +32,8 @@ One-to-one mapping of a module and a source file does not hold true. I want to k
 ## Ugly tags
 javadoc/jsdoc style start/end tag (from `/**` to `*/`) is not good...(though `@tag` is good!), because:
   
-### Needs Addtional lines: Generally a single line description needes three lines in the documents.
+### Needs Addtional lines
+Generally a single line description needes three lines in the documents.
 
     /**                               <- Boo!
      *  Variable hoge is bad.
