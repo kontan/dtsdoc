@@ -1,6 +1,21 @@
 /// <reference path="html.ts" />
 
-var marked:(markdown:string)=>string = this.marked;
+declare function require(name:string):any;
+
+var marked:(markdown:string)=>string;
+
+// web
+if(this.marked){
+    marked = this.marked;
+}
+// node.js
+else{
+    marked = require('./marked');
+}
+
+if(!marked){
+    console.log('ERROR: marked not found.');
+}
 
 module DTSDoc{
 

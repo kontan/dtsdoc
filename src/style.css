@@ -89,6 +89,10 @@ footer{
 	margin: 1em;
 }
 
+ul{
+	margin-left: 2em;
+}
+
 .ts_symbol{
 	color: SlateGray;
 }
@@ -183,7 +187,6 @@ footer{
 .ts_classmember_description{
 	font-size: small;
 	margin: 1em;
-	margin-left: 2em;
 }
 .ts_class_member_title{
 	background-color: rgba(128, 128, 128, 0.1);

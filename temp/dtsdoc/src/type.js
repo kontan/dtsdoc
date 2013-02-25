@@ -3,7 +3,15 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var marked = this.marked;
+var marked;
+if(this.marked) {
+    marked = this.marked;
+} else {
+    marked = require('./marked');
+}
+if(!marked) {
+    console.log('ERROR: marked not found.');
+}
 var DTSDoc;
 (function (DTSDoc) {
     var ASTDoctagSection = (function () {
