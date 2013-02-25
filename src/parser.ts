@@ -9,7 +9,7 @@ module DTSDoc{
 	////////////////////////////////////////////////////////////////////////////////////
 	
 	var lineComment      = regexp(/^\/\/[^\n]*(\n|$)/);
-	var blockComment     = regexp(/^\/(\*(?!\*)|\*\*\*+)([^*]|\r|\n|\*(?!\/))*?\*\//m);
+	var blockComment     = regexp(/^\/(\*(?!\*)|\*\*\*+)([^*]|\r|\n|\*(?!\/))*\*\//m);
 	var comment          = or(lineComment, blockComment);
 	var whitespace       = regexp(/^[ \t\r\n]+/m);
 	var spaces           = many(or(whitespace, comment));
