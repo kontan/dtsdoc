@@ -58,6 +58,9 @@ module THREE.Hoge{
 
 import Vector3 = THREE.Vector3;
 
+/**
+ * hogehoge
+ */
 var v: Vector3;
 
 

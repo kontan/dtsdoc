@@ -377,19 +377,21 @@ module DTSDoc{
                         b.hr();
                     }
 
-                    b.h3('Members');
-                    this.members.forEach((m:ASTClassMember)=>{
-                        if(m.buildMember){
-                            b.div("ts_classcontent ts_classmember", ()=>{
-                                m.buildMember(b);
-                                if(m.docs){
-                                    b.div("ts_classmemberdescription", ()=>{
-                                        m.docs.build(b);
-                                    });
-                                }
-                            });
-                        }
-                    });
+                    if(this.members.length > 0){
+                        b.h3('Members');
+                        this.members.forEach((m:ASTClassMember)=>{
+                            if(m.buildMember){
+                                b.div("ts_classcontent ts_classmember", ()=>{
+                                    m.buildMember(b);
+                                    if(m.docs){
+                                        b.div("ts_classmemberdescription", ()=>{
+                                            m.docs.build(b);
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
             });
         }
