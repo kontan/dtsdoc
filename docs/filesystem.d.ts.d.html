@@ -1,0 +1,462 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			
+*{
+	margin: 0px;
+	padding: 0px;
+
+	
+}
+
+/******************* Document Styles *******************/
+
+p, h1, h2, h3, h4, h5, h6{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;
+}
+
+h1{
+	text-align: center;
+	font-size: x-large;
+	line-height: normal;
+	font-weight: bold;
+}
+
+h2{
+	font-size: large;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+	
+	font-size: x-large;
+	margin: 1em;
+}
+
+
+h3{	
+	font-size: large;
+	margin: 0.5em;
+}
+
+
+p{
+	font-size: medium;
+}
+
+code{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	border-radius: 3px;
+	font-family: Courier New, monospace;
+	margin: 0 2px;
+	padding: 0px 5px;	
+
+}
+
+pre code{
+	border: 0px solid #eaeaea;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+pre{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+input[type=file]{
+	display: none;
+}
+
+textarea#source{
+	width: 100%;
+	height: 8em;
+}
+
+a{
+    color:#003399;
+    text-decoration:none;
+}
+a:link {
+    color:#003399;
+    text-decoration:none;
+}
+a:visited {
+    color:#003399;
+    text-decoration:none;
+}
+a:hover {
+    color:#003399;
+    text-decoration:underline;
+}
+a:active {
+    color:#003399;	
+    text-decoration:underline;
+}
+
+
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
+
+/************ API Reference Styles ******************/
+
+.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+.ts_reserved_static:after{
+	content: " ";
+}
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_reserved_function:after{
+	content: " ";
+}
+
+.ts_left_brace:after{
+	content: " ";
+}
+
+.contents{
+	margin: 1em;
+	margin-left: 4em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	text-align: left;
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_hierarchey{
+	margin-left: 0.2em;
+	margin-left: 2em;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+
+
+.ts_classcontent{
+	margin-left: 0.5em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 0.5em;
+}
+.ts_classmember_description{
+	margin: 1em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: Courier New, monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
+}
+
+		</style>
+		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+	</head>
+	<body>
+		<div><h2>Contents</h2><ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul><a name="members"></a><h2>Members</h2><div><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20LocalFileSystem"></a><a href="#interface%20LocalFileSystem"><span class="ts_modulemember_a">interface LocalFileSystem</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>TEMPORARY</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>Used for storage with no guarantee of persistence.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>PERSISTENT</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>Used for storage that should not be removed by the user agent without application or user permission.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>requestFileSystem</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>type</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystemCallback">FileSystemCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Requests a filesystem in which to store application data.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">type</dt><dd class="ts_param_description"> Whether the filesystem requested should be persistent, as defined above. Use one of TEMPORARY or PERSISTENT.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">size</dt><dd class="ts_param_description"> This is an indicator of how much storage space, in bytes, the application expects to need.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> The callback that is called when the user agent provides a filesystem.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen, or when the request to obtain the filesystem is denied.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>resolveLocalFileSystemURL</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>url</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntryCallback">EntryCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Allows the user to look up the Entry for a file or directory referred to by a local URL.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">url</dt><dd class="ts_param_description"> A URL referring to a local file in a filesystem accessable via this API.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called to report the Entry to which the supplied URL refers.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen, or when the request to obtain the Entry is denied.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>webkitRequestFileSystem</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>type</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystemCallback">FileSystemCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>see requestFileSystem.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20LocalFileSystemSync"></a><a href="#interface%20LocalFileSystemSync"><span class="ts_modulemember_a">interface LocalFileSystemSync</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>TEMPORARY</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>Used for storage with no guarantee of persistence.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>PERSISTENT</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>Used for storage that should not be removed by the user agent without application or user permission.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>requestFileSystemSync</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>type</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystemSync">FileSystemSync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Requests a filesystem in which to store application data.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">type</dt><dd class="ts_param_description"> Whether the filesystem requested should be persistent, as defined above. Use one of TEMPORARY or PERSISTENT.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">size</dt><dd class="ts_param_description"> This is an indicator of how much storage space, in bytes, the application expects to need.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>resolveLocalFileSystemSyncURL</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>url</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntrySync">EntrySync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Allows the user to look up the Entry for a file or directory referred to by a local URL.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">url</dt><dd class="ts_param_description"> A URL referring to a local file in a filesystem accessable via this API.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>webkitRequestFileSystemSync</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>type</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystemSync">FileSystemSync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>see requestFileSystemSync</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20Metadata"></a><a href="#interface%20Metadata"><span class="ts_modulemember_a">interface Metadata</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>modificationTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Date">Date</a></span></span></span></div><section class="ts_classmember_description"><p><p>This is the time at which the file or directory was last modified.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The size of the file, in bytes. This must return 0 for directories.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20Flags"></a><a href="#interface%20Flags"><span class="ts_modulemember_a">interface Flags</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>create?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><section class="ts_classmember_description"><p><p>Used to indicate that the user wants to create a file or directory if it was not previously there.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>exclusive?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><section class="ts_classmember_description"><p><p>By itself, exclusive must have no effect. Used with create, it must cause getFile and getDirectory to fail if the target path already exists.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileSystem"></a><a href="#interface%20FileSystem"><span class="ts_modulemember_a">interface FileSystem</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription"> 
+This interface represents a file system.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>This is the name of the file system. The specifics of naming filesystems is unspecified, but a name must be unique across the list of exposed file systems.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>root</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><section class="ts_classmember_description"><p><p>The root directory of the file system.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20Entry"></a><a href="#interface%20Entry"><span class="ts_modulemember_a">interface Entry</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>isFile</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><section class="ts_classmember_description"><p><p>Entry is a file.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>isDirectory</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><section class="ts_classmember_description"><p><p>Entry is a directory.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getMetadata</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20MetadataCallback">MetadataCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Look up metadata about this entry.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called with the time of the last modification.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> ErrorCallback A callback that is called when errors happen.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>The name of the entry, excluding the path leading to it.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fullPath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>The full absolute path from the root to the entry.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>filesystem</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystem">FileSystem</a></span></span></span></div><section class="ts_classmember_description"><p><p>The file system on which the entry resides.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>moveTo</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>parent</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntry">DirectoryEntry</a></span></span></span><span>, </span><span><span>newName</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntryCallback">EntryCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Move an entry to a different location on the file system. It is an error to try to:</p>
+<p><ui></p>
+<p><li>move a directory inside itself or to any child at any depth;</li></p>
+<p><li>move an entry into its parent if a name different from its current one isn&#39;t provided;</li></p>
+<p><li>move a file to a path occupied by a directory;</li></p>
+<p><li>move a directory to a path occupied by a file;</li></p>
+<p><li>move any element to a path occupied by a directory which is not empty.</li></p>
+<ul>
+
+<p>A move of a file on top of an existing file must attempt to delete and replace that file.
+A move of a directory on top of an existing empty directory must attempt to delete and replace that directory.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>copyTo</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>parent</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntry">DirectoryEntry</a></span></span></span><span>, </span><span><span>newName</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntryCallback">EntryCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Copy an entry to a different location on the file system. It is an error to try to:</p>
+<ul> 
+<li> copy a directory inside itself or to any child at any depth;</li>
+<li> copy an entry into its parent if a name different from its current one isn&#39;t provided;</li>
+<li> copy a file to a path occupied by a directory;</li>
+<li> copy a directory to a path occupied by a file;</li>
+<li> copy any element to a path occupied by a directory which is not empty.</li>
+<li> A copy of a file on top of an existing file must attempt to delete and replace that file.</li>
+<li> A copy of a directory on top of an existing empty directory must attempt to delete and replace that directory.</li>
+</ul>
+
+<p>Directory copies are always recursive--that is, they copy all contents of the directory.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>toURL</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Returns a URL that can be used to identify this entry. Unlike the URN defined in [FILE-API-ED], it has no specific expiration; as it describes a location on disk, it should be valid at least as long as that location exists.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>remove</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20VoidCallback">VoidCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Deletes a file or directory. It is an error to attempt to delete a directory that is not empty. It is an error to attempt to delete the root directory of a filesystem.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called on success.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getParent</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntryCallback">EntryCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Look up the parent DirectoryEntry containing this Entry. If this Entry is the root of its filesystem, its parent is itself.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called to return the parent Entry.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20DirectoryEntry"></a><a href="#interface%20DirectoryEntry"><span class="ts_modulemember_a">interface DirectoryEntry</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface represents a directory on a file system.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createReader</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryReader">DirectoryReader</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates a new DirectoryReader to read Entries from this Directory.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getFile</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>path</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Flags">Flags</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntryCallback">EntryCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates or looks up a file.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">path</dt><dd class="ts_param_description"> Either an absolute path or a relative path from this DirectoryEntry to the file to be looked up or created. It is an error to attempt to create a file whose immediate parent does not yet exist.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">options</dt><dd class="ts_param_description"></dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called to return the File selected or created.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getDirectory</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>path</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Flags">Flags</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntryCallback">EntryCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates or looks up a directory.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">path</dt><dd class="ts_param_description"> Either an absolute path or a relative path from this DirectoryEntry to the directory to be looked up or created. It is an error to attempt to create a directory whose immediate parent does not yet exist.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">options</dt><dd class="ts_param_description"> </dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description">   A callback that is called to return the DirectoryEntry selected or created.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>removeRecursively</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20VoidCallback">VoidCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Deletes a directory and all of its contents, if any. In the event of an error [e.g. trying to delete a directory that contains a file that cannot be removed], some of the contents of the directory may be deleted. It is an error to attempt to delete the root directory of a filesystem.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called on success.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20DirectoryReader"></a><a href="#interface%20DirectoryReader"><span class="ts_modulemember_a">interface DirectoryReader</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface lets a user list files and directories in a directory. If there are no additions to or deletions from a directory between the first and last call to readEntries, and no errors occur, then:
+<ul>
+<li> A series of calls to readEntries must return each entry in the directory exactly once.</li>
+<li> Once all entries have been returned, the next call to readEntries must produce an empty array.</li>
+<li> If not all entries have been returned, the array produced by readEntries must not be empty.</li>
+<li> The entries produced by readEntries must not include the directory itself ["."] or its parent [".."].</li>
+</ul>
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>readEntries</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntriesCallback">EntriesCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Read the next block of entries from this directory.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> Called once per successful call to readEntries to deliver the next previously-unreported set of Entries in the associated Directory. If all Entries have already been returned from previous invocations of readEntries, successCallback must be called with a zero-length array as an argument.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback indicating that there was an error reading from the Directory.</dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileEntry"></a><a href="#interface%20FileEntry"><span class="ts_modulemember_a">interface FileEntry</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface represents a file on a file system.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createWriter</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileWriterCallback">FileWriterCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates a new FileWriter associated with the file that this FileEntry represents.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called with the new FileWriter.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>file</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileCallback">FileCallback</a></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ErrorCallback">ErrorCallback</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Returns a File that represents the current state of the file that this FileEntry represents.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">successCallback</dt><dd class="ts_param_description"> A callback that is called with the File.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">errorCallback</dt><dd class="ts_param_description"> A callback that is called when errors happen.</dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileSystemCallback"></a><a href="#interface%20FileSystemCallback"><span class="ts_modulemember_a">interface FileSystemCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+When requestFileSystem() succeeds, the following callback is made.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>filesystem</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystem">FileSystem</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p></p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">filesystem</dt><dd class="ts_param_description"> The file systems to which the app is granted access.</dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20EntryCallback"></a><a href="#interface%20EntryCallback"><span class="ts_modulemember_a">interface EntryCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface is the callback used to look up Entry objects.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>entry</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Entry">Entry</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p></p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">entry</dt><dd class="ts_param_description"></dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20EntriesCallback"></a><a href="#interface%20EntriesCallback"><span class="ts_modulemember_a">interface EntriesCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+When readEntries() succeeds, the following callback is made.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>entries</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#interface%20Entry">Entry</a></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20MetadataCallback"></a><a href="#interface%20MetadataCallback"><span class="ts_modulemember_a">interface MetadataCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface is the callback used to look up file and directory metadata.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>metadata</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Metadata">Metadata</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileWriterCallback"></a><a href="#interface%20FileWriterCallback"><span class="ts_modulemember_a">interface FileWriterCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface is the callback used to create a FileWriter.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>fileWriter</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span>FileWriter</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileCallback"></a><a href="#interface%20FileCallback"><span class="ts_modulemember_a">interface FileCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface is the callback used to obtain a File.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>file</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20File">File</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20VoidCallback"></a><a href="#interface%20VoidCallback"><span class="ts_modulemember_a">interface VoidCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription"> 
+This interface is the generic callback used to indicate success of an asynchronous method.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20ErrorCallback"></a><a href="#interface%20ErrorCallback"><span class="ts_modulemember_a">interface ErrorCallback</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+When an error occurs, the following callback is made.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>err</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20DOMError">DOMError</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileSystemSync"></a><a href="#interface%20FileSystemSync"><span class="ts_modulemember_a">interface FileSystemSync</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription"> 
+This interface represents a file system.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>This is the name of the file system. The specifics of naming filesystems is unspecified, but a name must be unique across the list of exposed file systems.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>root</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntrySync">DirectoryEntrySync</a></span></span></span></div><section class="ts_classmember_description"><p><p>root The root directory of the file system.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20EntrySync"></a><a href="#interface%20EntrySync"><span class="ts_modulemember_a">interface EntrySync</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+An abstract interface representing entries in a file system, each of which may be a FileEntrySync or DirectoryEntrySync.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>isFile</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><section class="ts_classmember_description"><p><p>EntrySync is a file.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>isDirectory</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><section class="ts_classmember_description"><p><p>EntrySync is a directory.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getMetadata</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Metadata">Metadata</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Look up metadata about this entry.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>The name of the entry, excluding the path leading to it.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fullPath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>The full absolute path from the root to the entry.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>filesystem</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSystemSync">FileSystemSync</a></span></span></span></div><section class="ts_classmember_description"><p><p>The file system on which the entry resides.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>moveTo</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>parent</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntrySync">DirectoryEntrySync</a></span></span></span><span>, </span><span><span>newName</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntrySync">EntrySync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Move an entry to a different location on the file system. It is an error to try to:</p>
+<p><ul></p>
+<p><li> move a directory inside itself or to any child at any depth;</li></p>
+<p><li> move an entry into its parent if a name different from its current one isn&#39;t provided;</li></p>
+<p><li> move a file to a path occupied by a directory;</li></p>
+<p><li> move a directory to a path occupied by a file;</li></p>
+<p><li> move any element to a path occupied by a directory which is not empty.</li>
+</ui> 
+A move of a file on top of an existing file must attempt to delete and replace that file. A move of a directory on top of an existing empty directory must attempt to delete and replace that directory.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">parent</dt><dd class="ts_param_description"> The directory to which to move the entry.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">newName</dt><dd class="ts_param_description"> The new name of the entry. Defaults to the EntrySync's current name if unspecified.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>copyTo</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>parent</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntrySync">DirectoryEntrySync</a></span></span></span><span>, </span><span><span>newName</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20EntrySync">EntrySync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Copy an entry to a different location on the file system. It is an error to try to:</p>
+<p><ul></p>
+<p><li> copy a directory inside itself or to any child at any depth;</li></p>
+<p><li> copy an entry into its parent if a name different from its current one isn&#39;t provided;</li></p>
+<p><li> copy a file to a path occupied by a directory;</li></p>
+<p><li> copy a directory to a path occupied by a file;</li></p>
+<p><li> copy any element to a path occupied by a directory which is not empty.</li>
+</ui> 
+A copy of a file on top of an existing file must attempt to delete and replace that file.
+A copy of a directory on top of an existing empty directory must attempt to delete and replace that directory.
+Directory copies are always recursive--that is, they copy all contents of the directory.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>toURL</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Returns a URL that can be used to identify this entry. Unlike the URN defined in [FILE-API-ED], it has no specific expiration; as it describes a location on disk, it should be valid at least as long as that location exists.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>remove</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Deletes a file or directory. It is an error to attempt to delete a directory that is not empty. It is an error to attempt to delete the root directory of a filesystem.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getParent</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntrySync">DirectoryEntrySync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Look up the parent DirectoryEntrySync containing this Entry. If this EntrySync is the root of its filesystem, its parent is itself.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20DirectoryEntrySync"></a><a href="#interface%20DirectoryEntrySync"><span class="ts_modulemember_a">interface DirectoryEntrySync</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface represents a directory on a file system.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createReader</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryReaderSync">DirectoryReaderSync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates a new DirectoryReaderSync to read EntrySyncs from this DirectorySync.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getFile</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>path</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Flags">Flags</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileEntrySync">FileEntrySync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates or looks up a directory.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">path</dt><dd class="ts_param_description"> Either an absolute path or a relative path from this DirectoryEntrySync to the file to be looked up or created. It is an error to attempt to create a file whose immediate parent does not yet exist.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">options</dt><dd class="ts_param_description"> </dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getDirectory</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>path</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Flags">Flags</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DirectoryEntrySync">DirectoryEntrySync</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates or looks up a directory.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">path</dt><dd class="ts_param_description"> Either an absolute path or a relative path from this DirectoryEntrySync to the directory to be looked up or created. It is an error to attempt to create a directory whose immediate parent does not yet exist.</dd></dl><dl class="ts_param"><dt class="ts_code ts_param_name">options</dt><dd class="ts_param_description"> </dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>removeRecursively</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Deletes a directory and all of its contents, if any. In the event of an error [e.g. trying to delete a directory that contains a file that cannot be removed], some of the contents of the directory may be deleted. It is an error to attempt to delete the root directory of a filesystem.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20DirectoryReaderSync"></a><a href="#interface%20DirectoryReaderSync"><span class="ts_modulemember_a">interface DirectoryReaderSync</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface lets a user list files and directories in a directory. If there are no additions to or deletions from a directory between the first and last call to readEntries, and no errors occur, then:
+<ul>
+<li> A series of calls to readEntries must return each entry in the directory exactly once.</li>
+<li> Once all entries have been returned, the next call to readEntries must produce an empty array.</li>
+<li> If not all entries have been returned, the array produced by readEntries must not be empty.</li>
+<li> The entries produced by readEntries must not include the directory itself ["."] or its parent [".."].</li>
+</ul>
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>readEntries</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#interface%20EntrySync">EntrySync</a></span><span>[]</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Read the next block of entries from this directory.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileEntrySync"></a><a href="#interface%20FileEntrySync"><span class="ts_modulemember_a">interface FileEntrySync</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface represents a file on a file system.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createWriter</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span>FileWriterSync</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Creates a new FileWriterSync associated with the file that this FileEntrySync represents.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>file</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20File">File</a></span></span></span></span></div><section class="ts_classmember_description"><p><p>Returns a File that represents the current state of the file that this FileEntrySync represents.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20Window"></a><a href="#interface%20Window"><span class="ts_modulemember_a">interface Window</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20WorkerGlobalScope"></a><a href="#interface%20WorkerGlobalScope"><span class="ts_modulemember_a">interface WorkerGlobalScope</span></a></h1><section class="ts_modulemember_content"></section></section></div><hr></hr><a name="hierarchy"></a><h2>Class Hierarchy</h2><div><div></div></div><hr></hr><footer><a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer></div>
+	</body>
+</html>

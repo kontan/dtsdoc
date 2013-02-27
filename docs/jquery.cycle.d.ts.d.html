@@ -1,0 +1,323 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			
+*{
+	margin: 0px;
+	padding: 0px;
+
+	
+}
+
+/******************* Document Styles *******************/
+
+p, h1, h2, h3, h4, h5, h6{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;
+}
+
+h1{
+	text-align: center;
+	font-size: x-large;
+	line-height: normal;
+	font-weight: bold;
+}
+
+h2{
+	font-size: large;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+	
+	font-size: x-large;
+	margin: 1em;
+}
+
+
+h3{	
+	font-size: large;
+	margin: 0.5em;
+}
+
+
+p{
+	font-size: medium;
+}
+
+code{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	border-radius: 3px;
+	font-family: Courier New, monospace;
+	margin: 0 2px;
+	padding: 0px 5px;	
+
+}
+
+pre code{
+	border: 0px solid #eaeaea;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+pre{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+input[type=file]{
+	display: none;
+}
+
+textarea#source{
+	width: 100%;
+	height: 8em;
+}
+
+a{
+    color:#003399;
+    text-decoration:none;
+}
+a:link {
+    color:#003399;
+    text-decoration:none;
+}
+a:visited {
+    color:#003399;
+    text-decoration:none;
+}
+a:hover {
+    color:#003399;
+    text-decoration:underline;
+}
+a:active {
+    color:#003399;	
+    text-decoration:underline;
+}
+
+
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
+
+/************ API Reference Styles ******************/
+
+.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+.ts_reserved_static:after{
+	content: " ";
+}
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_reserved_function:after{
+	content: " ";
+}
+
+.ts_left_brace:after{
+	content: " ";
+}
+
+.contents{
+	margin: 1em;
+	margin-left: 4em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	text-align: left;
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_hierarchey{
+	margin-left: 0.2em;
+	margin-left: 2em;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+
+
+.ts_classcontent{
+	margin-left: 0.5em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 0.5em;
+}
+.ts_classmember_description{
+	margin: 1em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: Courier New, monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
+}
+
+		</style>
+		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+	</head>
+	<body>
+		<div><h2>Contents</h2><ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul><a name="members"></a><h2>Members</h2><div><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20CycleOptions"></a><a href="#interface%20CycleOptions"><span class="ts_modulemember_a">interface CycleOptions</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>activePagerClass?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>after?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>currSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>nextSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>forwardFlag</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>allowPagerClickBubble?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>animIn?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>animOut?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>aspect?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>autostop?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>autostopCount?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>backwards?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>before?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>currSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>nextSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>forwardFlag</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>center?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>cleartype?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>cleartypeNoBg?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>containerResize?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>containerResizeHeight?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>continuous?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>cssAfter?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>cssBefore?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>delay?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>easeIn?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>easeOut?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>easing?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>end?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fastOnEvent?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fit?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fx?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fxFn?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>currSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>nextSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>afterCalback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>, </span><span><span>forwardFlag</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>height?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>manualTrump?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>metaAttr?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>next?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>nowrap?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onPagerEvent?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>zeroBasedSlideIndex</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>slideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onPrevNextEvent?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>isNext</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>, </span><span><span>zeroBasedSlideIndex</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>slideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>pager?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>pagerAnchorBuilder?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>index</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>DOMelement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>pagerEvent?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>pause?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>pauseOnPagerHover?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>prev?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>prevNextEvent?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>random?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>randomizeEffects?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>requeueOnImageNotLoaded?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>requeueTimeout?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>rev?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>shuffle?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>skipInitializationCallbacks?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>slideExpr?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>slideResize?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>speed?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>speedIn?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>speedOut?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>startingSlide?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>sync?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>timeout?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>timeoutFn?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>currSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>nextSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>forwardFlag</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>updateActivePagerLink?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>pager</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>currSlide</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>clsName</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>width?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20Cycle"></a><a href="#interface%20Cycle"><span class="ts_modulemember_a">interface Cycle</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>fx</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20JQuery">JQuery</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20JQuery">JQuery</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>ver</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>debug</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>defaults</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>next</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>prev</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>options</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>transitions</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>$cont</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20JQuery">JQuery</a></span></span></span><span>, </span><span><span>$slides</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20JQuery">JQuery</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>custom</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>currSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>nextSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>afterCalback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>, </span><span><span>forwardFlag</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>, </span><span><span>speedOverride</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>commonReset</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>currSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>nextSlideElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>w</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>, </span><span><span>h</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>, </span><span><span>rev</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>hopsFromLast</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>forwardFlag</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>createPagerAnchor</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>index</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>DOMElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Element">Element</a></span></span></span><span>, </span><span><span>$pager</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20JQuery">JQuery</a></span></span></span><span>, </span><span><span>els</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>updateActivePagerLink</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>pager</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>currSlide</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>clsName</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>resetState</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>options</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20CycleOptions">CycleOptions</a></span></span></span><span>, </span><span><span>fx</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20JQuery"></a><a href="#interface%20JQuery"><span class="ts_modulemember_a">interface JQuery</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>cycle</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Cycle">Cycle</a></span></span></span></div></section></section></div><hr></hr><a name="hierarchy"></a><h2>Class Hierarchy</h2><div><div></div></div><hr></hr><footer><a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer></div>
+	</body>
+</html>

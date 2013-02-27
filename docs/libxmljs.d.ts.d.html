@@ -1,0 +1,323 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			
+*{
+	margin: 0px;
+	padding: 0px;
+
+	
+}
+
+/******************* Document Styles *******************/
+
+p, h1, h2, h3, h4, h5, h6{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;
+}
+
+h1{
+	text-align: center;
+	font-size: x-large;
+	line-height: normal;
+	font-weight: bold;
+}
+
+h2{
+	font-size: large;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+	
+	font-size: x-large;
+	margin: 1em;
+}
+
+
+h3{	
+	font-size: large;
+	margin: 0.5em;
+}
+
+
+p{
+	font-size: medium;
+}
+
+code{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	border-radius: 3px;
+	font-family: Courier New, monospace;
+	margin: 0 2px;
+	padding: 0px 5px;	
+
+}
+
+pre code{
+	border: 0px solid #eaeaea;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+pre{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+input[type=file]{
+	display: none;
+}
+
+textarea#source{
+	width: 100%;
+	height: 8em;
+}
+
+a{
+    color:#003399;
+    text-decoration:none;
+}
+a:link {
+    color:#003399;
+    text-decoration:none;
+}
+a:visited {
+    color:#003399;
+    text-decoration:none;
+}
+a:hover {
+    color:#003399;
+    text-decoration:underline;
+}
+a:active {
+    color:#003399;	
+    text-decoration:underline;
+}
+
+
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
+
+/************ API Reference Styles ******************/
+
+.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+.ts_reserved_static:after{
+	content: " ";
+}
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_reserved_function:after{
+	content: " ";
+}
+
+.ts_left_brace:after{
+	content: " ";
+}
+
+.contents{
+	margin: 1em;
+	margin-left: 4em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	text-align: left;
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_hierarchey{
+	margin-left: 0.2em;
+	margin-left: 2em;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+
+
+.ts_classcontent{
+	margin-left: 0.5em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 0.5em;
+}
+.ts_classmember_description{
+	margin: 1em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: Courier New, monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
+}
+
+		</style>
+		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+	</head>
+	<body>
+		<div><h2>Contents</h2><ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul><a name="members"></a><h2>Members</h2><div><section class="ts_modulemember ts_module"><h1 class="ts_modulemember_title ts_class_title"><a name="module%20%22libxmljs%22"></a><a href="#module%20%22libxmljs%22"><span class="ts_modulemember_a">module "libxmljs"</span></a></h1><section><section class="ts_modulemember ts_function"><h1 class="ts_modulemember_title ts_class_title"><a name="function%20%22libxmljs%22.parseXmlString"></a><a href="#function%20%22libxmljs%22.parseXmlString"><span class="ts_modulemember_a">function parseXmlString</span></a></h1><section class="ts_modulemember_content"><span class="ts_code ts_method"><span class="ts_reserved ts_reserved_function">function</span><span class="ts_identifier">parseXmlString</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>source</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.XMLDocument">XMLDocument</a></span></span></span></span></section></section><section class="ts_modulemember ts_function"><h1 class="ts_modulemember_title ts_class_title"><a name="function%20%22libxmljs%22.parseHtmlString"></a><a href="#function%20%22libxmljs%22.parseHtmlString"><span class="ts_modulemember_a">function parseHtmlString</span></a></h1><section class="ts_modulemember_content"><span class="ts_code ts_method"><span class="ts_reserved ts_reserved_function">function</span><span class="ts_identifier">parseHtmlString</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>source</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.HTMLDocument">HTMLDocument</a></span></span></span></span></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.XMLDocument"></a><a href="#class%20%22libxmljs%22.XMLDocument"><span class="ts_modulemember_a">class XMLDocument</span></a></h1><section class="ts_modulemember_content"><h3>Subclasses</h3><div class="ts_classcontent ts_classsubclasses"><a href="#"libxmljs".HTMLDocument">HTMLDocument</a></div><hr></hr><h3>Members</h3><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_constructor"><a name="XMLDocument-constructor"></a><span class="ts_reserved ts_reserved_constructor">constructor</span><span class="ts_params"><span>(</span><span><span>version</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>encoding</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-child"></a><span>child</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>idx</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-childNodes"></a><span>childNodes</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-errors"></a><span>errors</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20SyntaxError">SyntaxError</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-encoding"></a><span>encoding</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-encoding"></a><span>encoding</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>enc</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-find"></a><span>find</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-get"></a><span>get</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-node"></a><span>node</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>content</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-root"></a><span>root</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-toString"></a><span>toString</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="XMLDocument-version"></a><span>version</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">Number</a></span></span></span></div></div></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.HTMLDocument"></a><a href="#class%20%22libxmljs%22.HTMLDocument"><span class="ts_modulemember_a">class HTMLDocument</span></a></h1><section class="ts_modulemember_content"><h3>Hierarchy</h3><div class="ts_classcontent ts_classhierarchy"><span>HTMLDocument</span><span> ← </span><a href="#class%20%22libxmljs%22.XMLDocument">XMLDocument</a></div><hr></hr></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.Element"></a><a href="#class%20%22libxmljs%22.Element"><span class="ts_modulemember_a">class Element</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_constructor"><a name="Element-constructor"></a><span class="ts_reserved ts_reserved_constructor">constructor</span><span class="ts_params"><span>(</span><span><span>doc</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.XMLDocument">XMLDocument</a></span></span></span><span>, </span><span><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>content</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-name"></a><span>name</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-name"></a><span>name</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>newName</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-text"></a><span>text</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-attr"></a><span>attr</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-attr"></a><span>attr</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>attr</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Attribute">Attribute</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-attr"></a><span>attr</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>attrObject</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-attrs"></a><span>attrs</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Attribute">Attribute</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-parent"></a><span>parent</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-doc"></a><span>doc</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.XMLDocument">XMLDocument</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-child"></a><span>child</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>idx</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-childNodes"></a><span>childNodes</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-addChild"></a><span>addChild</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>child</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-nextSibling"></a><span>nextSibling</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-nextElement"></a><span>nextElement</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-addNextSibling"></a><span>addNextSibling</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>siblingNode</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-prevSibling"></a><span>prevSibling</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-prevElement"></a><span>prevElement</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-addPrevSibling"></a><span>addPrevSibling</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>siblingNode</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-find"></a><span>find</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-find"></a><span>find</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>ns_uri</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-get"></a><span>get</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>ns_uri</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-find"></a><span>find</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>namespaces</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-get"></a><span>get</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>xpath</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>ns_uri</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-defineNamespace"></a><span>defineNamespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>href</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-defineNamespace"></a><span>defineNamespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>prefix</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>href</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-namespace"></a><span>namespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-namespace"></a><span>namespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>ns</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-namespace"></a><span>namespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>href</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-namespace"></a><span>namespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>prefix</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>href</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-remove"></a><span>remove</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-path"></a><span>path</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Element-type"></a><span>type</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.Attribute"></a><a href="#class%20%22libxmljs%22.Attribute"><span class="ts_modulemember_a">class Attribute</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_constructor"><a name="Attribute-constructor"></a><span class="ts_reserved ts_reserved_constructor">constructor</span><span class="ts_params"><span>(</span><span><span>node</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span><span>, </span><span><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>value</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_constructor"><a name="Attribute-constructor"></a><span class="ts_reserved ts_reserved_constructor">constructor</span><span class="ts_params"><span>(</span><span><span>node</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span><span>, </span><span><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>value</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>ns</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span><span>)</span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-name"></a><span>name</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-namespace"></a><span>namespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-namespace"></a><span>namespace</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>ns</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Namespace">Namespace</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-nextSibling"></a><span>nextSibling</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Attribute">Attribute</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-node"></a><span>node</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-prevSibling"></a><span>prevSibling</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Attribute">Attribute</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-remove"></a><span>remove</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Attribute-value"></a><span>value</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.Namespace"></a><a href="#class%20%22libxmljs%22.Namespace"><span class="ts_modulemember_a">class Namespace</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_constructor"><a name="Namespace-constructor"></a><span class="ts_reserved ts_reserved_constructor">constructor</span><span class="ts_params"><span>(</span><span><span>node</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#class%20%22libxmljs%22.Element">Element</a></span></span></span><span>, </span><span><span>prefix</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>href</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Namespace-href"></a><span>href</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="Namespace-prefix"></a><span>prefix</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></div></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.SaxParser"></a><a href="#class%20%22libxmljs%22.SaxParser"><span class="ts_modulemember_a">class SaxParser</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-parseString"></a><span>parseString</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>source</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-addListener"></a><span>addListener</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-on"></a><span>on</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-once"></a><span>once</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-removeListener"></a><span>removeListener</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-removeAllListener"></a><span>removeAllListener</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-setMaxListeners"></a><span>setMaxListeners</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>n</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-listeners"></a><span>listeners</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code"><span>Function</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxParser-emit"></a><span>emit</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>arg1</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>arg2</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div></section></section><section class="ts_modulemember ts_class"><h1 class="ts_modulemember_title ts_class_title"><a name="class%20%22libxmljs%22.SaxPushParser"></a><a href="#class%20%22libxmljs%22.SaxPushParser"><span class="ts_modulemember_a">class SaxPushParser</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-push"></a><span>push</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>source</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-addListener"></a><span>addListener</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-on"></a><span>on</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-once"></a><span>once</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-removeListener"></a><span>removeListener</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-removeAllListener"></a><span>removeAllListener</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-setMaxListeners"></a><span>setMaxListeners</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>n</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-listeners"></a><span>listeners</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code"><span>Function</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span><span>[]</span></span></span></span></div></div><div class="ts_classcontent ts_classmember"><div class="ts_code ts_class_member_title ts_method"><a name="SaxPushParser-emit"></a><span>emit</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>event</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>arg1</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>arg2</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div></div></section></section></section></section></div><hr></hr><a name="hierarchy"></a><h2>Class Hierarchy</h2><div><div><div><div class="ts_hierarchey"><a href="#class%20%22libxmljs%22.XMLDocument">XMLDocument</a><div class="ts_hierarchey"><a href="#class%20%22libxmljs%22.HTMLDocument">HTMLDocument</a></div></div></div></div></div><hr></hr><footer><a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer></div>
+	</body>
+</html>

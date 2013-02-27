@@ -13,7 +13,7 @@ See [my Web Site](http://phyzkit.net/).
 
 # Build
 
-Some messy step is needed. In node.js command line,
+Some messy steps are needed. In node.js command line,
 
 1. `npm install -g jakefile`
 2. Download [Parsect](https://github.com/kontan/Parsect) and place same directory with dtsdoc. 

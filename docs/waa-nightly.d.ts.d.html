@@ -1,0 +1,323 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			
+*{
+	margin: 0px;
+	padding: 0px;
+
+	
+}
+
+/******************* Document Styles *******************/
+
+p, h1, h2, h3, h4, h5, h6{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;
+}
+
+h1{
+	text-align: center;
+	font-size: x-large;
+	line-height: normal;
+	font-weight: bold;
+}
+
+h2{
+	font-size: large;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+	
+	font-size: x-large;
+	margin: 1em;
+}
+
+
+h3{	
+	font-size: large;
+	margin: 0.5em;
+}
+
+
+p{
+	font-size: medium;
+}
+
+code{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	border-radius: 3px;
+	font-family: Courier New, monospace;
+	margin: 0 2px;
+	padding: 0px 5px;	
+
+}
+
+pre code{
+	border: 0px solid #eaeaea;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+pre{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+input[type=file]{
+	display: none;
+}
+
+textarea#source{
+	width: 100%;
+	height: 8em;
+}
+
+a{
+    color:#003399;
+    text-decoration:none;
+}
+a:link {
+    color:#003399;
+    text-decoration:none;
+}
+a:visited {
+    color:#003399;
+    text-decoration:none;
+}
+a:hover {
+    color:#003399;
+    text-decoration:underline;
+}
+a:active {
+    color:#003399;	
+    text-decoration:underline;
+}
+
+
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
+
+/************ API Reference Styles ******************/
+
+.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+.ts_reserved_static:after{
+	content: " ";
+}
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_reserved_function:after{
+	content: " ";
+}
+
+.ts_left_brace:after{
+	content: " ";
+}
+
+.contents{
+	margin: 1em;
+	margin-left: 4em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	text-align: left;
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_hierarchey{
+	margin-left: 0.2em;
+	margin-left: 2em;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+
+
+.ts_classcontent{
+	margin-left: 0.5em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 0.5em;
+}
+.ts_classmember_description{
+	margin: 1em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: Courier New, monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
+}
+
+		</style>
+		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+	</head>
+	<body>
+		<div><h2>Contents</h2><ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul><a name="members"></a><h2>Members</h2><div><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20webkitAudioContext"></a><a href="#interface%20webkitAudioContext"><span class="ts_modulemember_a">interface webkitAudioContext</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>destination</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioDestinationNode">AudioDestinationNode</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>sampleRate</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>currentTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>listener</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioListener">AudioListener</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>activeSourceCount</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createBuffer</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>numberOfChannels</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>length</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>sampleRate</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBuffer">AudioBuffer</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createBuffer</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>buffer</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20ArrayBuffer">ArrayBuffer</a></span></span></span><span>, </span><span><span>mixToMono</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBuffer">AudioBuffer</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>decodeAudioData</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>audioData</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20ArrayBuffer">ArrayBuffer</a></span></span></span><span>, </span><span><span>successCallback</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createBufferSource</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBufferSourceNode">AudioBufferSourceNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createMediaElementSource</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>mediaElement</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20HTMLMediaElement">HTMLMediaElement</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20MediaElementAudioSourceNode">MediaElementAudioSourceNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createMediaStreamSource</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>mediaStream</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20MediaStream">MediaStream</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20MediaStreamAudioSourceNode">MediaStreamAudioSourceNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createScriptProcessor</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>bufferSize</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>numberOfInputChannels</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>numberOfOutputChannels</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ScriptProcessorNode">ScriptProcessorNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createAnalyser</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AnalyserNode">AnalyserNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createGain</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20GainNode">GainNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createDelay</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>maxDelayTime</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DelayNode">DelayNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createBiquadFilter</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20BiquadFilterNode">BiquadFilterNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createWaveShaper</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20WaveShaperNode">WaveShaperNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createPanner</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20PannerNode">PannerNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createConvolver</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ConvolverNode">ConvolverNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createChannelSplitter</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>numberOfOutputs</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ChannelSplitterNode">ChannelSplitterNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createChannelMerger</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>numberOfInputs</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ChannelMergerNode">ChannelMergerNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createDynamicsCompressor</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20DynamicsCompressorNode">DynamicsCompressorNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createOscillator</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20OscillatorNode">OscillatorNode</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>createWaveTable</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>real</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>imag</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20WaveTable">WaveTable</a></span></span></span></span></div></section></section><section class="ts_modulemember ts_var"><h1 class="ts_modulemember_title ts_class_title"><a name="var%20webkitAudioContext"></a><a href="#var%20webkitAudioContext"><span class="ts_modulemember_a">var webkitAudioContext</span></a></h1><section class="ts_modulemember_content"><span class="ts_code"><span class="ts_reserved ts_reserved_var">var</span><span>webkitAudioContext</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_constructor"><span>new</span><span class="ts_params"><span>(</span><span><span>value</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20webkitAudioContext">webkitAudioContext</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioNode"></a><a href="#interface%20AudioNode"><span class="ts_modulemember_a">interface AudioNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>connect</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>destination</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioNode">AudioNode</a></span></span></span><span>, </span><span><span>output</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>input</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>connect</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>destination</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span><span>, </span><span><span>output</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>disconnect</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>output</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>context</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20webkitAudioContext">webkitAudioContext</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>numberOfInputs</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>numberOfOutputs</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioSourceNode"></a><a href="#interface%20AudioSourceNode"><span class="ts_modulemember_a">interface AudioSourceNode</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioDestinationNode"></a><a href="#interface%20AudioDestinationNode"><span class="ts_modulemember_a">interface AudioDestinationNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>maxNumberOfChannels</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>numberOfChannels</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioParam"></a><a href="#interface%20AudioParam"><span class="ts_modulemember_a">interface AudioParam</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>value</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>computedValue</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>minValue</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>maxValue</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>defaultValue</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setValueAtTime</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>value</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>startTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>linearRampToValueAtTime</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>value</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>endTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>exponentialRampToValueAtTime</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>value</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>endTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setTargetAtTime</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>target</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>startTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>timeConstant</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setValueCurveAtTime</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>values</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>startTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>duration</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>cancelScheduledValues</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>startTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20GainNode"></a><a href="#interface%20GainNode"><span class="ts_modulemember_a">interface GainNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>gain</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20DelayNode"></a><a href="#interface%20DelayNode"><span class="ts_modulemember_a">interface DelayNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>delayTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioBuffer"></a><a href="#interface%20AudioBuffer"><span class="ts_modulemember_a">interface AudioBuffer</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>sampleRate</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>length</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>duration</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>numberOfChannels</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getChannelData</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>channel</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioBufferSourceNode"></a><a href="#interface%20AudioBufferSourceNode"><span class="ts_modulemember_a">interface AudioBufferSourceNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>playbackState</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>buffer</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBuffer">AudioBuffer</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>playbackRate</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>loop</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>loopStart</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>loopEnd</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>start</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>when</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>offset</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>duration</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>stop</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>when</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20MediaElementAudioSourceNode"></a><a href="#interface%20MediaElementAudioSourceNode"><span class="ts_modulemember_a">interface MediaElementAudioSourceNode</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20ScriptProcessorNode"></a><a href="#interface%20ScriptProcessorNode"><span class="ts_modulemember_a">interface ScriptProcessorNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onaudioproces</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20EventListener">EventListener</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>bufferSize</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioProcessingEvent"></a><a href="#interface%20AudioProcessingEvent"><span class="ts_modulemember_a">interface AudioProcessingEvent</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>node</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20ScriptProcessorNode">ScriptProcessorNode</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>playbackTime</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>inputBuffer</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBuffer">AudioBuffer</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>outputBuffer</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBuffer">AudioBuffer</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20PannerNode"></a><a href="#interface%20PannerNode"><span class="ts_modulemember_a">interface PannerNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>panningModel</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>distanceModel</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setPosition</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>x</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>y</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>z</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setOrientation</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>x</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>y</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>z</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setVelocity</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>x</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>y</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>z</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>refDistance</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>maxDistance</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>rolloffFactor</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>coneInnerAngle</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>coneOuterAngle</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>coneOuterGain</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AudioListener"></a><a href="#interface%20AudioListener"><span class="ts_modulemember_a">interface AudioListener</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>dopplerFactor</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>speedOfSound</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setPosition</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>x</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>y</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>z</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setOrientation</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>x</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>y</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>z</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>xUp</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>yUp</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>zUp</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setVelocity</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>x</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>y</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>, </span><span><span>z</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20ConvolverNode"></a><a href="#interface%20ConvolverNode"><span class="ts_modulemember_a">interface ConvolverNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>buffer</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioBuffer">AudioBuffer</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>normalize</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20AnalyserNode"></a><a href="#interface%20AnalyserNode"><span class="ts_modulemember_a">interface AnalyserNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getFloatFrequencyData</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>array</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getByteFrequencyData</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>array</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getByteTimeDomainData</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>array</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fftSize</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>frequencyBinCount</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>minDecibels</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>maxDecibels</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>smoothingTimeConstant</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20ChannelSplitterNode"></a><a href="#interface%20ChannelSplitterNode"><span class="ts_modulemember_a">interface ChannelSplitterNode</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20ChannelMergerNode"></a><a href="#interface%20ChannelMergerNode"><span class="ts_modulemember_a">interface ChannelMergerNode</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20DynamicsCompressorNode"></a><a href="#interface%20DynamicsCompressorNode"><span class="ts_modulemember_a">interface DynamicsCompressorNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>threshold</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>knee</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>ratio</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>reduction</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>attack</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>release</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20BiquadFilterNode"></a><a href="#interface%20BiquadFilterNode"><span class="ts_modulemember_a">interface BiquadFilterNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>type</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>frequency</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>Q</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>gain</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>getFrequencyResponse</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>frequencyHz</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>magResponse</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>, </span><span><span>phaseResponse</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20WaveShaperNode"></a><a href="#interface%20WaveShaperNode"><span class="ts_modulemember_a">interface WaveShaperNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>curve</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20OscillatorNode"></a><a href="#interface%20OscillatorNode"><span class="ts_modulemember_a">interface OscillatorNode</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>type</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>playbackState</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>frequency</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>detune</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20AudioParam">AudioParam</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>start</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>when</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>stop</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>when</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>setWaveTable</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>waveTable</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20WaveTable">WaveTable</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20WaveTable"></a><a href="#interface%20WaveTable"><span class="ts_modulemember_a">interface WaveTable</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20MediaStreamAudioSourceNode"></a><a href="#interface%20MediaStreamAudioSourceNode"><span class="ts_modulemember_a">interface MediaStreamAudioSourceNode</span></a></h1><section class="ts_modulemember_content"></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20MediaStream"></a><a href="#interface%20MediaStream"><span class="ts_modulemember_a">interface MediaStream</span></a></h1><section class="ts_modulemember_content"></section></section></div><hr></hr><a name="hierarchy"></a><h2>Class Hierarchy</h2><div><div></div></div><hr></hr><footer><a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer></div>
+	</body>
+</html>

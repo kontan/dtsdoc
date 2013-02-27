@@ -1,0 +1,378 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			
+*{
+	margin: 0px;
+	padding: 0px;
+
+	
+}
+
+/******************* Document Styles *******************/
+
+p, h1, h2, h3, h4, h5, h6{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;
+}
+
+h1{
+	text-align: center;
+	font-size: x-large;
+	line-height: normal;
+	font-weight: bold;
+}
+
+h2{
+	font-size: large;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+	
+	font-size: x-large;
+	margin: 1em;
+}
+
+
+h3{	
+	font-size: large;
+	margin: 0.5em;
+}
+
+
+p{
+	font-size: medium;
+}
+
+code{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	border-radius: 3px;
+	font-family: Courier New, monospace;
+	margin: 0 2px;
+	padding: 0px 5px;	
+
+}
+
+pre code{
+	border: 0px solid #eaeaea;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+pre{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+input[type=file]{
+	display: none;
+}
+
+textarea#source{
+	width: 100%;
+	height: 8em;
+}
+
+a{
+    color:#003399;
+    text-decoration:none;
+}
+a:link {
+    color:#003399;
+    text-decoration:none;
+}
+a:visited {
+    color:#003399;
+    text-decoration:none;
+}
+a:hover {
+    color:#003399;
+    text-decoration:underline;
+}
+a:active {
+    color:#003399;	
+    text-decoration:underline;
+}
+
+
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
+
+/************ API Reference Styles ******************/
+
+.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+.ts_reserved_static:after{
+	content: " ";
+}
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_reserved_function:after{
+	content: " ";
+}
+
+.ts_left_brace:after{
+	content: " ";
+}
+
+.contents{
+	margin: 1em;
+	margin-left: 4em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	text-align: left;
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_hierarchey{
+	margin-left: 0.2em;
+	margin-left: 2em;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+
+
+.ts_classcontent{
+	margin-left: 0.5em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 0.5em;
+}
+.ts_classmember_description{
+	margin: 1em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: Courier New, monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
+}
+
+		</style>
+		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+	</head>
+	<body>
+		<section class="ts_classmember_description"><p><p>This interface provides methods to monitor the asynchronous writing of blobs to disk using progress events [PROGRESS-EVENTS] and event handler attributes.
+This interface is specified to be used within the context of the global object (Window [HTML5]) and within Web Workers (WorkerUtils [WEBWORKERS-ED]).</p>
+</p></section><div><h2>Contents</h2><ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul><a name="members"></a><h2>Members</h2><div><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileSaver"></a><a href="#interface%20FileSaver"><span class="ts_modulemember_a">interface FileSaver</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>abort</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>When the abort method is called, user agents must run the steps below:</p>
+<ol>
+<li> If readyState == DONE or readyState == INIT, terminate this overall series of steps without doing anything else. </li>
+<li> Set readyState to DONE. </li>
+<li> If there are any tasks from the object&#39;s FileSaver task source in one of the task queues, then remove those tasks. </li>
+<li> Terminate the write algorithm being processed. </li>
+<li> Set the error attribute to a DOMError object of type &quot;AbortError&quot;. </li>
+<li> Fire a progress event called abort </li>
+<li> Fire a progress event called writeend </li>
+<li> Terminate this algorithm. </li>
+</ol>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>INIT</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The blob is being written.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>WRITING</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The object has been constructed, but there is no pending write.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>DONE</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The entire Blob has been written to the file, an error occurred during the write, or the write was aborted using abort(). The FileSaver is no longer writing the blob.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>readyState</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The FileSaver object can be in one of 3 states. The readyState attribute, on getting, must return the current state, which must be one of the following values:</p>
+<p><ul></p>
+<p><li>INIT</li></p>
+<p><li>WRITING</li></p>
+<p><li>DONE</li></p>
+<ul>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>error</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20DOMError">DOMError</a></span></span></span></div><section class="ts_classmember_description"><p><p>The last error that occurred on the FileSaver.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onwritestart</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span></div><section class="ts_classmember_description"><p><p>Handler for writestart events</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onprogress</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span></div><section class="ts_classmember_description"><p><p>Handler for progress events.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onwrite</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span></div><section class="ts_classmember_description"><p><p>Handler for write events.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onabort</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span></div><section class="ts_classmember_description"><p><p>Handler for abort events.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onerror</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span></div><section class="ts_classmember_description"><p><p>Handler for error events.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>onwriteend</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Function">Function</a></span></span></span></div><section class="ts_classmember_description"><p><p>Handler for writeend events.</p>
+</p></section></section></section><section class="ts_modulemember ts_var"><h1 class="ts_modulemember_title ts_class_title"><a name="var%20FileSaver"></a><a href="#var%20FileSaver"><span class="ts_modulemember_a">var FileSaver</span></a></h1><section class="ts_modulemember_content"><span class="ts_code"><span class="ts_reserved ts_reserved_var">var</span><span>FileSaver</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_constructor"><span>new</span><span class="ts_params"><span>(</span><span><span>data</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Blob">Blob</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20FileSaver">FileSaver</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileWriter"></a><a href="#interface%20FileWriter"><span class="ts_modulemember_a">interface FileWriter</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface expands on the FileSaver interface to allow for multiple write actions, rather than just saving a single Blob.
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>position</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The byte offset at which the next write to the file will occur. This must be no greater than length.
+A newly-created FileWriter must have position set to 0.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>length</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The length of the file. If the user does not have read access to the file, this must be the highest byte offset at which the user has written.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>write</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>data</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Blob">Blob</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Write the supplied data to the file at position. </p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">data</dt><dd class="ts_param_description"> The blob to write.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>seek</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>offset</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Seek sets the file position at which the next write will occur.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">offset</dt><dd class="ts_param_description"> If nonnegative, an absolute byte offset into the file. If negative, an offset back from the end of the file.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>truncate</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Changes the length of the file to that specified. If shortening the file, data beyond the new length must be discarded. If extending the file, the existing data must be zero-padded up to the new length.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">size</dt><dd class="ts_param_description"> The size to which the length of the file is to be adjusted, measured in bytes.</dd></dl></div></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20FileWriterSync"></a><a href="#interface%20FileWriterSync"><span class="ts_modulemember_a">interface FileWriterSync</span></a></h1><section class="ts_modulemember_content"><h3>Description</h3><div class="ts_classcontent ts_classdescription">
+This interface lets users write, truncate, and append to files using simple synchronous calls.
+This interface is specified to be used only within Web Workers (WorkerUtils [WEBWORKERS]).
+ </div><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>position</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The byte offset at which the next write to the file will occur. This must be no greater than length.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>length</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><section class="ts_classmember_description"><p><p>The length of the file. If the user does not have read access to the file, this must be the highest byte offset at which the user has written.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>write</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>data</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Blob">Blob</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Write the supplied data to the file at position. Upon completion, position will increase by data.size.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">data</dt><dd class="ts_param_description"> The blob to write.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>seek</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>offset</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Seek sets the file position at which the next write will occur.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">offset</dt><dd class="ts_param_description"> An absolute byte offset into the file. If offset is greater than length, length is used instead. If offset is less than zero, length is added to it, so that it is treated as an offset back from the end of the file. If it is still less than zero, zero is used.</dd></dl></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>truncate</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>size</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><section class="ts_classmember_description"><p><p>Changes the length of the file to that specified. If shortening the file, data beyond the new length must be discarded. If extending the file, the existing data must be zero-padded up to the new length.
+Upon successful completion:</p>
+<ul>
+    <li>length must be equal to size.</li>
+    <li>position must be the lesser of
+         <ul>
+             <li>its pre-truncate value,</li>
+             <li>size.</li>
+         </ul>
+     </li>
+ </ul>
+</p><h5 class="ts_parameters">Parameters</h5><div><dl class="ts_param"><dt class="ts_code ts_param_name">size</dt><dd class="ts_param_description"> The size to which the length of the file is to be adjusted, measured in bytes.</dd></dl></div></section></section></section></div><hr></hr><a name="hierarchy"></a><h2>Class Hierarchy</h2><div><div></div></div><hr></hr><footer><a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer></div>
+	</body>
+</html>

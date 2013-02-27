@@ -1,0 +1,338 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style type="text/css">
+			
+*{
+	margin: 0px;
+	padding: 0px;
+
+	
+}
+
+/******************* Document Styles *******************/
+
+p, h1, h2, h3, h4, h5, h6{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;
+}
+
+h1{
+	text-align: center;
+	font-size: x-large;
+	line-height: normal;
+	font-weight: bold;
+}
+
+h2{
+	font-size: large;
+	border-bottom: 1px solid #ccc;
+	color: #000;
+	
+	font-size: x-large;
+	margin: 1em;
+}
+
+
+h3{	
+	font-size: large;
+	margin: 0.5em;
+}
+
+
+p{
+	font-size: medium;
+}
+
+code{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	border-radius: 3px;
+	font-family: Courier New, monospace;
+	margin: 0 2px;
+	padding: 0px 5px;	
+
+}
+
+pre code{
+	border: 0px solid #eaeaea;
+	background-color: transparent;
+	margin: 0px;
+	padding: 0px;
+}
+
+pre{
+	border: 1px solid #eaeaea;
+	background-color: #f8f8f8;
+	margin: 0.5em;
+	padding: 0.5em;
+}
+
+body{
+	padding: 10px;
+}
+
+input[type=button]{
+	padding: 8px;
+	margin: 4px;
+}
+
+input[type=file]{
+	display: none;
+}
+
+textarea#source{
+	width: 100%;
+	height: 8em;
+}
+
+a{
+    color:#003399;
+    text-decoration:none;
+}
+a:link {
+    color:#003399;
+    text-decoration:none;
+}
+a:visited {
+    color:#003399;
+    text-decoration:none;
+}
+a:hover {
+    color:#003399;
+    text-decoration:underline;
+}
+a:active {
+    color:#003399;	
+    text-decoration:underline;
+}
+
+
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
+
+/************ API Reference Styles ******************/
+
+.ts_modulemember_a{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:link{
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:visited {
+    color: black;
+    text-decoration:none;
+}
+.ts_modulemember_a:hover {
+    color: black;
+    text-decoration:underline;
+}
+.ts_modulemember_a:active {
+    color: black;	
+    text-decoration:underline;
+}
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_colon:after{
+	content: " ";
+}
+
+.ts_reserved{
+	color: DarkRed;
+}
+
+.ts_optional{
+	color: DarkCyan;
+}
+
+.ts_reserved_var:after{
+	content: " ";
+}
+
+.ts_reserved_static:after{
+	content: " ";
+}
+
+.ts_semi:after{
+	content: " ";
+}
+
+.ts_arrow{
+
+}
+
+.ts_reserved_function:after{
+	content: " ";
+}
+
+.ts_left_brace:after{
+	content: " ";
+}
+
+.contents{
+	margin: 1em;
+	margin-left: 4em;
+}
+
+.ts_modulemember{
+	border: solid 1px grey;
+	border-radius: 4px;
+	margin: 8px;
+}
+
+.ts_modulemember_title{
+	text-align: left;
+	font-family: Segoe UI, Verdana, Arial;	
+	font-weight: normal;
+	padding: 8px;
+	margin: 0px;
+	font-size: large;	
+	background: rgba(0, 0, 0, 0.1);
+}
+
+.ts_modulemember_content{
+	padding: 8px;
+}
+
+.ts_modulemember_description{
+	padding: 8px;
+	padding-left: 64px;
+}
+
+.ts_hierarchey{
+	margin-left: 0.2em;
+	margin-left: 2em;
+}
+
+.ts_module{
+}
+
+.ts_module_title{
+}
+
+.ts_class{
+}
+
+
+
+.ts_classcontent{
+	margin-left: 0.5em;
+}
+.ts_classhierarchy{
+	
+}
+.ts_classdescription{
+}
+
+
+.ts_classmember{
+	margin: 0.5em;
+}
+.ts_classmember_description{
+	margin: 1em;
+}
+.ts_class_member_title{
+	background-color: rgba(128, 128, 128, 0.1);
+	padding: 0.5em;
+	border-top: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.ts_enum{
+}
+
+.ts_var{
+}
+
+.ts_var_title{
+}
+
+.ts_enum_title{
+}
+
+.ts_interface{
+}
+
+.ts_class_title{
+}
+
+.ts_interface_title{
+}
+
+.ts_code{
+	font-family: Courier New, monospace;
+	font-size: normal;	
+}
+
+.ts_method{
+	
+}
+
+.ts_constructor{	
+}
+
+
+dl.ts_param{
+	margin: 0.2em;
+}
+
+dt.ts_param_name{
+	margin-left: 1em;
+	display: inline;
+}
+
+dt.ts_param_name:after{
+	content: " - ";
+}
+
+dd.ts_param_description{
+	display: inline;	
+	clear: both;
+}
+
+
+.ts_parameters{
+	font-size: small;
+}
+.ts_parameters:after{
+	content: " :";
+}
+
+		</style>
+		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
+	</head>
+	<body>
+		<div><h2>Contents</h2><ul class="contents"><li><a href="#members">Members</a></li><li><a href="#hierarchy">Class Hierarchy</a></li></ul><a name="members"></a><h2>Members</h2><div><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20RequireShim"></a><a href="#interface%20RequireShim"><span class="ts_modulemember_a">interface RequireShim</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>deps?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span><span>[]</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>exports?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>init?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span class="ts_symbol ts_keyword">...</span><span>dependencies</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_reserved">any</span></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">any</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20RequireConfig"></a><a href="#interface%20RequireConfig"><span class="ts_modulemember_a">interface RequireConfig</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>baseUrl?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>paths?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>shim?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireShim">RequireShim</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>map?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[id</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[id</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></div><section class="ts_classmember_description"><p><p>For the given module prefix, instead of loading the
+module with the given ID, substitude a different
+module ID.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>config?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[id</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>packages?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>waitSeconds?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Number">number</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>context?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>deps?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span><span>[]</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>callback?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span class="ts_symbol ts_keyword">...</span><span>modules</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_reserved">any</span></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>enforceDefine?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>xhtml?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Boolean">bool</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>urlArgs?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>Extra query string arguments appended to URLs that RequireJS
+uses to fetch resources.  Most useful to cachce bust when
+the browser or server is not configured correcty.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>scriptType?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><section class="ts_classmember_description"><p><p>Specify the value for the type=&quot;&quot; attribute used for script
+tags inserted into the document by RequireJS.  Default is
+&quot;text/javascript&quot;.  To use Firefox&#39;s JavasScript 1.8
+features, use &quot;text/javascript;version=1.8&quot;.</p>
+</p></section></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20RequireModule"></a><a href="#interface%20RequireModule"><span class="ts_modulemember_a">interface RequireModule</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>config</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_symbol ts_right_brace">}</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20RequireMap"></a><a href="#interface%20RequireMap"><span class="ts_modulemember_a">interface RequireMap</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>prefix</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>parentMap</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireMap">RequireMap</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>url</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>originalName</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>fullName</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20Require"></a><a href="#interface%20Require"><span class="ts_modulemember_a">interface Require</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>config</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>config</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireConfig">RequireConfig</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>module</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>modules</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span><span>[]</span></span></span></span><span>, </span><span><span>ready</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span class="ts_symbol ts_keyword">...</span><span>modules</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_reserved">any</span></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span><span>, </span><span><span>errorCallback</span><span class="ts_symbol ts_keyword">?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>err</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireError">RequireError</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">void</span></span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>toUrl</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>module</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>onError</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>undef</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>module</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method'"><span>onResourceLoad</span><span class="ts_signiture"><span class="ts_params"><span>(</span><span><span>context</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20Object">Object</a></span></span></span><span>, </span><span><span>map</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireMap">RequireMap</a></span></span></span><span>, </span><span><span>depArray</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="#interface%20RequireMap">RequireMap</a></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20RequireError"></a><a href="#interface%20RequireError"><span class="ts_modulemember_a">interface RequireError</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>requireType</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>requireModules</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span><span>[]</span></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>originalError?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>contextName?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span></div><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code"><span>requireMap?</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span></div></section></section><section class="ts_modulemember ts_interface"><h1 class="ts_modulemember_title ts_class_title"><a name="interface%20RequireDefine"></a><a href="#interface%20RequireDefine"><span class="ts_modulemember_a">interface RequireDefine</span></a></h1><section class="ts_modulemember_content"><h3>Members</h3><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>config</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p><p>Define Simple Name/Value Pairs</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>func</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">any</span></span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p><p>Define function.</p>
+</p></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>deps</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span><span>[]</span></span></span></span><span>, </span><span><span>ready</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span class="ts_symbol ts_keyword">...</span><span>deps</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_reserved">any</span></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">any</span></span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p><p>Define function with dependencies.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>ready</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span>require</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Require">Require</a></span></span></span><span>, </span><span><span>exports</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_symbol ts_left_brace">{</span><span class="ts_code ts_indexer"><span>[key</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span><span>]</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">any</span></span></span></span><span class="ts_symbol ts_semi">;</span><span class="ts_symbol ts_right_brace">}</span></span></span></span><span>, </span><span><span>module</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireModule">RequireModule</a></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">any</span></span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p><p> Define module with simplified CommonJS wrapper.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section><div class="ts_classcontent ts_classmember ts_class_member_title"><span class="ts_code ts_method ts_signiture"><span class="ts_params"><span>(</span><span><span>name</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span></span></span><span>, </span><span><span>deps</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><a href="http://phyzkit.net/docs/lib.d.ts.html#interface%20String">string</a></span><span>[]</span></span></span></span><span>, </span><span><span>ready</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_params"><span>(</span><span><span class="ts_symbol ts_keyword">...</span><span>deps</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span><span class="ts_reserved">any</span></span><span>[]</span></span></span></span><span>)</span></span><span class="ts_symbol ts_arrow">=&gt;</span><span><span class="ts_reserved">any</span></span></span></span></span><span>)</span></span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><span class="ts_reserved">void</span></span></span></span></div><section class="ts_classmember_description"><p><p>Define a module with a name and dependencies.</p>
+</p><h5 class="ts_parameters">Parameters</h5><div></div></section></section></section><section class="ts_modulemember ts_var"><h1 class="ts_modulemember_title ts_class_title"><a name="var%20require"></a><a href="#var%20require"><span class="ts_modulemember_a">var require</span></a></h1><section class="ts_modulemember_content"><span class="ts_code"><span class="ts_reserved ts_reserved_var">var</span><span>require</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20Require">Require</a></span></span></span></section></section><section class="ts_modulemember ts_var"><h1 class="ts_modulemember_title ts_class_title"><a name="var%20define"></a><a href="#var%20define"><span class="ts_modulemember_a">var define</span></a></h1><section class="ts_modulemember_content"><span class="ts_code"><span class="ts_reserved ts_reserved_var">var</span><span>define</span><span class="ts_type_annotation"><span class="ts_symbol ts_colon">:</span><span><a href="#interface%20RequireDefine">RequireDefine</a></span></span></span></section></section></div><hr></hr><a name="hierarchy"></a><h2>Class Hierarchy</h2><div><div></div></div><hr></hr><footer><a href="https://github.com/kontan/dtsdoc">DTSDoc</a></footer></div>
+	</body>
+</html>

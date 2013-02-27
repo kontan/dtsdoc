@@ -1,25 +1,16 @@
-/// <reference path="html.ts" />
+/// <reference path="htmlemitter.ts" />
 /// <reference path="primitives.ts" />
 /// <reference path="links.ts" />
 
 declare module marked {
-    export function (src: string, opt?: Options): string;
-    export function lexer(src: string, opt?: Options): Array;
-    export function parser(src: string, opt?: Options): string;
-    export function parse(src: string, opt?: Options): string;
-    export function setOptions(opt: Options): void;
-}
-
-interface Options {
-    gfm?: bool;
-    tables?: bool;
-    breaks?: bool;
-    pedantic?: bool;
-    sanitize?: bool;
-    highlight?: any;
+    export function (src: string): string;
 }
 
 module DTSDoc{
+
+    function emitReserved(b:HTMLBuilder, name:string){
+        b.span('ts_reserved ts_reserved_' + name, name);
+    }
 
     ////////////////////////////////////////////////////////////////////
     // Common Nodes
@@ -31,8 +22,8 @@ module DTSDoc{
             if(this.tag == 'param'){
                 b.dl('ts_param', ()=>{
                     var arr = /([_a-zA-Z]+)(.*)/.exec(this.text);
-                    b.dt('ts_code ts_param_name', arr[1]);
-                    b.dd('ts_param_description', arr[2]);
+                    if(arr.length >= 2) b.dt('ts_code ts_param_name', arr[1]);
+                    if(arr.length >= 3) b.dd('ts_param_description', arr[2]);
                 });
             }
         }
@@ -268,7 +259,7 @@ module DTSDoc{
         buildMember(b:HTMLBuilder):void{
             b.div("ts_code ts_class_member_title ts_method", ()=>{
                 b.anchor(this.parent.name + "-" + this.name);
-                if(this.isStatic){ b.span("ts_reserved", 'static'); }
+                if(this.isStatic) emitReserved(b, 'static'); 
                 b.span('', this.name);
                 this.sign.build(b, this.parent.parent);
             });
@@ -280,7 +271,8 @@ module DTSDoc{
         buildMember(b:HTMLBuilder):void{
             b.div("ts_code ts_class_member_title ts_field", ()=>{
                 b.anchor(this.parent.name + "-" + this.name);
-                b.span('', (this.isStatic ? "static " : "") + this.name);
+                if(this.isStatic) emitReserved(b, 'static');
+                b.span('ts_identifier', this.name);
                 this.type.build(b, this.parent.parent); 
             });
         }
@@ -451,6 +443,21 @@ module DTSDoc{
         }
     }
 
+    export class ASTIFunction extends ASTInterfaceMember{
+        constructor(public params:ASTParameters, public retType:ASTTypeAnnotation){ super(); }
+        build(b:HTMLBuilder, scope:ASTModule):void{
+            b.span("ts_code ts_method ts_signiture", ()=>{
+                this.params.build(b, scope);
+                this.retType.build(b, scope);
+            });
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Other Module members
+    ////////////////////////////////////////////////////////////////////// 
+
+
     export class ASTInterface extends ASTModuleMember{
         constructor(name:string, public interfaces:ASTTypeName[], public type:ASTSpecifingType){ 
             super('interface', name); 
@@ -476,10 +483,6 @@ module DTSDoc{
             });
         }
     }
-
-    ///////////////////////////////////////////////////////////////////////
-    // Other Module members
-    ////////////////////////////////////////////////////////////////////// 
     
     export class ASTFunction extends ASTModuleMember{ 
         constructor(name:string, public sign:ASTFuncionSignature){ 
@@ -490,7 +493,8 @@ module DTSDoc{
                 this.buildTitle(b);
                 b.section("ts_modulemember_content", ()=>{
                     b.span("ts_code ts_method", ()=>{
-                        b.span('', "function " + this.name);
+                        emitReserved(b, "function");
+                        b.span('ts_identifier', this.name);
                         this.sign.build(b, this.parent);
                     });
                 });
@@ -501,15 +505,7 @@ module DTSDoc{
         }
     }
 
-     export class ASTIFunction extends ASTInterfaceMember{
-        constructor(public params:ASTParameters, public retType:ASTTypeAnnotation){ super(); }
-        build(b:HTMLBuilder, scope:ASTModule):void{
-            b.span("ts_code ts_method ts_signiture", ()=>{
-                this.params.build(b, scope);
-                this.retType.build(b, scope);
-            });
-        }
-    }
+
 
     export class ASTCallable extends ASTModuleMember{ 
         constructor(public sign:ASTFuncionSignature){ super('function()', ''); } 
@@ -518,7 +514,7 @@ module DTSDoc{
                 this.buildTitle(b);
                 b.section("ts_modulemember_content", ()=>{
                     b.span("ts_code ts_method", ()=>{
-                        b.span('', "function");
+                        emitReserved(b, "function");
                         this.sign.build(b, this.parent);    
                     });
                 });
@@ -554,7 +550,7 @@ module DTSDoc{
                 this.buildTitle(b);
                 b.section("ts_modulemember_content", ()=>{
                     b.span("ts_code", ()=>{
-                        b.span("ts_reserved ts_reserved_var", 'var');
+                        emitReserved(b, 'var');
                         b.span('', this.name);
                         this.type.build(b, this.parent)
                     });
@@ -570,8 +566,6 @@ module DTSDoc{
         actualModule: ASTModule;
         constructor(public alias:string, public moduleName:ASTTypeName){ 
             super('import', alias); 
-        } 
-        build(b:HTMLBuilder):void{
         }
     }
 
@@ -733,9 +727,8 @@ module DTSDoc{
         message?: string;
     }
 
-
     export function generateDocument(sourceCode:string, watcher?:(v:number)=>void):GenerationResult{
-        var result = DTSDoc.pProgram(watcher).parse(new Source(sourceCode, 0));
+        var result = DTSDoc.pScript(watcher).parse(new Source(sourceCode, 0));
         if(result.success){
             var program:DTSDoc.ASTProgram = result.value;
             var global:DTSDoc.ASTModule = program.global;

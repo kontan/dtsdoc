@@ -37,10 +37,10 @@ module DTSDoc{
 	var colon    = reserved(":");
 	var semi     = reserved(";");
 	var comma    = reserved(",");
+	var period   = reserved(".");
 	var pExport  = optional(reserved("export"));
 	var pDeclare = optional(reserved("declare"));
 	var pStatic  = option(false, map(()=>true, keyword("static")));
-	var pIdentifierPath = lexme(regexp(/^([_$a-zA-Z][_$a-zA-Z0-9]*)(\.([_$a-zA-Z][_$a-zA-Z0-9]*))*/));
 	var pIdentifier     = lexme(regexp(/^[_$a-zA-Z][_$a-zA-Z0-9]*(?![_$a-zA-Z0-9])/));
 	var pStringRiteral  = lexme(regexp(/^(\"[^\"]+\"|\'[^\']+\')/));
 
@@ -73,12 +73,14 @@ module DTSDoc{
 		}
 	})));
 
+	var pIdentifierPath = sepBy1(pIdentifier, period);
+
 	export var pParameter = seq(s=>{
 		
 		// ** Hack **
 		// In some ambient source file, some parameters has inline document comments. 
 		// To avaid it, following parser consumes the comment and ignore it.
-		var docs = s(pDocumentComment);
+		s(pDocumentComment);
 
 		var isVarArg = s(optional(reserved("...")));
 		var varName = s(pIdentifier);
@@ -97,10 +99,7 @@ module DTSDoc{
 	
 	var pTypeAnnotation = option(new ASTTypeAnnotation(new ASTTypeName(["any"])), seq(s=>{
 		s(colon);
-		var type = s(pType);
-		if(s.success()){
-			return new ASTTypeAnnotation(type);
-		}
+		s(map((t)=>new ASTTypeAnnotation(t), pType));
 	}));
 
 	var pOpt = option(false, map(()=>true, reserved("?")));
@@ -123,14 +122,7 @@ module DTSDoc{
 	// Type Riteral
 	/////////////////////////////////////////////////////////////////////////////////
 
-	var pTypeNameLiteral = lexme(seq(s=>{
-		var name = s(pIdentifier);
-		var names = s(many(series(reserved('.'), pIdentifier)));
-		if(s.success()){
-			names.unshift(name);
-			return new ASTTypeName(names);
-		}
-	}));
+	var pTypeNameLiteral = map((n)=> new ASTTypeName(n), pIdentifierPath);
 
 	var pFunctionTypeLiteral = seq(s=>{
 		var docs = s(pDocumentComment);
@@ -369,12 +361,11 @@ module DTSDoc{
 
 	export var pModule = seq(s=>{
 		s(keyword("module"));
-		var name = s(or(pIdentifierPath, pStringRiteral));
+		var tokens:string[] = s(or(pIdentifierPath, map((s)=>[s], pStringRiteral)));
 		s(reserved("{"));
 		var members = s(pModuleMembers);
 		s(reserved("}"));
 		if(s.success()){
-			var tokens = name.split('.');
 			var mod = new ASTModule(tokens[tokens.length - 1], members);
 			members.forEach((m)=>{ m.parent = mod; });
 			for(var i = tokens.length - 2; i >= 0; i--){
@@ -399,7 +390,7 @@ module DTSDoc{
 
 	var pModuleMembers:Parsect.Parser = map(ms=>ms.filter(m => m instanceof ASTModuleMember), many(or(pModuleMember, reserved(';'), pImport)));
 
-	export function pProgram(watcher?:(v:number)=>void):Parsect.Parser{
+	export function pScript(watcher?:(v:number)=>void):Parsect.Parser{
 		return seq(s=>{
 			logger = Parsect.log(n=>{ 
 				if(watcher){
@@ -412,7 +403,7 @@ module DTSDoc{
 			var members = s(pModuleMembers);
 			s(eof);
 			if(s.success()){
-				var mod = new ASTModule("(globalg)", members);
+				var mod = new ASTModule("__global__", members);
 				members.forEach((m)=>{ m.parent = mod; });
 				mod.updateHierarchy();
 				//return mod;

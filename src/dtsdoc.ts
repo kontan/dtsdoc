@@ -1,29 +1,62 @@
-/// <reference path="../../DefinitelyTyped/node/node.d.ts" />
-/// <reference path="../../Parsect/src/parsect.ts" />
-/// <reference path="../../Parsect/src/globals.ts" />
-
-/// <reference path="html.ts" />
-/// <reference path="primitives.ts" />
-/// <reference path="links.ts" />
-/// <reference path="type.ts" />
-/// <reference path="parser.ts" />
-
 import fs = module("fs");
+import path = module("path");
+import dtsdoc = module("./dtsdoclib");
 
-export function toHTMLDocument(input:string):string{
-    var result:DTSDoc.GenerationResult = DTSDoc.generateDocument(input, (v:number)=>{ 
-    	process.stdout.write('*'); 
-    });
-    if(result.type === DTSDoc.GenerationResultType.Success){
-    	//console.log(process.argv[1]);
-    	var match = /(.*[\/\\])[^\/\\]+/.exec(process.argv[1]);
-    	var dir = match ? match[1] : "";
-		var styles:string = fs.readFileSync(dir + 'style.css').toString();
-		var template:string = fs.readFileSync(dir + 'template.html').toString();
-		template = template.replace('<!-- CSS Content -->', styles);
-	    template = template.replace('<!-- Document Content -->', result.docs);
-    	return template;				    
-	}else if(result.type === DTSDoc.GenerationResultType.Fail){
-		console.log('fail');
+function printHelp(): void{
+	console.log([
+		"Syntax: dtsdoc [options] [file...]",
+		"",
+		"Examples: dtsdoc --out docs foo.d.ts bar.d.ts",
+        "",
+        "Options: ",
+        "  --out DIRECTORY    Redirect output to the directory",
+        "  --silent           No information output "
+	].join('\n'));
+}
+
+var args = process.argv.slice(2);
+var files: string[] = [];
+var outputDir: string;
+var silent:bool = false;
+
+// Parse command line option
+for(var i = 0; i < args.length; i++){
+	var arg = args[i];
+	if(arg.indexOf('--') == 0){
+		var opt:string = arg.slice(2);
+		if(opt === 'out'){
+			outputDir = args[i + 1];
+			i++;
+		}else if(opt == 'silent'){
+			silent = true;
+		}else{
+			console.log('Unknown option \'' + arg + '\'');
+			printHelp();
+			files = [];
+			break;
+		}
+	}else{
+		files.push(arg);		
 	}
 }
+
+//console.log(files);
+
+// Generate documents
+files.forEach((file:string)=>{
+	var matches = /^(.+)(\.d\.ts)$/.exec(file);
+	if( ! fs.existsSync(file)){
+		if( ! silent) console.log('file "' + file + '" not found.');
+	}else if( ! matches){
+		console.log('file "' + file + '" is not a ambient source file.');
+	}else{
+		if( ! silent) process.stdout.write('Generating docs for "' + file + '"... ');
+		var dir = outputDir || path.dirname(file);
+		var dest = path.basename(file);
+		var code:string = fs.readFileSync(file).toString();
+		var html:string = dtsdoc.toHTMLDocument(code);
+		if( ! fs.existsSync(dir)) fs.mkdirSync(dir);
+		fs.writeFileSync(path.join(dir, dest + ".d.html"), html);		
+		if( ! silent) console.log("Complete.");
+	}
+});
