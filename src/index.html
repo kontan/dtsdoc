@@ -19,32 +19,23 @@
 
 	</head>
 	<body>
-		<section style="margin:2em;">
-			<h1 class="gen_title"><a href="https://github.com/kontan/dtsdoc" target="_blank">DTSDoc - Documentation Generator for TypeScript Ambient Source File</a></h1>
-			<h2>Usage</h2>
-			<ul>
-				<li>You can directly input your definition in the textarea. Push the Generate button to generate a document.</li>
-				<li>You can also load your local definition file. Push to Open button to show a file dialog. </li>
-				<li>Downloading a generated file is available only Chorme with "--enable-experimental-extension-apis" option because it uses File System API. </li>
-			</ul>
-			<p></p>
-		</section>
+		<h1 class="gen_title"><a href="https://github.com/kontan/dtsdoc" target="_blank">dtsdoc on Web</a></h1>
 		<textarea id="source"></textarea>
 		<div>
-			<input id="input_file" type="file" value=""></input>
-			<input id="button_open" type="button" value="Open"></input>
-			<input id="gen" type="button" value="Generate"></input>
-			<a id="downloadLink" href="hoge.png" target="_blank"><input id="download" type="button" value="Download"></input></a>	
-			<canvas id="progressbar" width="300" height="40" style="border:solid 1px black; margin: 4px; display: inline;"></canvas>	
-			<div>
-				<div style="width: 40px; height: 40px; float:left;">
-					<input id="async" type="checkbox" value="Async" checked="true" style="display: block; margin-left:auto; margin-right:auto; margin-top:auto; margin-bottom:auto;"></input>
-				</div>
-				<span style="padding-top: 20px;">Asyncronous</span>
-			</div>
-			<div id="performance" style="vertical-align: top; padding: 12px;"></div>	
+			<style> .widget{ display: block; float: left; height: 40px; margin-left: 10px; } </style>
+			<input id="input_file"  type="file"   value=""         style="display:none;"></input>
+			<input id="button_open" type="button" value="Open"     class="widget"></input>
+			<input id="gen"         type="button" value="Generate" class="widget"></input>
+			<a id="downloadLink" href="hoge.png" target="_blank">
+				<input id="download" type="button" value="Download" class="widget"></input>
+			</a>	
+			
+			<input id="async" type="checkbox" value="Async" checked="true" class="widget" style="width: 40px;　vertical-align:middle;"></input>
+			<div class="widget" style=""><span style="line-height: 40px;">Asyncronous</span></div>
+			<div class="widget"><span id="performance" style="line-height: 40px;"></span></div>	
+			<canvas id="progressbar" class="widget" width="300" height="30" style="border:solid 1px black; width: 300px;height: 30px; margin: 12px;"></canvas>	
 		</div>
-		<hr />
+		<hr style="margin: 60px; clear: both;" />
 		<div id="docs"></div>
 		<script type="text/javascript" src="jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="generator.js"></script>

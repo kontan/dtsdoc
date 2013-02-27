@@ -85,7 +85,7 @@ module DTSDoc{
 		var opt = s(option(false, map(()=>true, reserved("?"))));		
 		var typeName = s(option(new ASTTypeName(["any"]), pTypeAnnotation));
 		if(s.success()){
-			return new ASTParameter(varName, opt, typeName);
+			return new ASTParameter(isVarArg, varName, opt, typeName);
 		}
 	});
 
@@ -111,9 +111,12 @@ module DTSDoc{
 		s(reserved('='));
 		var mod = s(or(
 			trying(series(keyword('module'), between(reserved('('), pStringRiteral, reserved(')')))), 
-			pIdentifierPath
+			pTypeNameLiteral
 		));
 		s(reserved(';'));
+		if(s.success()){
+			return new ASTImport(id, mod);
+		}
 	});
 
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +302,7 @@ module DTSDoc{
 		var params:ASTParameter[] = s(pParameters);
 		var retType:ASTTypeAnnotation = s(pTypeAnnotation);
 		if(s.success()){
-			return new ASTIMethod(methodName, new ASTFuncionSignature(params, retType));
+			return new ASTIMethod(methodName, opt, new ASTFuncionSignature(params, retType));
 		}
 	});
 
@@ -409,13 +412,30 @@ module DTSDoc{
 			var members = s(pModuleMembers);
 			s(eof);
 			if(s.success()){
-				var mod = new ASTModule("(global)", members);
+				var mod = new ASTModule("(globalg)", members);
 				members.forEach((m)=>{ m.parent = mod; });
 				mod.updateHierarchy();
 				//return mod;
 
 				var prog = new ASTProgram(mod);
 				prog.docs = docs;
+
+				// solve import declalation
+				prog.global.members.forEach((member:any)=>{
+					if(member instanceof ASTImport){
+						var i:ASTImport = member;
+						prog.global.searchMember(i.moduleName, (member)=>{
+							if(member instanceof ASTModule){
+								i.actualModule = <ASTModule>member;
+								return false;
+							}else{
+								return true;
+							}
+						});
+					}
+				});
+
+
 				return prog;
 			}
 		});

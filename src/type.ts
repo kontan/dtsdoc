@@ -2,21 +2,21 @@
 /// <reference path="primitives.ts" />
 /// <reference path="links.ts" />
 
-declare var require:any;
-
-var marked:(markdown:string)=>string;
-
-// web
-if(this.marked){
-    marked = this.marked;
-}
-// node.js
-else{
-    marked = require('./marked');
+declare module marked {
+    export function (src: string, opt?: Options): string;
+    export function lexer(src: string, opt?: Options): Array;
+    export function parser(src: string, opt?: Options): string;
+    export function parse(src: string, opt?: Options): string;
+    export function setOptions(opt: Options): void;
 }
 
-if(!marked){
-    console.log('ERROR: marked not found.');
+interface Options {
+    gfm?: bool;
+    tables?: bool;
+    breaks?: bool;
+    pedantic?: bool;
+    sanitize?: bool;
+    highlight?: any;
 }
 
 module DTSDoc{
@@ -74,10 +74,12 @@ module DTSDoc{
     }    
 
     export class ASTParameter{ 
-        constructor(public name:string, public optional:bool, public type:ASTTypeAnnotation){}
+        constructor(public isVarLength:bool, public name:string, public optional:bool, public type:ASTTypeAnnotation){}
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
+                if(this.isVarLength) b.span('ts_symbol ts_keyword', '...');
                 b.span('', this.name);
+                if(this.optional) b.span('ts_symbol ts_keyword', '?');
                 this.type.build(b, scope);
             });
         }
@@ -119,9 +121,9 @@ module DTSDoc{
 
     export class ASTTypeName extends ASTType { 
         name:string;
-        constructor(public names:string[]){ 
+        constructor(public segments:string[]){ 
             super(); 
-            this.name = names[names.length - 1];
+            this.name = segments[segments.length - 1];
         } 
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
@@ -213,10 +215,14 @@ module DTSDoc{
         }
 
         getFullName(){
-            if( ! this.parent){
-                throw "";
+            var type = this;
+            var n = type.name;
+            var mod:ASTModule = type.parent;
+            while(mod.parent){
+                n = mod.name + "." + n;
+                mod = mod.parent;
             }
-            return this.parent.findFullName(this.name);
+            return n;
         }
 
         getLinkString():string{
@@ -287,7 +293,7 @@ module DTSDoc{
         };
         getSuperClass():ASTClass{
             if(this.superClass){
-                var sc = this.parent.findType(this.superClass.name);
+                var sc = this.parent.searchType(this.superClass);
                 if(sc instanceof ASTClass){
                     return <ASTClass>sc;
                 }
@@ -347,7 +353,7 @@ module DTSDoc{
                             for(var i = 0; i < this.interfaces.length; i++){
                                 if(i > 0) b.span('', ", ");
                                 var name = this.interfaces[i].name;
-                                var sc = this.parent.findType(name);
+                                var sc = this.parent.searchType(new ASTTypeName([name]));
                                 if(sc instanceof ASTInterface){
                                     var ifs:ASTInterface = <ASTInterface> sc;
                                     b.link('#' + ifs.getLinkString(), name);
@@ -412,10 +418,11 @@ module DTSDoc{
     }
 
     export class ASTIMethod extends ASTInterfaceMember{
-        constructor(public name:string, public sign:ASTFuncionSignature){ super(); }
+        constructor(public name:string, public isOpt:bool, public sign:ASTFuncionSignature){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span("ts_code ts_method'", ()=>{
                 b.span('', this.name);
+                if(this.isOpt) b.span('ts_symbol ts_keyword', '?');
                 this.sign.build(b, scope);
             });
         }
@@ -521,9 +528,6 @@ module DTSDoc{
         constructor(name:string, public members:string[]){ 
             super('enum', name); 
         }
-        getFullName(){
-            return this.parent.findFullName(this.name);
-        }
         build(b:HTMLBuilder):void{
             b.section("ts_modulemember ts_enum", ()=>{
                 this.buildTitle(b);
@@ -543,7 +547,6 @@ module DTSDoc{
         constructor(name:string, public type:ASTTypeAnnotation){ 
             super('var', name); 
         } 
-        toString():string{ return this.name; };
         build(b:HTMLBuilder):void{
             b.section('ts_modulemember ts_var', ()=>{
                 this.buildTitle(b);
@@ -558,6 +561,15 @@ module DTSDoc{
                     }
                 });
             });
+        }
+    }
+
+    export class ASTImport extends ASTModuleMember{
+        actualModule: ASTModule;
+        constructor(public alias:string, public moduleName:ASTTypeName){ 
+            super('import', alias); 
+        } 
+        build(b:HTMLBuilder):void{
         }
     }
 
@@ -577,127 +589,77 @@ module DTSDoc{
         }
 
         searchType(typeName:ASTTypeName):ASTModuleMember{
-            
-            var topMember = ((prefix:string):ASTModuleMember=>{
-                for(var scope = this; scope; scope = scope.parent){
-                    for(var i = 0; i < scope.members.length; i++){
-                        var member = scope.members[i];
-                        if(
-                            member instanceof ASTClass || 
-                            member instanceof ASTInterface ||
-                            member instanceof ASTEnum
-                        ){
-                            if(member.name == prefix){
-                                return member;
-                            }
-                        }
-                        if(member instanceof ASTModule){
-                            var mod = <ASTModule> member;
-                            if(mod.name == prefix){
-                                return mod;
-                            }
-                        }
-                    } 
+            var type:ASTModuleMember;
+            this.searchMember(typeName, (member)=>{
+                if(
+                    member instanceof ASTClass || 
+                    member instanceof ASTInterface ||
+                    member instanceof ASTEnum
+                ){
+                    type = member;
+                    return false;
+                }{
+                    return true;
                 }
-                return null;
-            })(typeName.names[0]);
-
-            if(topMember){
-                var focused:ASTModuleMember = topMember;
-                for(var i = 1; i < typeName.names.length && focused; i++){
-                    if(focused instanceof ASTModuleMember){
-                        var m = <ASTModule> focused;
-                        focused = m.getMember(typeName.names[i]);
-                    }else{
-                        return null;
-                    }
-                }
-                return focused;
-            }
-            
-            return null;
+            });
+            return type;
         }
 
-        findType(name:string):ASTModuleMember{
-            var splitted = name.split('.'); 
-            if(splitted.length == 1){
-                var targetType = splitted[0];
-                for(var i = 0; i < this.members.length; i++){
-                    var member = this.members[i];
-                    if(
-                        member instanceof ASTClass || 
-                        member instanceof ASTInterface ||
-                        member instanceof ASTEnum 
-                    ){
-                        if(member.name == targetType){
-                            return member;
+        searchMember(typeName:ASTTypeName, filter:(member:ASTModuleMember)=>bool): void{
+
+            function grabType(topMember: ASTModuleMember){
+                if(topMember){
+                    var focused:ASTModuleMember = topMember;
+                    for(var i = 1; i < typeName.segments.length && focused; i++){
+                        if(focused instanceof ASTModuleMember){
+                            var m = <ASTModule> focused;
+                            focused = m.getMember(typeName.segments[i]);
+                        }else{
+                            return null;
                         }
                     }
-                } 
-            }else if(splitted.length > 0){
-                var targetModule = splitted[0];
-                for(var i = 0; i < this.members.length; i++){
-                    var member = this.members[i];
-                    if(member instanceof ASTModule){
-                        var m = <ASTModule>member;
-                        if(m.name == targetModule){
-                            var t = this.getTypeFromFullName(splitted.slice(1).join("."));
-                            if(t){
-                                return t;
-                            }
-                        }
-                    }
+                    return focused;
                 }
             }
-            if(this.parent){
-                return this.parent.findType(name);
-            }
-            return null;
-        }
-        getTypeFromFullName(name:string):ASTModuleMember{
-            var splitted = name.split('.'); 
-            if(splitted.length == 1){
-                var targetType = splitted[0];
-                for(var i = 0; i < this.members.length; i++){
-                    var member = this.members[i];
+            
+            var prefix = typeName.segments[0];
+            for(var scope = this; scope; scope = scope.parent){
+                for(var i = 0; i < scope.members.length; i++){
+                    var member = scope.members[i];
                     if(
                         member instanceof ASTClass || 
                         member instanceof ASTInterface ||
                         member instanceof ASTEnum
                     ){
-                        if(member.name == targetType){
-                            return member;
+                        if(member.name == prefix){
+                            var target = grabType(member);
+                            if(target){
+                                if( ! filter(target)) return;
+                            }
+                        }
+                    }
+                    if(member instanceof ASTImport){
+                        var importDecl = <ASTImport> member;
+                        if(importDecl.alias == prefix){
+                            var target = grabType(importDecl.actualModule);
+                            if(target){
+                                if( ! filter(target)) return;
+                            }
+                        }
+                    }
+                    if(member instanceof ASTModule){
+                        var mod = <ASTModule> member;
+                        if(mod.name == prefix){
+                            var target = grabType(mod);
+                            if(target){
+                                if( ! filter(target)) return;
+                            }
                         }
                     }
                 } 
-            }else if(splitted.length > 0){
-                var targetModule = splitted[0];
-                for(var i = 0; i < this.members.length; i++){
-                    var member = this.members[i];
-                    if(member instanceof ASTModule){
-                        var m = <ASTModule>member;
-                        if(m.name == targetModule){
-                            return this.getTypeFromFullName(splitted.slice(1).join("."));
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-        findFullName(name:string):string{
-            var type:ASTModuleMember = this.findType(name);
-            if(type){
-                var n = type.name;
-                var mod:ASTModule = type.parent;
-                while(mod.parent){
-                    n = mod.name + "." + n;
-                    mod = mod.parent;
-                }
-                return n;
-            }else{
-                return name;
             }
         }
+
         updateHierarchy():void{
             this.members.forEach((m)=>{ 
                 if(m instanceof ASTModule){
@@ -778,6 +740,10 @@ module DTSDoc{
             var members = global.members;
 
             var b = new DTSDoc.HTMLBuilder();
+            
+            if(program.docs){
+                program.docs.build(b);
+            }
             
             b.div('', ()=>{
                 if(global.docs){

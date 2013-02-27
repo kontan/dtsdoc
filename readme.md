@@ -29,13 +29,27 @@ will generate document in the same directory of the input file.
 
 ## As node.js module
 
-See `build/node/command.js` or `src/command.ts` as example.
+See `src/command.ts` as example.
 
 ## In Web browser
 
 Open `build/web/index.html` in your browser. In Chrome, `--allow-file-access-from-files` option is needed to run locally.
 
-#Problems
+# Known Issues
+
+Can't find a type name in other split module. 
+
+    module M {
+        var c: N.C;      <- N.C is not found
+        var d: M.N.C;    <- M.N.C is OK
+    }
+
+    module M.N {
+        class C {
+        }
+    }
+
+# Desing Problems
 
 ## Interface is open
 Multiple interfaces with the same name exist together. Merge or split them in documents? Which definition should be linked from a interface name? 

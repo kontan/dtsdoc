@@ -1,13 +1,19 @@
 var cp = require('child_process');
 var fs = require('fs');
+var path = require('path');
 
 function copyFile(from, to){
+	var destDir = path.dirname(to);
+	if( ! fs.existsSync(destDir)){
+		fs.mkdirSync(destDir);
+	}
+
 	var fromFile = fs.createReadStream(from);
 	var toFile = fs.createWriteStream(to, { flags: 'w+'});
 	toFile.once('open', function(fd){
 	    require('util').pump(fromFile, toFile);
 	});
-	console.log('copying from ' + from + ' to ' + to);
+	console.log('copy ' + from + ' -> ' + to);
 }
 
 function concatFiles(out, files){
@@ -17,7 +23,6 @@ function concatFiles(out, files){
 	});
 	fs.writeFileSync(out, result);
 }
-
 
 function exec(command, func){
 	console.log(command);
@@ -39,20 +44,17 @@ function exec(command, func){
 
 var commonOptions = [
 	'--target ES5',
-	//'src/html.ts',
-	//'src/primitives.ts',
-	//'src/links.ts',
-	//'src/type.ts',
 	'src/parser.ts'
 ];
 
 task('node', function(){
 	exec('tsc ' + commonOptions.concat(['--out temp', 'src/command.ts']).join(' '), function(){
-		copyFile('src/marked.js', 'build/node/marked.js');
-		copyFile('src/template.html', 'build/node/template.html');
-		copyFile('src/style.css', 'build/node/style.css');
-		copyFile('temp/dtsdoc/src/command.js', 'build/node/command.js');
-		concatFiles('build/node/dtsdoc.js', [
+		copyFile('src/template.html', 'bin/template.html');
+		copyFile('src/style.css', 'bin/style.css');
+		copyFile('temp/dtsdoc/src/command.js', 'lib/command.js');
+		//copyFile('src/dtsdoc', 'bin/dtsdoc');
+		concatFiles('lib/dtsdoc.js', [
+			'src/marked.js',
 			'temp/Parsect/src/parsect.js',
 			'temp/Parsect/src/globals.js',
 			'temp/dtsdoc/src/html.js',
@@ -63,7 +65,6 @@ task('node', function(){
 			'temp/dtsdoc/src/paralet.js',
 			'temp/dtsdoc/src/dtsdoc.js'
 		]);
-
 	});
 });
 

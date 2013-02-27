@@ -1,0 +1,25 @@
+{
+    "name": "dtsdoc",
+    "version": "0.1.0",
+    "author": "kontan <kudagitsune+npm@gmail.com>",
+    "description": "A simple documentation generator for TypeScript ambient source file.",
+    "dependencies": {
+    },
+    "devDependencies": {
+    },
+    "bin": {
+        "dtsdoc": "node ./bin/dtsdoc"
+    },
+    "main": "./src/dtsdoc.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kontan/dtsdoc"
+    },
+    "keywords": [
+        "TypeScript"
+    ],
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.6"
+    }
+}

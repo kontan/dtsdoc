@@ -2,62 +2,9 @@
 *{
 	margin: 0px;
 	padding: 0px;
-
-	
-}
-
-/******************* Document Styles *******************/
-
-p, h1, h2, h3, h4, h5, h6{
-	font-family: Segoe UI, Oxygen, Verdana, Arial;
-}
-
-h1{
-	text-align: center;
-	font-size: x-large;
-	line-height: normal;
-	font-weight: bold;
-}
-
-h2{
-	font-size: large;
-	border-bottom: 1px solid #ccc;
-	color: #000;
-	
-	font-size: x-large;
-	margin: 1em;
-}
-
-
-h3{	
-	font-size: large;
-	margin: 0.5em;
-}
-
-
-p{
-	font-size: medium;
-}
-
-code{
-	margin: 0 2px;
-	padding: 0px 5px;
-	border: 1px solid #eaeaea;
-	background-color: #f8f8f8;
-	border-radius: 3px;
-	font-family: Courier New, monospace;
-}
-
-pre code{
-	border: 0px solid #eaeaea;
-	background-color: transparent;
-}
-
-pre{
-	border: 1px solid #eaeaea;
-	background-color: #f8f8f8;
-	margin: 0.5em;
-	padding: 0.5em;
+	font-size: inherit;
+	font-weight: inherit;
+	text-align: inherit;
 }
 
 body{
@@ -99,25 +46,6 @@ a:active {
     text-decoration:underline;
 }
 
-
-
-hr{
-	margin: 0.5em;
-}
-
-footer{
-	text-align: center;
-	font-size: small;
-	margin: 1em;
-}
-
-ul{
-	margin-left: 2em;
-}
-
-
-/************ API Reference Styles ******************/
-
 .ts_modulemember_a{
     color: black;
     text-decoration:none;
@@ -139,6 +67,32 @@ ul{
     text-decoration:underline;
 }
 
+h2{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;	
+	font-size: x-large;
+	margin: 1em;
+}
+
+h3{
+	font-family: Segoe UI, Oxygen, Verdana, Arial;	
+	font-size: large;
+	margin: 0.5em;
+}
+
+hr{
+	margin: 0.5em;
+}
+
+footer{
+	text-align: center;
+	font-size: small;
+	margin: 1em;
+}
+
+ul{
+	margin-left: 2em;
+}
+
 .ts_symbol{
 	color: SlateGray;
 }
@@ -158,6 +112,7 @@ ul{
 .ts_reserved_var:after{
 	content: " ";
 }
+
 
 .ts_semi:after{
 	content: " ";
@@ -183,7 +138,6 @@ ul{
 }
 
 .ts_modulemember_title{
-	text-align: left;
 	font-family: Segoe UI, Verdana, Arial;	
 	font-weight: normal;
 	padding: 8px;

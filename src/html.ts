@@ -32,7 +32,10 @@ module DTSDoc{
 
 				this.add('</', name, '>');
 			}else{
-				this.add('/>');
+				//this.add('/>');
+
+				this.add('>');
+				this.add('</', name, '>');
 			}
 		}		
 
