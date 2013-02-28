@@ -1579,7 +1579,7 @@ var DTSDoc;
         };
         HTMLBuilder.prototype.anchor = function (name) {
             this.elem('a', '', {
-                'name': name
+                'id': name
             });
         };
         HTMLBuilder.prototype.link = function (url, content) {
@@ -1588,8 +1588,7 @@ var DTSDoc;
             }, content);
         };
         HTMLBuilder.prototype.hr = function () {
-            this.elem('hr', '', {
-            });
+            this.add('<hr/>');
         };
         HTMLBuilder.prototype.h1 = function (x, y) {
             this.elem('h1', y ? x : '', {
@@ -2288,14 +2287,17 @@ var DTSDoc;
             b.elem('section', 'ts_classmember_description', {
             }, function () {
                 if(_this.text) {
-                    b.elem('p', '', {
+                    b.elem('div', '', {
                     }, marked(_this.text));
                 }
-                if(_this.sections.length > 0) {
+                var params = _this.sections.filter(function (tag) {
+                    return tag.tag === 'param';
+                });
+                if(params.length > 0) {
                     b.elem('h5', 'ts_parameters', {
                     }, 'Parameters');
                     b.div('', function () {
-                        _this.sections.forEach(function (s) {
+                        params.forEach(function (s) {
                             s.build(b);
                         });
                     });
@@ -3122,8 +3124,9 @@ var DTSDoc;
                                 });
                                 emitMember(member);
                             } else {
-                                b.p('', function () {
-                                    b.link('#' + member.getLinkString(), member.name);
+                                b.p('ts_index_item', function () {
+                                    var symbol = member instanceof ASTClass ? '■' : member instanceof ASTInterface ? '□' : member instanceof ASTVar ? '●' : member instanceof ASTEnum ? '▼' : '◇';
+                                    b.link('#' + member.getLinkString(), symbol + " " + member.name);
                                 });
                             }
                         });

@@ -70,7 +70,7 @@ module DTSDoc{
 		}
 
 		anchor(name:string):void{
-			this.elem('a', '', {'name': name});
+			this.elem('a', '', {'id': name});
 		}
 
 		link(url:string, content:string):void;
@@ -80,7 +80,7 @@ module DTSDoc{
 		}
 
 		hr():void{
-			this.elem('hr', '', {});
+			this.add('<hr/>');
 		}
 
 		h1(content:string):void;

@@ -45,15 +45,17 @@ module DTSDoc{
                     //b.elem('p', '', {}, markedmod(this.text));
                     //b.elem('p', '', {}, this.text);
                     
-                    b.elem('p', '', {}, marked(this.text));
+                    b.elem('div', '', {}, marked(this.text));
                 }
-                if(this.sections.length > 0){
-                    
-                    // TODO
-                    // available only @param now
+
+
+                // TODO
+                // available only @param now
+                var params = this.sections.filter((tag)=>tag.tag === 'param');
+                if(params.length > 0){
                     b.elem('h5', 'ts_parameters', {}, 'Parameters');
                     b.div('', ()=>{
-                        this.sections.forEach(s=>{
+                        params.forEach(s=>{
                             s.build(b);
                         });
                     });
@@ -758,8 +760,13 @@ module DTSDoc{
                                 });
                                 emitMember(<ASTModule>member);
                             }else{
-                                b.p('', ()=>{ 
-                                   b.link('#' + member.getLinkString(), member.name);
+                                b.p('ts_index_item', ()=>{ 
+                                    var symbol = member instanceof ASTClass ? '■' :
+                                                 member instanceof ASTInterface ? '□' :
+                                                 member instanceof ASTVar ? '●' :
+                                                 member instanceof ASTEnum ? '▼' :
+                                                 '◇';
+                                    b.link('#' + member.getLinkString(), symbol + " " + member.name);
                                 });
                             }
                         });

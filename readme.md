@@ -14,7 +14,8 @@ See [my Web Site](http://phyzkit.net/).
 # Build
 
 **If you only want to use dtsdoc, you can precompiled javascript source files in `bin` directory**.
-Some messy steps are needed to build. In node.js command line,
+
+Some messy steps are needed to build. 
 
 1. `npm install -g jakefile`
 2. Download [Parsect](https://github.com/kontan/Parsect) and place same directory with dtsdoc. 

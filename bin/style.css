@@ -177,20 +177,32 @@ ul, ol{
     text-decoration:underline;
 }
 
-.ts_symbol{
-	color: SlateGray;
-}
 
-.ts_colon:after{
+
+
+/* Whitespaces */
+
+.ts_symbol_colon:after{
 	content: " ";
 }
 
-.ts_reserved{
-	color: DarkRed;
+.ts_symbol_semicolon:after{
+	content: " ";
 }
 
-.ts_optional{
-	color: DarkCyan;
+.ts_symbol_comma:after{
+	content: " ";
+}
+
+.ts_symbol_left_brace:after{
+	content: " ";
+}
+
+.ts_symbol_arrow:before{
+	content: " ";
+}
+.ts_symbol_arrow:after{
+	content: " ";
 }
 
 .ts_reserved_var:after{
@@ -201,26 +213,35 @@ ul, ol{
 	content: " ";
 }
 
-
-.ts_symbol_colon:after{
-	content: " ";
-}
-
-.ts_symbol_semicolon:after{
-	content: " ";
-}
-
-.ts_arrow{
-
-}
-
 .ts_reserved_function:after{
 	content: " ";
 }
 
-.ts_left_brace:after{
-	content: " ";
+
+
+
+
+/* Coloring */
+
+.ts_reserved{
+	color: DarkRed;
 }
+
+.ts_symbol{
+	color: SlateGray;
+}
+
+.ts_symbol_question{
+	color: DarkCyan;
+}
+
+.ts_index_item a{
+	color: black;
+}
+
+/* Misc */
+
+
 
 .contents{
 	margin: 1em;
@@ -342,10 +363,6 @@ ul, ol{
 	clear: both;
 }
 
-
-.ts_parameters{
-	font-size: small;
-}
-.ts_parameters:after{
-	content: " :";
+.ts_index_item{
+	white-space: nowrap;
 }
