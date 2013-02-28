@@ -32,6 +32,7 @@ export function toHTMLDocument(input:string):string{
 	    template = template.replace('<!-- Document Content -->', result.docs);
     	return template;				    
 	}else if(result.type === DTSDoc.GenerationResultType.Fail){
-		console.log('fail');
+		console.log('generation failed: ' + result.message + " at " + result.line + ", " + result.column);
+        //throw 'generation failed: ' + result.message;
 	}
 }

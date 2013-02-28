@@ -3194,7 +3194,7 @@ var DTSDoc;
 
 var DTSDoc;
 (function (DTSDoc) {
-    var lineComment = regexp(/^\/\/[^\n]*(\n|$)/);
+    var lineComment = regexp(/^\/\/[^\r\n]*(\r\n|\r|\n|$)/m);
     var blockComment = regexp(/^\/(\*(?!\*)|\*\*\*+)([^*]|\r|\n|\*(?!\/))*\*\//m);
     var comment = or(lineComment, blockComment);
     var whitespace = regexp(/^[ \t\r\n]+/m);
@@ -3594,7 +3594,7 @@ function toHTMLDocument(input) {
         template = template.replace('<!-- Document Content -->', result.docs);
         return template;
     } else if(result.type === DTSDoc.GenerationResultType.Fail) {
-        console.log('fail');
+        console.log('generation failed: ' + result.message + " at " + result.line + ", " + result.column);
     }
 }
 exports.toHTMLDocument = toHTMLDocument;

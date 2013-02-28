@@ -26,6 +26,13 @@ for(var i = 0; i < args.length; i++){
 		var opt:string = arg.slice(2);
 		if(opt === 'out'){
 			outputDir = args[i + 1];
+			var stat = fs.statSync(outputDir);
+			if( ! stat.isDirectory()){
+				console.log('error: "' + outputDir + '" is not directory.');
+				printHelp();
+				files = [];
+				break;
+			}
 			i++;
 		}else if(opt == 'silent'){
 			silent = true;
@@ -50,13 +57,23 @@ files.forEach((file:string)=>{
 	}else if( ! matches){
 		console.log('file "' + file + '" is not a ambient source file.');
 	}else{
-		if( ! silent) process.stdout.write('Generating docs for "' + file + '"... ');
+		//if( ! silent) process.stdout.write('Generating docs for "' + file + '"... ');
 		var dir = outputDir || path.dirname(file);
 		var dest = path.basename(file);
 		var code:string = fs.readFileSync(file).toString();
+
+		// remove BOM
+		if(code.charCodeAt(0) === 65279){
+			code = code.slice(1);
+		}
+		
 		var html:string = dtsdoc.toHTMLDocument(code);
-		if( ! fs.existsSync(dir)) fs.mkdirSync(dir);
-		fs.writeFileSync(path.join(dir, dest + ".html"), html);		
-		if( ! silent) console.log("Complete.");
+		if(html){
+			if( ! fs.existsSync(dir)) fs.mkdirSync(dir);
+			fs.writeFileSync(path.join(dir, dest + ".html"), html);		
+			//if( ! silent) console.log("Complete.");
+		}else{
+			console.log("Error: " + file);
+		}
 	}
 });
