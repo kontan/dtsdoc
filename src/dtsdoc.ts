@@ -56,7 +56,7 @@ files.forEach((file:string)=>{
 		var code:string = fs.readFileSync(file).toString();
 		var html:string = dtsdoc.toHTMLDocument(code);
 		if( ! fs.existsSync(dir)) fs.mkdirSync(dir);
-		fs.writeFileSync(path.join(dir, dest + ".d.html"), html);		
+		fs.writeFileSync(path.join(dir, dest + ".html"), html);		
 		if( ! silent) console.log("Complete.");
 	}
 });

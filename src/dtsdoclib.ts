@@ -2,7 +2,7 @@
 /// <reference path="../../Parsect/src/parsect.ts" />
 /// <reference path="../../Parsect/src/globals.ts" />
 
-/// <reference path="html.ts" />
+/// <reference path="htmlemitter.ts" />
 /// <reference path="primitives.ts" />
 /// <reference path="links.ts" />
 /// <reference path="type.ts" />

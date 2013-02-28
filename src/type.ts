@@ -12,6 +12,14 @@ module DTSDoc{
         b.span('ts_reserved ts_reserved_' + name, name);
     }
 
+    function emitIdentifier(b:HTMLBuilder, name:string){
+        b.span('ts_identifier', name);
+    }
+
+    function emitSymbol(b:HTMLBuilder, name:string, symbol:string){
+        b.span('ts_symbol ts_symbol_' + name, symbol);
+    }
+
     ////////////////////////////////////////////////////////////////////
     // Common Nodes
     ////////////////////////////////////////////////////////////////
@@ -58,7 +66,7 @@ module DTSDoc{
         constructor(public type:ASTType){}
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('ts_type_annotation', ()=>{
-                b.span('ts_symbol ts_colon', ':');
+                emitSymbol(b, 'colon', ':');
                 this.type.build(b, scope);
             });
         }
@@ -68,9 +76,9 @@ module DTSDoc{
         constructor(public isVarLength:bool, public name:string, public optional:bool, public type:ASTTypeAnnotation){}
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
-                if(this.isVarLength) b.span('ts_symbol ts_keyword', '...');
-                b.span('', this.name);
-                if(this.optional) b.span('ts_symbol ts_keyword', '?');
+                if(this.isVarLength) emitSymbol(b, 'dots', '...');
+                emitIdentifier(b, this.name);
+                if(this.optional) emitSymbol(b, 'question', '?');
                 this.type.build(b, scope);
             });
         }
@@ -80,12 +88,12 @@ module DTSDoc{
         constructor(public params:ASTParameter[]){}
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('ts_params', ()=>{
-                b.span('', '(');
+                emitSymbol(b, 'leftparenthesis', '(');
                 for(var i = 0; i < this.params.length; i++){
-                    if(i > 0){ b.span('', ', '); }
+                    if(i > 0){ emitSymbol(b, 'comma', ','); }
                     this.params[i].build(b, scope);
                 }
-                b.span('', ')');
+                emitSymbol(b, 'rightparenthesis', ')');
             });
         }
     }    
@@ -122,7 +130,7 @@ module DTSDoc{
                     this.name == "any" ||
                     this.name == "void"
                 ){
-                    b.span('ts_reserved', this.name);
+                    emitReserved(b, this.name);
                 }else if(primitiveTypeNameLinks[this.name]){
                     b.link(primitiveTypeNameLinks[this.name], this.name);
                 }else{
@@ -147,7 +155,7 @@ module DTSDoc{
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
                 this.type.build(b, scope);
-                b.span('', '[]');
+                emitSymbol(b, 'array', '[]');
             });
         }
     }
@@ -156,12 +164,12 @@ module DTSDoc{
         constructor(public members:ASTInterfaceMember[]){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
-                b.span('ts_symbol ts_left_brace', '{');
+                emitSymbol(b, 'leftbrace', '{');
                 this.members.forEach((m)=>{
                     m.build(b, scope);
-                    b.span('ts_symbol ts_semi', ';');
+                    emitSymbol(b, 'semicolon', ';');
                 });
-                b.span('ts_symbol ts_right_brace', '}'); 
+                emitSymbol(b, 'rightbrace', '}'); 
             });
         }
     }
@@ -171,7 +179,7 @@ module DTSDoc{
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
                 this.params.build(b, scope);
-                b.span('ts_symbol ts_arrow', '=&gt;');
+                emitSymbol(b, 'arrow', '=&gt;');
                 this.retType.build(b, scope);
             })            
         }
@@ -181,9 +189,9 @@ module DTSDoc{
         constructor(public params:ASTParameters, public retType:ASTType){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
-                b.span("ts_reserved", 'new');
+                emitReserved(b, 'new');
                 this.params.build(b, scope);
-                b.span("ts_symbol ts_arrow", '=&gt;');
+                emitSymbol(b, 'arrow', '=&gt;');
                 this.retType.build(b, scope);
             });
         }
@@ -248,7 +256,7 @@ module DTSDoc{
         buildMember(b:HTMLBuilder):void{
             b.div("ts_code ts_class_member_title ts_constructor", ()=>{
                 b.anchor(this.parent.name + "-constructor");
-                b.span("ts_reserved ts_reserved_constructor", 'constructor');
+                emitReserved(b, 'constructor');
                 this.params.build(b, this.parent.parent); 
             });
         }
@@ -260,7 +268,7 @@ module DTSDoc{
             b.div("ts_code ts_class_member_title ts_method", ()=>{
                 b.anchor(this.parent.name + "-" + this.name);
                 if(this.isStatic) emitReserved(b, 'static'); 
-                b.span('', this.name);
+                emitIdentifier(b, this.name);
                 this.sign.build(b, this.parent.parent);
             });
         }
@@ -272,7 +280,7 @@ module DTSDoc{
             b.div("ts_code ts_class_member_title ts_field", ()=>{
                 b.anchor(this.parent.name + "-" + this.name);
                 if(this.isStatic) emitReserved(b, 'static');
-                b.span('ts_identifier', this.name);
+                emitIdentifier(b, this.name);
                 this.type.build(b, this.parent.parent); 
             });
         }
@@ -324,7 +332,7 @@ module DTSDoc{
                     if(this.superClass){
                         b.h3('Hierarchy');
                         b.div("ts_classcontent ts_classhierarchy", ()=>{            
-                            b.span('', this.name);    
+                            emitIdentifier(b, this.name);    
                             var superClass:ASTClass = this.getSuperClass();
                             if(superClass){
                                 while(superClass){
@@ -403,9 +411,10 @@ module DTSDoc{
         constructor(public name:string, public indexType:ASTType, public retType:ASTTypeAnnotation){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span("ts_code ts_indexer", ()=>{
-                b.span('', "[" + this.name);
+                emitSymbol(b, 'leftbracket', "[");
+                emitIdentifier(b, this.name);
                 this.indexType.build(b, scope);
-                b.span('', "]");
+                emitSymbol(b, 'rightbracket', "]");
                 this.retType.build(b, scope);
             });
         }
@@ -415,8 +424,8 @@ module DTSDoc{
         constructor(public name:string, public isOpt:bool, public sign:ASTFuncionSignature){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span("ts_code ts_method'", ()=>{
-                b.span('', this.name);
-                if(this.isOpt) b.span('ts_symbol ts_keyword', '?');
+                emitIdentifier(b, this.name);
+                if(this.isOpt) emitSymbol(b, 'question', '?');
                 this.sign.build(b, scope);
             });
         }
@@ -426,7 +435,7 @@ module DTSDoc{
         constructor(public params:ASTParameters, public type:ASTTypeAnnotation){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span("ts_code ts_constructor", ()=>{
-                b.span('', "new");
+                emitReserved(b, "new");
                 this.params.build(b, scope);
                 this.type.build(b, scope);
             });
@@ -437,7 +446,8 @@ module DTSDoc{
         constructor(public name:string, public isOptional:bool, public type:ASTTypeAnnotation){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{ 
             b.span("ts_code", ()=>{
-                b.span('', this.name + (this.isOptional ? "?" : ""));
+                emitIdentifier(b, this.name);
+                if(this.isOptional) emitSymbol(b, 'question', "?");
                 this.type.build(b, scope);
             });
         }
@@ -494,7 +504,7 @@ module DTSDoc{
                 b.section("ts_modulemember_content", ()=>{
                     b.span("ts_code ts_method", ()=>{
                         emitReserved(b, "function");
-                        b.span('ts_identifier', this.name);
+                        emitIdentifier(b, this.name);
                         this.sign.build(b, this.parent);
                     });
                 });
@@ -736,42 +746,65 @@ module DTSDoc{
 
             var b = new DTSDoc.HTMLBuilder();
             
-            if(program.docs){
-                program.docs.build(b);
-            }
-            
-            b.div('', ()=>{
-                if(global.docs){
-                    b.p('', ()=>{
-                        global.docs.build(b);
-                    });
-                }
-                b.h2('Contents');
-                b.ul("contents", ()=>{
-                    b.li(()=>{
-                        b.link("#members", 'Members');
-                    });
-                    b.li(()=>{
-                        b.link("#hierarchy", 'Class Hierarchy');
-                    });
-                });
+            b.div('ts_document', ()=>{
+                b.div('ts_index', ()=>{
+                    b.h1('Index');
 
-                b.anchor("members");
-                b.h2('Members');        
-                b.div('', ()=>{
-                    members.map((m)=>{
-                        m.build(b);
-                    });
-                });                         
-                b.hr();
-                b.anchor("hierarchy");
-                b.h2('Class Hierarchy');
-                b.div('', ()=>{
-                    global.buildHierarchy(b);
+                    function emitMember(scope:ASTModule){
+                        scope.members.forEach((member)=>{                            
+                            if(member instanceof ASTModule){
+                                b.link('#' + member.getLinkString(), ()=>{
+                                    b.h2(member.name);
+                                });
+                                emitMember(<ASTModule>member);
+                            }else{
+                                b.p('', ()=>{ 
+                                   b.link('#' + member.getLinkString(), member.name);
+                                });
+                            }
+                        });
+                    }
+                    emitMember(global);
                 });
-                b.hr();
-                b.footer(()=>{
-                    b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
+                b.div('ts_index_static', '');
+                b.div('ts_content', ()=>{
+
+                    if(program.docs){
+                        program.docs.build(b);
+                    }
+
+                    if(global.docs){
+                        b.p('', ()=>{
+                            global.docs.build(b);
+                        });
+                    }
+                    b.h2('Contents');
+                    b.ul("contents", ()=>{
+                        b.li(()=>{
+                            b.link("#members", 'Members');
+                        });
+                        b.li(()=>{
+                            b.link("#hierarchy", 'Class Hierarchy');
+                        });
+                    });
+
+                    b.anchor("members");
+                    b.h2('Members');        
+                    b.div('', ()=>{
+                        members.map((m)=>{
+                            m.build(b);
+                        });
+                    });                         
+                    b.hr();
+                    b.anchor("hierarchy");
+                    b.h2('Class Hierarchy');
+                    b.div('', ()=>{
+                        global.buildHierarchy(b);
+                    });
+                    b.hr();
+                    b.footer(()=>{
+                        b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
+                    });
                 });
             });
 

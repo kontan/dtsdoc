@@ -2250,6 +2250,12 @@ var DTSDoc;
     function emitReserved(b, name) {
         b.span('ts_reserved ts_reserved_' + name, name);
     }
+    function emitIdentifier(b, name) {
+        b.span('ts_identifier', name);
+    }
+    function emitSymbol(b, name, symbol) {
+        b.span('ts_symbol ts_symbol_' + name, symbol);
+    }
     var ASTDoctagSection = (function () {
         function ASTDoctagSection(tag, text) {
             this.tag = tag;
@@ -2306,7 +2312,7 @@ var DTSDoc;
         ASTTypeAnnotation.prototype.build = function (b, scope) {
             var _this = this;
             b.span('ts_type_annotation', function () {
-                b.span('ts_symbol ts_colon', ':');
+                emitSymbol(b, 'colon', ':');
                 _this.type.build(b, scope);
             });
         };
@@ -2324,11 +2330,11 @@ var DTSDoc;
             var _this = this;
             b.span('', function () {
                 if(_this.isVarLength) {
-                    b.span('ts_symbol ts_keyword', '...');
+                    emitSymbol(b, 'dots', '...');
                 }
-                b.span('', _this.name);
+                emitIdentifier(b, _this.name);
                 if(_this.optional) {
-                    b.span('ts_symbol ts_keyword', '?');
+                    emitSymbol(b, 'question', '?');
                 }
                 _this.type.build(b, scope);
             });
@@ -2343,14 +2349,14 @@ var DTSDoc;
         ASTParameters.prototype.build = function (b, scope) {
             var _this = this;
             b.span('ts_params', function () {
-                b.span('', '(');
+                emitSymbol(b, 'leftparenthesis', '(');
                 for(var i = 0; i < _this.params.length; i++) {
                     if(i > 0) {
-                        b.span('', ', ');
+                        emitSymbol(b, 'comma', ',');
                     }
                     _this.params[i].build(b, scope);
                 }
-                b.span('', ')');
+                emitSymbol(b, 'rightparenthesis', ')');
             });
         };
         return ASTParameters;
@@ -2389,7 +2395,7 @@ var DTSDoc;
             var _this = this;
             b.span('', function () {
                 if(_this.name == "any" || _this.name == "void") {
-                    b.span('ts_reserved', _this.name);
+                    emitReserved(b, _this.name);
                 } else if(primitiveTypeNameLinks[_this.name]) {
                     b.link(primitiveTypeNameLinks[_this.name], _this.name);
                 } else {
@@ -2417,7 +2423,7 @@ var DTSDoc;
             var _this = this;
             b.span('', function () {
                 _this.type.build(b, scope);
-                b.span('', '[]');
+                emitSymbol(b, 'array', '[]');
             });
         };
         return ASTArrayType;
@@ -2432,12 +2438,12 @@ var DTSDoc;
         ASTSpecifingType.prototype.build = function (b, scope) {
             var _this = this;
             b.span('', function () {
-                b.span('ts_symbol ts_left_brace', '{');
+                emitSymbol(b, 'leftbrace', '{');
                 _this.members.forEach(function (m) {
                     m.build(b, scope);
-                    b.span('ts_symbol ts_semi', ';');
+                    emitSymbol(b, 'semicolon', ';');
                 });
-                b.span('ts_symbol ts_right_brace', '}');
+                emitSymbol(b, 'rightbrace', '}');
             });
         };
         return ASTSpecifingType;
@@ -2454,7 +2460,7 @@ var DTSDoc;
             var _this = this;
             b.span('', function () {
                 _this.params.build(b, scope);
-                b.span('ts_symbol ts_arrow', '=&gt;');
+                emitSymbol(b, 'arrow', '=&gt;');
                 _this.retType.build(b, scope);
             });
         };
@@ -2471,9 +2477,9 @@ var DTSDoc;
         ASTConstructorTypeLiteral.prototype.build = function (b, scope) {
             var _this = this;
             b.span('', function () {
-                b.span("ts_reserved", 'new');
+                emitReserved(b, 'new');
                 _this.params.build(b, scope);
-                b.span("ts_symbol ts_arrow", '=&gt;');
+                emitSymbol(b, 'arrow', '=&gt;');
                 _this.retType.build(b, scope);
             });
         };
@@ -2543,7 +2549,7 @@ var DTSDoc;
             var _this = this;
             b.div("ts_code ts_class_member_title ts_constructor", function () {
                 b.anchor(_this.parent.name + "-constructor");
-                b.span("ts_reserved ts_reserved_constructor", 'constructor');
+                emitReserved(b, 'constructor');
                 _this.params.build(b, _this.parent.parent);
             });
         };
@@ -2566,7 +2572,7 @@ var DTSDoc;
                 if(_this.isStatic) {
                     emitReserved(b, 'static');
                 }
-                b.span('', _this.name);
+                emitIdentifier(b, _this.name);
                 _this.sign.build(b, _this.parent.parent);
             });
         };
@@ -2589,7 +2595,7 @@ var DTSDoc;
                 if(_this.isStatic) {
                     emitReserved(b, 'static');
                 }
-                b.span('ts_identifier', _this.name);
+                emitIdentifier(b, _this.name);
                 _this.type.build(b, _this.parent.parent);
             });
         };
@@ -2647,7 +2653,7 @@ var DTSDoc;
                     if(_this.superClass) {
                         b.h3('Hierarchy');
                         b.div("ts_classcontent ts_classhierarchy", function () {
-                            b.span('', _this.name);
+                            emitIdentifier(b, _this.name);
                             var superClass = _this.getSuperClass();
                             if(superClass) {
                                 while(superClass) {
@@ -2734,9 +2740,10 @@ var DTSDoc;
         ASTIIndexer.prototype.build = function (b, scope) {
             var _this = this;
             b.span("ts_code ts_indexer", function () {
-                b.span('', "[" + _this.name);
+                emitSymbol(b, 'leftbracket', "[");
+                emitIdentifier(b, _this.name);
                 _this.indexType.build(b, scope);
-                b.span('', "]");
+                emitSymbol(b, 'rightbracket', "]");
                 _this.retType.build(b, scope);
             });
         };
@@ -2754,9 +2761,9 @@ var DTSDoc;
         ASTIMethod.prototype.build = function (b, scope) {
             var _this = this;
             b.span("ts_code ts_method'", function () {
-                b.span('', _this.name);
+                emitIdentifier(b, _this.name);
                 if(_this.isOpt) {
-                    b.span('ts_symbol ts_keyword', '?');
+                    emitSymbol(b, 'question', '?');
                 }
                 _this.sign.build(b, scope);
             });
@@ -2774,7 +2781,7 @@ var DTSDoc;
         ASTIConstructor.prototype.build = function (b, scope) {
             var _this = this;
             b.span("ts_code ts_constructor", function () {
-                b.span('', "new");
+                emitReserved(b, "new");
                 _this.params.build(b, scope);
                 _this.type.build(b, scope);
             });
@@ -2793,7 +2800,10 @@ var DTSDoc;
         ASTIField.prototype.build = function (b, scope) {
             var _this = this;
             b.span("ts_code", function () {
-                b.span('', _this.name + (_this.isOptional ? "?" : ""));
+                emitIdentifier(b, _this.name);
+                if(_this.isOptional) {
+                    emitSymbol(b, 'question', "?");
+                }
                 _this.type.build(b, scope);
             });
         };
@@ -2863,7 +2873,7 @@ var DTSDoc;
                 b.section("ts_modulemember_content", function () {
                     b.span("ts_code ts_method", function () {
                         emitReserved(b, "function");
-                        b.span('ts_identifier', _this.name);
+                        emitIdentifier(b, _this.name);
                         _this.sign.build(b, _this.parent);
                     });
                 });
@@ -3101,40 +3111,61 @@ var DTSDoc;
             var global = program.global;
             var members = global.members;
             var b = new DTSDoc.HTMLBuilder();
-            if(program.docs) {
-                program.docs.build(b);
-            }
-            b.div('', function () {
-                if(global.docs) {
-                    b.p('', function () {
-                        global.docs.build(b);
-                    });
-                }
-                b.h2('Contents');
-                b.ul("contents", function () {
-                    b.li(function () {
-                        b.link("#members", 'Members');
-                    });
-                    b.li(function () {
-                        b.link("#hierarchy", 'Class Hierarchy');
-                    });
+            b.div('ts_document', function () {
+                b.div('ts_index', function () {
+                    b.h1('Index');
+                    function emitMember(scope) {
+                        scope.members.forEach(function (member) {
+                            if(member instanceof ASTModule) {
+                                b.link('#' + member.getLinkString(), function () {
+                                    b.h2(member.name);
+                                });
+                                emitMember(member);
+                            } else {
+                                b.p('', function () {
+                                    b.link('#' + member.getLinkString(), member.name);
+                                });
+                            }
+                        });
+                    }
+                    emitMember(global);
                 });
-                b.anchor("members");
-                b.h2('Members');
-                b.div('', function () {
-                    members.map(function (m) {
-                        m.build(b);
+                b.div('ts_index_static', '');
+                b.div('ts_content', function () {
+                    if(program.docs) {
+                        program.docs.build(b);
+                    }
+                    if(global.docs) {
+                        b.p('', function () {
+                            global.docs.build(b);
+                        });
+                    }
+                    b.h2('Contents');
+                    b.ul("contents", function () {
+                        b.li(function () {
+                            b.link("#members", 'Members');
+                        });
+                        b.li(function () {
+                            b.link("#hierarchy", 'Class Hierarchy');
+                        });
                     });
-                });
-                b.hr();
-                b.anchor("hierarchy");
-                b.h2('Class Hierarchy');
-                b.div('', function () {
-                    global.buildHierarchy(b);
-                });
-                b.hr();
-                b.footer(function () {
-                    b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
+                    b.anchor("members");
+                    b.h2('Members');
+                    b.div('', function () {
+                        members.map(function (m) {
+                            m.build(b);
+                        });
+                    });
+                    b.hr();
+                    b.anchor("hierarchy");
+                    b.h2('Class Hierarchy');
+                    b.div('', function () {
+                        global.buildHierarchy(b);
+                    });
+                    b.hr();
+                    b.footer(function () {
+                        b.link("https://github.com/kontan/dtsdoc", 'DTSDoc');
+                    });
                 });
             });
             return {
@@ -3194,7 +3225,7 @@ var DTSDoc;
         return DTSDoc.Accessibility.Private;
     }, DTSDoc.reserved("private"))));
     var rDocumentComment = /^\/\*(\*(?!\*))((\*(?!\/)|[^*])*)\*\//m;
-    var rTags = /^\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/gm;
+    var rTags = /^\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
     var pDocumentComment = option(undefined, lexme(seq(function (s) {
         var text = s(regexp(rDocumentComment));
         s(whitespace);
@@ -3606,7 +3637,15 @@ function showResult(dat) {
     docs.children().remove();
     if(dat['type'] === 'success') {
         var documentContent = dat['docs'];
-        docs.html(documentContent);
+        var doc = docs[0]['contentDocument'];
+        $.ajax("style.css", {
+            contentType: "text/plain",
+            dataType: "text",
+            success: function (data) {
+                var text = '<style type="text/css">' + data + '</style>' + documentContent;
+                doc.body.innerHTML = text;
+            }
+        });
         updateDocument(documentContent);
     } else {
         docs.html("<p>Parsing failed at line " + dat.line + ", column " + dat.column + ": \"" + dat.source + "\", " + dat.message + "</p>");

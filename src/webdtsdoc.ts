@@ -1,10 +1,9 @@
 /// <reference path="../../DefinitelyTyped/jquery/jquery.d.ts" />
 /// <reference path="../../DefinitelyTyped/filewriter/filewriter.d.ts" />
 /// <reference path="../../DefinitelyTyped/filesystem/filesystem.d.ts" />
-/// <reference path="../Parsect/src/parsect.ts" />
-/// <reference path="../Parsect/src/globals.ts" />
-/// <reference path="../Parsect/src/type.ts" />
-/// <reference path="../Parsect/src/parser.ts" />
+/// <reference path="../../Parsect/src/parsect.ts" />
+/// <reference path="../../Parsect/src/globals.ts" />
+/// <reference path="parser.ts" />
 
 var fileInput  = <JQuery>$("#input_file"); 
 var openButton = <JQuery>$("#button_open"); 
@@ -85,7 +84,18 @@ function showResult(dat:any){
     docs.children().remove();
     if(dat['type'] === 'success'){
         var documentContent = dat['docs'];
-        docs.html(documentContent);
+        
+        var doc = docs[0]['contentDocument'];
+        $.ajax("style.css", {
+            contentType: "text/plain",
+            dataType: "text",
+            success: (data)=>{
+                var text = '<style type="text/css">' + data + '</style>' + documentContent;
+                doc.body.innerHTML = text;
+            }
+        });
+        
+        //docs.html(documentContent);
         updateDocument(documentContent);
     }else{
         docs.html("<p>Parsing failed at line " + dat.line + ", column " + dat.column + ": \"" + dat.source +  "\", " + dat.message + "</p>");

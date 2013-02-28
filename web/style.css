@@ -121,6 +121,41 @@ ul, ol{
 
 /************ API Reference Styles ******************/
 
+.ts_document{
+
+}
+
+.ts_index{
+	width: 12em;
+	padding-right: 10px;
+	overflow: auto;
+	position: fixed;
+	float: left;
+	top: 0px;
+	bottom: 0px;
+}
+
+/* Layout */
+.ts_index_static{
+	width: 12em;
+	min-height: 10px;
+	padding-right: 10px;
+	overflow: auto;
+	position: static;
+	float: left;
+}
+
+.ts_content{
+	width: -webkit-calc(100% - 12em - 16px);
+	width:    -moz-calc(100% - 12em - 16px);
+	width:         calc(100% - 12em - 16px);
+	min-width: 300px;
+	position: static;
+	float: left;
+}
+
+
+
 .ts_modulemember_a{
     color: black;
     text-decoration:none;
@@ -166,7 +201,12 @@ ul, ol{
 	content: " ";
 }
 
-.ts_semi:after{
+
+.ts_symbol_colon:after{
+	content: " ";
+}
+
+.ts_symbol_semicolon:after{
 	content: " ";
 }
 
@@ -284,20 +324,20 @@ ul, ol{
 }
 
 
-dl.ts_param{
+.ts_param{
 	margin: 0.2em;
 }
 
-dt.ts_param_name{
+.ts_param_name{
 	margin-left: 1em;
 	display: inline;
 }
 
-dt.ts_param_name:after{
+.ts_param_name:after{
 	content: " - ";
 }
 
-dd.ts_param_description{
+.ts_param_description{
 	display: inline;	
 	clear: both;
 }

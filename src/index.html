@@ -3,11 +3,52 @@
 	<head>
 		<meta charset="utf-8">
 		<style type="text/css">
+			.widget{
+				margin: 8px;
+			}
+			input.widget{
+				padding-left: 8px;
+				padding-right: 8px;
+			}
 			.gen_title{ 
 				text-align: center; font-size: large; 
 			}
 			input{
 				vertical-align: top;
+			}
+
+			*{
+				margin:0px;
+				padding:0px;
+			}
+
+			html,body{
+				height: 100%;
+				overflow: hidden;
+			}
+
+			#source{
+				width: 100%;
+				height: 200px;
+			}
+
+			#container{
+				width:100%;
+				height:100%;
+			}
+
+			#header{
+				width:100%;
+				height:300px;
+			}
+
+			#docs{
+				width:100%;
+				height: -webkit-calc(100% - 300px);
+				height: -moz-calc(100% - 300px);
+				height: calc(100% - 300px);
+				overflow:auto;
+				border-style: none;
 			}
 		</style>
 
@@ -15,28 +56,47 @@
 		<link href='http://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
 
 		<!-- Styles -->
+		<!--
 		<link rel="STYLESHEET" href="style.css" type="text/css"></link>
-
+		-->
 	</head>
 	<body>
-		<h1 class="gen_title"><a href="https://github.com/kontan/dtsdoc" target="_blank">dtsdoc on Web</a></h1>
-		<textarea id="source"></textarea>
-		<div>
-			<style> .widget{ display: block; float: left; height: 40px; margin-left: 10px; } </style>
-			<input id="input_file"  type="file"   value=""         style="display:none;"></input>
-			<input id="button_open" type="button" value="Open"     class="widget"></input>
-			<input id="gen"         type="button" value="Generate" class="widget"></input>
-			<a id="downloadLink" href="hoge.png" target="_blank">
-				<input id="download" type="button" value="Download" class="widget"></input>
-			</a>	
-			
-			<input id="async" type="checkbox" value="Async" checked="true" class="widget" style="width: 40px;　vertical-align:middle;"></input>
-			<div class="widget" style=""><span style="line-height: 40px;">Asyncronous</span></div>
-			<div class="widget"><span id="performance" style="line-height: 40px;"></span></div>	
-			<canvas id="progressbar" class="widget" width="300" height="30" style="border:solid 1px black; width: 300px;height: 30px; margin: 12px;"></canvas>	
+<!--
+
+		
+	-->
+
+		<!-- <iframe id="docs" style="width: 100%; 　height: 600px; display: block;"></iframe> -->
+
+		<!-- 
+		
+	-->
+
+
+		<div id="container">
+			<div id="header">
+				<h1 class="gen_title"><a href="https://github.com/kontan/dtsdoc" target="_blank">dtsdoc on Web</a></h1>
+				<textarea id="source"></textarea>
+				<div>
+					<style> .widget{ display: block; float: left; height: 40px; margin-left: 10px; } </style>
+					<input id="input_file"  type="file"   value=""         style="display:none;"></input>
+					<input id="button_open" type="button" value="Open"     class="widget"></input>
+					<input id="gen"         type="button" value="Generate" class="widget"></input>
+					<a id="downloadLink" href="hoge.png" target="_blank">
+						<input id="download" type="button" value="Download" class="widget"></input>
+					</a>	
+					
+					<input id="async" type="checkbox" value="Async" checked="true" class="widget" style="width: 40px;　vertical-align:middle;"></input>
+					<div class="widget" style=""><span style="line-height: 40px;">Asyncronous</span></div>
+					<div class="widget"><span id="performance" style="line-height: 40px;"></span></div>	
+					<canvas id="progressbar" class="widget" width="300" height="30" style="border:solid 1px black; width: 300px;height: 30px; margin: 12px;"></canvas>	
+				</div>
+				<hr style="margin: 60px; clear: both;" />
+			</div>
+			<iframe id="docs"></iframe>
+
 		</div>
-		<hr style="margin: 60px; clear: both;" />
-		<div id="docs"></div>
+
 		<script type="text/javascript" src="jquery-1.8.3.js"></script>
 		<script type="text/javascript" src="webdtsdoc.js"></script>
 	</body>

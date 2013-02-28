@@ -14,8 +14,8 @@
  * * You can also load your local definition file. Push to Open button to show a file dialog.
  * * Downloading a generated file is available only Chorme with "--enable-experimental-extension-apis" option because it uses File System API.
  * * &#64;param tag is supported.
- * * `dtsdoc` is very **slow** in Firefox. Currently Chrome is most suitable browser for `dtsdoc`.
- * * This tool is be at an early stage.　You can use it at your own risk.
+ * * `dtsdoc` is very **slow in Firefox**. Currently Chrome is most suitable browser for `dtsdoc`.
+ * * This tool is at an early stage yet.
  * * For more information, see [github page](https://github.com/kontan/dtsdoc).
  *
  *
@@ -23,9 +23,9 @@
  *    
  *     import dtsdoc = module("./dtsdoclib");
  *
- *     var code:string = fs.readFileSync(file).toString();
+ *     var code:string = fs.readFileSync(sourcePath).toString();
  *     var html:string = dtsdoc.toHTMLDocument(code);
- *     fs.writeFileSync(matches[1] + ".d.html", html); 
+ *     fs.writeFileSync(destPath, html); 
  *
  *
  * ## Example
