@@ -13,7 +13,8 @@ See [my Web Site](http://phyzkit.net/).
 
 # Build
 
-Some messy steps are needed. In node.js command line,
+**If you only want to use dtsdoc, you can precompiled javascript source files in `bin` directory**.
+Some messy steps are needed to build. In node.js command line,
 
 1. `npm install -g jakefile`
 2. Download [Parsect](https://github.com/kontan/Parsect) and place same directory with dtsdoc. 
@@ -22,23 +23,23 @@ Some messy steps are needed. In node.js command line,
 # Usage
 
 ## From command line
-To run dtsdoc in node.js, you needs 5 files in build/node dir. `command.js` is command line script, so: 
+To run dtsdoc in node.js, you needs some files in bin dir. `dtsdoc.js` is command line script, so: 
 
-`node build/node/command source_file_path`
+`node bin/dtsdoc --out DEST SOURCE_FILE_PATH`
 
-will generate document in the same directory of the input file.
+will generate a document in DEST.
 
 ## As node.js module
 
-See `src/command.ts` as example.
+See `src/dtsdoc.ts` as example.
 
 ## In Web browser
 
-Open `build/web/index.html` in your browser. In Chrome, `--allow-file-access-from-files` option is needed to run locally.
+Open `web/index.html` in your browser. In Chrome, `--allow-file-access-from-files` option is needed to run locally.
 
 # Known Issues
 
-Can't find a type name in other split module. 
+Can't find a type name in other split module, especially the following case: 
 
     module M {
         var c: N.C;      <- N.C is not found
