@@ -2,8 +2,11 @@
 /// <reference path="primitives.ts" />
 /// <reference path="links.ts" />
 
-declare module marked {
-    export function (src: string): string;
+var marked: (src: string)=> string;
+declare function require(name: string): any;
+
+if( ! marked){
+    marked = require("./marked");
 }
 
 module DTSDoc{
@@ -350,7 +353,7 @@ module DTSDoc{
                     }
 
                     if(this.interfaces.length > 0){
-                        b.h3('Implementing Interfaces');
+                        b.h3('Implemented Interfaces');
                         b.div("ts_classcontent ts_implementations", ()=>{
                             for(var i = 0; i < this.interfaces.length; i++){
                                 if(i > 0) b.span('', ", ");
@@ -373,7 +376,7 @@ module DTSDoc{
                             for(var i = 0; i < this.derivedClasses.length; i++){
                                 if(i > 0) b.span('', ", ");
                                 var c = this.derivedClasses[i];
-                                b.link('#' + c.getFullName(), c.name);
+                                b.link('#' + c.getLinkString(), c.name);
                             }
                         });
                         b.hr();
@@ -482,6 +485,25 @@ module DTSDoc{
                         b.h3('Description');
                         b.div("ts_classcontent ts_classdescription", this.docs.text);
                     }
+
+                    if(this.interfaces.length > 0){
+                        b.h3('Extended Interfaces');
+                        b.div("ts_classcontent ts_implementations", ()=>{
+                            for(var i = 0; i < this.interfaces.length; i++){
+                                if(i > 0) b.span('', ", ");
+                                var name = this.interfaces[i].name;
+                                var sc = this.parent.searchType(new ASTTypeName([name]));
+                                if(sc instanceof ASTInterface){
+                                    var ifs:ASTInterface = <ASTInterface> sc;
+                                    b.link('#' + ifs.getLinkString(), name);
+                                }else{
+                                    b.span('', name);
+                                }
+                            }
+                        });
+                        b.hr();
+                    }
+
                     if(this.type.members.length > 0){
                         b.h3('Members');
                         this.type.members.forEach((m)=>{
@@ -740,7 +762,7 @@ module DTSDoc{
     }
 
     export function generateDocument(sourceCode:string, watcher?:(v:number)=>void):GenerationResult{
-        var result = DTSDoc.pScript(watcher).parse(new Source(sourceCode, 0));
+        var result:Parsect.State = DTSDoc.pScript(watcher).parse(new Source(sourceCode, 0));
         if(result.success){
             var program:DTSDoc.ASTProgram = result.value;
             var global:DTSDoc.ASTModule = program.global;
@@ -752,14 +774,26 @@ module DTSDoc{
                 b.div('ts_index', ()=>{
                     b.h1('Index');
 
+
+                    var currentModule:string = null;
+                    var linkString:string = null;
+                    var moduleEmitted:bool =  false;
                     function emitMember(scope:ASTModule){
                         scope.members.forEach((member)=>{                            
                             if(member instanceof ASTModule){
-                                b.link('#' + member.getLinkString(), ()=>{
-                                    b.h2(member.name);
-                                });
+                                if(member.getFullName() != currentModule){
+                                    currentModule = member.getFullName();
+                                    linkString = member.getLinkString();
+                                    moduleEmitted = false;
+                                }
                                 emitMember(<ASTModule>member);
                             }else{
+                                if(currentModule && ! moduleEmitted){
+                                    moduleEmitted = true;
+                                    b.link('#' + linkString, ()=>{
+                                        b.h2('ts_index_module', currentModule);
+                                    });
+                                }
                                 b.p('ts_index_item', ()=>{ 
                                     var symbol = member instanceof ASTClass ? '■' :
                                                  member instanceof ASTInterface ? '□' :
@@ -821,11 +855,12 @@ module DTSDoc{
             };
         }else{
             var pos = result.source.getPosition();
+            var i:number = result.source.position;
             return {
                 "type": GenerationResultType.Fail,
                 'line': pos.line,
                 'column': pos.column,
-                'source': result.source.source.slice(result.source.position, result.source.position + 128),
+                'source': result.source.source.slice(i, i + 128),
                 'message': result.errorMesssage
             };
         }

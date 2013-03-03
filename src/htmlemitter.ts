@@ -89,8 +89,11 @@ module DTSDoc{
 		h1(x:string, y?:any):void{
 			this.elem('h1', y ? x : '', {}, y ? y : x);
 		}
-		h2(content:string):void{
-			this.elem('h2', '', {}, content);
+		h2(content:string):void;
+		h2(classes:string, content:string):void;
+		h2(classes:string, content:()=>void):void;
+		h2(x:string, y?:any):void{
+			this.elem('h2', y ? x : '', {}, y ? y : x);
 		}
 		h3(content:string):void{
 			this.elem('h3', '', {}, content);

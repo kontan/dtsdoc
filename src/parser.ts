@@ -26,7 +26,9 @@ module DTSDoc{
 		});
 	}
 
-	export var reserved:(s:string)=>Parsect.Parser = s=>lexme(string(s));
+	export function reserved(s:string): Parsect.Parser{
+		return new Parsect.Parser("", (src)=>{ return lexme(string(s)).parse(src); });
+	}
 	var keyword:(s:string)=>Parsect.Parser = s=>lexme(regexp(new RegExp('^' + s + '(?!(\\w|_))', '')));
 	
 	////////////////////////////////////////////////////////////////////////
@@ -51,7 +53,10 @@ module DTSDoc{
 	var rDocumentComment = /^\/\*(\*(?!\*))((\*(?!\/)|[^*])*)\*\//m;
 	var rTags = /^\@([a-z]+)\s+(([^@]|\@(?![a-z]))*)/mg;
 
-	var pDocumentComment     = option(undefined, lexme(seq(s=>{
+
+	
+
+	var pDocumentCommentSection     = lexme(seq(s=>{
 		var text = s(regexp(rDocumentComment));
 		s(whitespace);
 		if(s.success()){
@@ -70,7 +75,11 @@ module DTSDoc{
 			}
 			return new ASTDocs(description, tags);
 		}
-	})));
+	}));
+
+	var pDocumentComment = option(undefined, pDocumentCommentSection);
+
+	var pDocumentComments = many(pDocumentCommentSection);
 
 	var pIdentifierPath = sepBy1(pIdentifier, period);
 
@@ -146,7 +155,7 @@ module DTSDoc{
 	});
 
 	var pSpecifyingTypeMember = seq(s=>{
-		var docs = s(pDocumentComment);
+		var docs:ASTDocs[] = s(pDocumentComments);
 		var member:ASTInterfaceMember = s(or(
 			pIConstructor,
 			trying(pIMethod),
@@ -156,7 +165,10 @@ module DTSDoc{
 		));
 		s(semi);
 		if(s.success()){
-			member.docs = docs;
+			if(docs.length >= 2){
+				console.log("WARNING: Too many document comment at a specifying type member." + s.peek());
+			}
+			member.docs = docs[docs.length - 1];
 			return member;
 		}
 	});
@@ -229,11 +241,15 @@ module DTSDoc{
 	});
 
 	var pClassMember = seq(s=>{
-		var docs = s(pDocumentComment);
+		var docs:ASTDocs[] = s(pDocumentComments);
 		var member:ASTClassMember = s(or(pConstructor, pMethodOrField, pIIndexer));
 		s(semi);
 		if(s.success()){
-			member.docs = docs;
+			if(docs.length >= 2){
+				console.log("WARNING: Too many document comment for a member at: " + s.peek());
+			}
+			member.docs = docs[docs.length - 1];
+			
 			return member;
 		}
 	});

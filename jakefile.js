@@ -43,17 +43,15 @@ function exec(command, func){
 }
 
 var commonOptions = [
-	'--target ES5',
 	'src/parser.ts'
 ];
 
 task('node', function(){
 	exec('tsc ' + commonOptions.concat(['--out temp', 'src/dtsdoc.ts']).join(' '), function(){
 		copyFile('src/template.html', 'bin/template.html');
-		copyFile('src/style.css', 'bin/style.css');
 		copyFile('temp/dtsdoc/src/dtsdoc.js', 'bin/dtsdoc.js');
+		copyFile('src/marked.js', 'bin/marked.js');	
 		concatFiles('bin/dtsdoclib.js', [
-			'src/marked.js',
 			'temp/Parsect/src/parsect.js',
 			'temp/Parsect/src/globals.js',
 			'temp/dtsdoc/src/htmlemitter.js',
@@ -68,12 +66,12 @@ task('node', function(){
 
 task('web', function(){
 	exec('tsc ' + commonOptions.concat(['--out web/webdtsdoc.js', 'src/webdtsdoc.ts']).join(' '), function(){
-		concatFiles('web/webdtsdoc.js', ['src/marked.js', 'web/webdtsdoc.js']);
-		copyFile('src/style.css', 'web/style.css');
+		concatFiles('web/webdtsdoc.js', ['web/webdtsdoc.js']);
 		copyFile('src/template.html', 'web/template.html');
 		copyFile('src/index.html', 'web/index.html');
 		copyFile('src/sample.d.ts', 'web/sample.d.ts');
 		copyFile('src/jquery-1.8.3.js', 'web/jquery-1.8.3.js');	
+		copyFile('src/marked.js', 'web/marked.js');	
 	});
 });
 

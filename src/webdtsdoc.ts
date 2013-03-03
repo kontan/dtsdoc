@@ -15,29 +15,13 @@ var async     = <JQuery>$("#async");
 textarea.val("");
 
 function getFullHTML(bodyHTML:string, callback:(html:string)=>void){
-    var cssText:string;
-    var templete:string;
-    function onAjaxComplete(){
-        if(cssText && templete){
-            templete = templete.replace('<!-- CSS Content -->', cssText);
-            templete = templete.replace('<!-- Document Content -->', bodyHTML);
-            callback(templete);
-        }
-    }
-    $.ajax("style.css", {
-        contentType: "text/plain",
-        dataType: "text",
-        success: (data)=>{
-            cssText = data;
-            onAjaxComplete();
-        }
-    });
     $.ajax('template.html', {
         contentType: "text/plain",
         dataType: 'text',
         success: (data:string, dataType:string)=>{
-            templete = data;
-            onAjaxComplete();
+            var templete:string = data;
+            templete = templete.replace('<!-- Document Content -->', bodyHTML);
+            callback(templete);
         }
     });
 }
@@ -85,7 +69,14 @@ function showResult(dat:any){
     if(dat['type'] === 'success'){
         var documentContent = dat['docs'];
         
+        getFullHTML(documentContent, (fullHTML)=>{
+            docs[0]['contentDocument'].documentElement.innerHTML = fullHTML;
+        });
+        
+/*
         var doc = docs[0]['contentDocument'];
+
+
         $.ajax("style.css", {
             contentType: "text/plain",
             dataType: "text",
@@ -94,7 +85,7 @@ function showResult(dat:any){
                 doc.body.innerHTML = text;
             }
         });
-        
+ */       
         //docs.html(documentContent);
         updateDocument(documentContent);
     }else{
@@ -130,6 +121,10 @@ worker.addEventListener('message', (event:MessageEvent)=>{
 });
 
 function generateDocuments(sync?:bool){
+    if(sync === undefined){
+        sync = async.attr('checked') ? false : true;
+    }
+
     start = window.performance.now();
     workerRunning = true;
     var sourceCode = textarea.val();
@@ -138,7 +133,7 @@ function generateDocuments(sync?:bool){
             showResult(DTSDoc.generateDocument(sourceCode, watcher));
         }, 1);
     }else{
-        worker.postMessage(sourceCode);
+      //  worker.postMessage(sourceCode);
     }
 }
 
