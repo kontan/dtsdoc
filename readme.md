@@ -52,7 +52,7 @@ Can't find a type name in other split module, especially the following case:
         }
     }
 
-# Desing Problems
+# Designing Problems
 
 ## Interface is open
 Multiple interfaces with the same name exist together. Merge or split them in documents? Which definition should be linked from a interface name? 
