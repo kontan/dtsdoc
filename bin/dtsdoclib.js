@@ -41,21 +41,22 @@ var Parsect;
     })();
     Parsect.State = State;    
     var Source = (function () {
-        function Source(source, position) {
+        function Source(source, position, userData) {
             if (typeof position === "undefined") { position = 0; }
             this.source = source;
             this.position = position;
+            this.userData = userData;
             if(position < 0 || position > source.length + 1) {
                 throw "_position: out of range: " + position;
             }
         }
         Source.prototype.progress = function (delta) {
-            return new Source(this.source, this.position + delta);
+            return new Source(this.source, this.position + delta, this.userData);
         };
         Source.prototype.success = function (delta, value) {
             if (typeof delta === "undefined") { delta = 0; }
             if (typeof value === "undefined") { value = undefined; }
-            return State.success(new Source(this.source, this.position + delta), value);
+            return State.success(new Source(this.source, this.position + delta, this.userData), value);
         };
         Source.prototype.fail = function (message) {
             return State.fail(this, message);
@@ -130,6 +131,9 @@ var Parsect;
                     st = st.source.fail('unexpected ' + p.expected);
                 }
             };
+            s.getUserState = function () {
+                return source.userData;
+            };
             s.success = function () {
                 return st.success;
             };
@@ -170,6 +174,21 @@ var Parsect;
         });
     }
     Parsect.series = series;
+    function stream(ps) {
+        return new Parser("series", function (source) {
+            var st = source.success();
+            for(var i = 0; i < ps.length && st.success; i++) {
+                var _st = ps[i].parse(st.source);
+                if(_st.success) {
+                    st = _st;
+                } else {
+                    return st.source.fail(_st.errorMesssage);
+                }
+            }
+            return st.success ? st : st.source.fail();
+        });
+    }
+    Parsect.stream = stream;
     function ret(f) {
         return new Parser("ret", function (s) {
             return s.success(0, f());
@@ -249,6 +268,9 @@ var Parsect;
     }
     Parsect.or = or;
     function option(defaultValue, p) {
+        if(!p) {
+            throw "Parsect.option: invalid argument: p";
+        }
         return new Parser("option", function (source) {
             var st = p.parse(source);
             return st.success ? st : source.success(0, defaultValue);
@@ -318,12 +340,72 @@ var Parsect;
     };
     Parsect.between = function (open, p, close) {
         return seq(function (s) {
+            if(!(open && p && close)) {
+                throw "Parsect.between: Invalid argument:";
+            }
             s(open);
             var v = s(p);
             s(close);
             return v;
         });
     };
+    function apply(func) {
+        var parserSeq = [];
+        for (var _i = 0; _i < (arguments.length - 1); _i++) {
+            parserSeq[_i] = arguments[_i + 1];
+        }
+        return new Parser("apply", function (source) {
+            var args = [];
+            var st = source.success();
+            for(var i = 0; i < parserSeq.length; i++) {
+                var _st = stream(parserSeq[i]).parse(st.source);
+                if(_st.success) {
+                    st = _st;
+                    args.push(_st.value);
+                } else {
+                    return st.source.fail("");
+                }
+            }
+            return st.source.success(0, func.apply(undefined, args));
+        });
+    }
+    Parsect.apply = apply;
+    function build(ctor) {
+        var parserSeq = [];
+        for (var _i = 0; _i < (arguments.length - 1); _i++) {
+            parserSeq[_i] = arguments[_i + 1];
+        }
+        for(var i = 0; i < parserSeq.length; i++) {
+            for(var k = 0; k < parserSeq[i].length; k++) {
+                if(!parserSeq[i][k]) {
+                    throw "Parsect.build: Invalid argument: ps[" + i + "][" + k + "]";
+                }
+            }
+        }
+        return new Parser("apply", function (source) {
+            var args = [];
+            var st = source.success();
+            for(var i = 0; i < parserSeq.length; i++) {
+                var _st = stream(parserSeq[i]).parse(st.source);
+                if(_st.success) {
+                    st = _st;
+                    args.push(_st.value);
+                } else {
+                    return st.source.fail("");
+                }
+            }
+            var obj = Object.create(ctor.prototype);
+            ctor.apply(obj, args);
+            return st.source.success(0, obj);
+        });
+    }
+    Parsect.build = build;
+    function lazy(f) {
+        return new Parser("log", function (source) {
+            return f().parse(source);
+        });
+    }
+    Parsect.lazy = lazy;
     function log(f) {
         var count = 0;
         return new Parser("log", function (source) {
@@ -1317,8 +1399,9 @@ var DTSDoc;
     DTSDoc.ASTSpecifingType = ASTSpecifingType;    
     var ASTFunctionType = (function (_super) {
         __extends(ASTFunctionType, _super);
-        function ASTFunctionType(params, retType) {
+        function ASTFunctionType(docs, params, retType) {
                 _super.call(this);
+            this.docs = docs;
             this.params = params;
             this.retType = retType;
         }
@@ -1471,11 +1554,15 @@ var DTSDoc;
     var ASTClass = (function (_super) {
         __extends(ASTClass, _super);
         function ASTClass(name, superClass, interfaces, members) {
+            var _this = this;
                 _super.call(this, 'class', name);
             this.superClass = superClass;
             this.interfaces = interfaces;
             this.members = members;
             this.derivedClasses = [];
+            members.forEach(function (m) {
+                m.parent = _this;
+            });
         }
         ASTClass.prototype.getSuperClass = function () {
             if(this.superClass) {
@@ -1851,11 +1938,24 @@ var DTSDoc;
         return ASTImport;
     })(ASTModuleMember);
     DTSDoc.ASTImport = ASTImport;    
+    var ASTModuleMemberDocs = (function (_super) {
+        __extends(ASTModuleMemberDocs, _super);
+        function ASTModuleMemberDocs(docs) {
+                _super.call(this, 'docs', undefined);
+            this.docs = docs;
+        }
+        return ASTModuleMemberDocs;
+    })(ASTModuleMember);
+    DTSDoc.ASTModuleMemberDocs = ASTModuleMemberDocs;    
     var ASTModule = (function (_super) {
         __extends(ASTModule, _super);
         function ASTModule(name, members) {
+            var _this = this;
                 _super.call(this, 'module', name);
             this.members = members;
+            members.forEach(function (m) {
+                m.parent = _this;
+            });
         }
         ASTModule.prototype.getMember = function (name) {
             for(var i = 0; i < this.members.length; i++) {
@@ -2109,9 +2209,9 @@ var DTSDoc;
         });
     }
     DTSDoc.reserved = reserved;
-    var keyword = function (s) {
+    function keyword(s) {
         return lexme(regexp(new RegExp('^' + s + '(?!(\\w|_))', '')));
-    };
+    }
     var colon = reserved(":");
     var semi = reserved(";");
     var comma = reserved(",");
@@ -2154,66 +2254,34 @@ var DTSDoc;
     var pDocumentComment = option(undefined, pDocumentCommentSection);
     var pDocumentComments = many(pDocumentCommentSection);
     var pIdentifierPath = sepBy1(pIdentifier, period);
-    DTSDoc.pParameter = seq(function (s) {
-        s(pDocumentComment);
-        var isVarArg = s(optional(reserved("...")));
-        var varName = s(pIdentifier);
-        var opt = s(option(false, map(function () {
-            return true;
-        }, reserved("?"))));
-        var typeName = s(option(new DTSDoc.ASTTypeName([
-            "any"
-        ]), pTypeAnnotation));
-        if(s.success()) {
-            return new DTSDoc.ASTParameter(isVarArg, varName, opt, typeName);
-        }
-    });
-    var pParameters = between(reserved("("), map(function (ps) {
-        return new DTSDoc.ASTParameters(ps);
-    }, sepBy(DTSDoc.pParameter, comma)), reserved(")"));
-    var pTypeAnnotation = option(new DTSDoc.ASTTypeAnnotation(new DTSDoc.ASTTypeName([
-        "any"
-    ])), seq(function (s) {
-        s(colon);
-        s(map(function (t) {
-            return new DTSDoc.ASTTypeAnnotation(t);
-        }, pType));
-    }));
     var pOpt = option(false, map(function () {
         return true;
     }, reserved("?")));
-    var pImport = seq(function (s) {
-        s(keyword('import'));
-        var id = s(pIdentifier);
-        s(reserved('='));
-        var mod = s(or(trying(series(keyword('module'), between(reserved('('), pStringRiteral, reserved(')')))), pTypeNameLiteral));
-        s(reserved(';'));
-        if(s.success()) {
-            return new DTSDoc.ASTImport(id, mod);
-        }
+    DTSDoc.pParameter = Parsect.lazy(function () {
+        return Parsect.build(DTSDoc.ASTParameter, [
+            pDocumentComment, 
+            optional(reserved("..."))
+        ], [
+            pIdentifier
+        ], [
+            pOpt
+        ], [
+            pTypeAnnotation
+        ]);
     });
-    var pTypeNameLiteral = map(function (n) {
-        return new DTSDoc.ASTTypeName(n);
-    }, pIdentifierPath);
-    var pFunctionTypeLiteral = seq(function (s) {
-        var docs = s(pDocumentComment);
-        var params = s(pParameters);
-        s(reserved("=>"));
-        var retType = s(pType);
-        if(s.success()) {
-            var t = new DTSDoc.ASTFunctionType(params, retType);
-            t.docs = docs;
-            return t;
-        }
-    });
-    var pConstructorTypeRiteral = seq(function (s) {
-        s(keyword('new'));
-        var params = s(pParameters);
-        s(reserved("=>"));
-        var retType = s(pType);
-        if(s.success()) {
-            return new DTSDoc.ASTConstructorTypeLiteral(params, retType);
-        }
+    DTSDoc.pParameters = Parsect.build(DTSDoc.ASTParameters, [
+        reserved("("), 
+        sepBy(DTSDoc.pParameter, comma)
+    ], [
+        reserved(")")
+    ]);
+    var pTypeAnnotation = Parsect.lazy(function () {
+        return option(new DTSDoc.ASTTypeAnnotation(new DTSDoc.ASTTypeName([
+            "any"
+        ])), Parsect.build(DTSDoc.ASTTypeAnnotation, [
+            colon, 
+            pType
+        ]));
     });
     var pSpecifyingTypeMember = seq(function (s) {
         var docs = s(pDocumentComments);
@@ -2227,14 +2295,6 @@ var DTSDoc;
             return member;
         }
     });
-    var pSpecifyingType = seq(function (s) {
-        s(reserved("{"));
-        var members = s(many(pSpecifyingTypeMember));
-        s(reserved("}"));
-        if(s.success()) {
-            return new DTSDoc.ASTSpecifingType(members);
-        }
-    });
     var pType = seq(function (s) {
         var type = s(or(pConstructorTypeRiteral, pTypeNameLiteral, pSpecifyingType, pFunctionTypeLiteral));
         s(many(seq(function (s) {
@@ -2246,40 +2306,53 @@ var DTSDoc;
         })));
         return type;
     });
+    var pTypeNameLiteral = Parsect.build(DTSDoc.ASTTypeName, [
+        pIdentifierPath
+    ]);
+    var pSpecifyingType = Parsect.build(DTSDoc.ASTSpecifingType, [
+        reserved("{"), 
+        many(pSpecifyingTypeMember)
+    ], [
+        reserved("}")
+    ]);
+    var pConstructorTypeRiteral = Parsect.build(DTSDoc.ASTConstructorTypeLiteral, [
+        keyword('new'), 
+        DTSDoc.pParameters
+    ], [
+        reserved("=>"), 
+        pType
+    ]);
+    var pFunctionTypeLiteral = Parsect.build(DTSDoc.ASTFunctionType, [
+        pDocumentComment
+    ], [
+        DTSDoc.pParameters
+    ], [
+        reserved("=>"), 
+        pType
+    ]);
     var pMethodOrField = seq(function (s) {
         var access = s(pAccessibility);
         var isStatic = s(pStatic);
         var name = s(pIdentifier);
-        s(or(seq(function (s) {
-            var params = s(pParameters);
-            var retType = s(pTypeAnnotation);
-            if(s.success()) {
-                return new DTSDoc.ASTMethod(access, isStatic, name, new DTSDoc.ASTFuncionSignature(params, retType));
-            }
-        }), seq(function (s) {
-            var type = s(pTypeAnnotation);
-            if(s.success()) {
-                return new DTSDoc.ASTField(access, isStatic, name, type);
-            }
-        })));
+        s(or(Parsect.map(function (sig) {
+            return new DTSDoc.ASTMethod(access, isStatic, name, sig);
+        }, pFunctionSigniture), Parsect.map(function (type) {
+            return new DTSDoc.ASTField(access, isStatic, name, type);
+        }, pTypeAnnotation)));
     });
-    var pConstructor = seq(function (s) {
-        s(keyword("constructor"));
-        var params = s(pParameters);
-        if(s.success()) {
-            return new DTSDoc.ASTConstructor(params);
-        }
-    });
-    var pIIndexer = seq(function (s) {
-        s(reserved("["));
-        var name = s(pIdentifier);
-        var keyType = s(pTypeAnnotation);
-        s(reserved("]"));
-        var valueType = s(pTypeAnnotation);
-        if(s.success()) {
-            return new DTSDoc.ASTIIndexer(name, keyType, valueType);
-        }
-    });
+    var pConstructor = Parsect.build(DTSDoc.ASTConstructor, [
+        keyword("constructor"), 
+        DTSDoc.pParameters
+    ]);
+    var pIIndexer = Parsect.build(DTSDoc.ASTIIndexer, [
+        reserved("["), 
+        pIdentifier
+    ], [
+        pTypeAnnotation
+    ], [
+        reserved("]"), 
+        pTypeAnnotation
+    ]);
     var pClassMember = seq(function (s) {
         var docs = s(pDocumentComments);
         var member = s(or(pConstructor, pMethodOrField, pIIndexer));
@@ -2292,115 +2365,100 @@ var DTSDoc;
             return member;
         }
     });
-    DTSDoc.pClass = seq(function (s) {
-        s(reserved("class"));
-        var name = s(pIdentifier);
-        var superClasse = s(option(undefined, seq(function (s) {
-            s(reserved("extends"));
-            s(pTypeNameLiteral);
-        })));
-        var interfaces = s(option([], seq(function (s) {
-            s(reserved("implements"));
-            s(sepBy1(pTypeNameLiteral, comma));
-        })));
-        s(reserved("{"));
-        var members = s(many(pClassMember));
-        s(reserved("}"));
-        if(s.success()) {
-            var clazz = new DTSDoc.ASTClass(name, superClasse, interfaces, members);
-            members.forEach(function (m) {
-                m.parent = clazz;
-            });
-            return clazz;
-        }
-    });
-    var pIField = seq(function (s) {
-        var name = s(pIdentifier);
-        var opt = s(pOpt);
-        var type = s(pTypeAnnotation);
-        return new DTSDoc.ASTIField(name, opt, type);
-    });
-    var pIConstructor = seq(function (s) {
-        s(keyword("new"));
-        var params = s(pParameters);
-        var type = s(pTypeAnnotation);
-        if(s.success()) {
-            return new DTSDoc.ASTIConstructor(params, type);
-        }
-    });
-    var pIFunction = seq(function (s) {
-        var params = s(pParameters);
-        var type = s(pTypeAnnotation);
-        if(s.success()) {
-            return new DTSDoc.ASTIFunction(params, type);
-        }
-    });
-    var pIMethod = seq(function (s) {
-        var methodName = s(pIdentifier);
-        var opt = s(pOpt);
-        var params = s(pParameters);
-        var retType = s(pTypeAnnotation);
-        if(s.success()) {
-            return new DTSDoc.ASTIMethod(methodName, opt, new DTSDoc.ASTFuncionSignature(params, retType));
-        }
-    });
-    DTSDoc.pInterface = seq(function (s) {
-        s(reserved("interface"));
-        var name = s(pIdentifier);
-        var ifs = s(option([], seq(function (s) {
-            s(reserved("extends"));
-            s(sepBy1(pTypeNameLiteral, comma));
-        })));
-        var type = s(pSpecifyingType);
-        if(s.success()) {
-            return new DTSDoc.ASTInterface(name, ifs, type);
-        }
-    });
-    DTSDoc.pEnum = seq(function (s) {
-        s(keyword("enum"));
-        var name = s(pIdentifier);
-        s(reserved("{"));
-        var members = s(or(trying(sepBy(pIdentifier, comma)), endBy(pIdentifier, comma)));
-        s(optional(comma));
-        s(reserved("}"));
-        if(s.success()) {
-            return new DTSDoc.ASTEnum(name, members);
-        }
-    });
-    var pFunctionSigniture = seq(function (s) {
-        var params = s(pParameters);
-        var retType = s(pTypeAnnotation);
-        if(s.success()) {
-            return new DTSDoc.ASTFuncionSignature(params, retType);
-        }
-    });
-    DTSDoc.pFunction = seq(function (s) {
-        s(keyword("function"));
-        var name = s(pIdentifier);
-        var sign = s(pFunctionSigniture);
-        s(semi);
-        if(s.success()) {
-            return new DTSDoc.ASTFunction(name, sign);
-        }
-    });
-    DTSDoc.pVar = seq(function (s) {
-        s(keyword("var"));
-        var name = s(pIdentifier);
-        var typeName = s(pTypeAnnotation);
-        s(optional(semi));
-        if(s.success()) {
-            return new DTSDoc.ASTVar(name, typeName);
-        }
-    });
-    DTSDoc.pCallable = seq(function (s) {
-        s(keyword("function"));
-        var sign = s(pFunctionSigniture);
-        s(semi);
-        if(s.success()) {
-            return new DTSDoc.ASTCallable(sign);
-        }
-    });
-    DTSDoc.pModule = seq(function (s) {
+    var pClass = Parsect.build(DTSDoc.ASTClass, [
+        reserved("class"), 
+        pIdentifier
+    ], [
+        option(undefined, series(reserved("extends"), pTypeNameLiteral))
+    ], [
+        option([], series(reserved("implements"), sepBy1(pTypeNameLiteral, comma)))
+    ], [
+        between(reserved("{"), many(pClassMember), reserved("}"))
+    ]);
+    var pFunctionSigniture = Parsect.build(DTSDoc.ASTFuncionSignature, [
+        DTSDoc.pParameters
+    ], [
+        pTypeAnnotation
+    ]);
+    var pIField = Parsect.build(DTSDoc.ASTIField, [
+        pIdentifier
+    ], [
+        pOpt
+    ], [
+        pTypeAnnotation
+    ]);
+    var pIConstructor = Parsect.build(DTSDoc.ASTIConstructor, [
+        keyword("new"), 
+        DTSDoc.pParameters
+    ], [
+        pTypeAnnotation
+    ]);
+    var pIFunction = Parsect.build(DTSDoc.ASTIFunction, [
+        DTSDoc.pParameters
+    ], [
+        pTypeAnnotation
+    ]);
+    var pIMethod = Parsect.build(DTSDoc.ASTIMethod, [
+        pIdentifier
+    ], [
+        pOpt
+    ], [
+        pFunctionSigniture
+    ]);
+    var pInterface = Parsect.build(DTSDoc.ASTInterface, [
+        reserved("interface"), 
+        pIdentifier
+    ], [
+        option([], series(reserved("extends"), sepBy1(pTypeNameLiteral, comma)))
+    ], [
+        pSpecifyingType
+    ]);
+    var pModuleRef = or(trying(series(keyword('module'), between(reserved('('), pStringRiteral, reserved(')')))), pTypeNameLiteral);
+    var pImport = Parsect.build(DTSDoc.ASTImport, [
+        keyword('import'), 
+        pIdentifier
+    ], [
+        reserved('='), 
+        pModuleRef
+    ], [
+        reserved(';')
+    ]);
+    var pEnum = Parsect.build(DTSDoc.ASTEnum, [
+        keyword("enum"), 
+        pIdentifier
+    ], [
+        reserved("{"), 
+        or(trying(sepBy(pIdentifier, comma)), endBy(pIdentifier, comma))
+    ], [
+        optional(comma), 
+        reserved("}")
+    ]);
+    var pFunction = Parsect.build(DTSDoc.ASTFunction, [
+        keyword("function"), 
+        pIdentifier
+    ], [
+        pFunctionSigniture
+    ], [
+        semi
+    ]);
+    var pVar = Parsect.build(DTSDoc.ASTVar, [
+        keyword("var"), 
+        pIdentifier
+    ], [
+        pTypeAnnotation
+    ], [
+        optional(semi)
+    ]);
+    var pCallable = Parsect.build(DTSDoc.ASTCallable, [
+        keyword("function"), 
+        pFunctionSigniture
+    ], [
+        semi
+    ]);
+    var pModuleMemberDocs = Parsect.build(DTSDoc.ASTModuleMemberDocs, [
+        pDocumentCommentSection
+    ]);
+    var pModule = seq(function (s) {
         s(keyword("module"));
         var tokens = s(or(pIdentifierPath, map(function (s) {
             return [
@@ -2412,9 +2470,6 @@ var DTSDoc;
         s(reserved("}"));
         if(s.success()) {
             var mod = new DTSDoc.ASTModule(tokens[tokens.length - 1], members);
-            members.forEach(function (m) {
-                m.parent = mod;
-            });
             for(var i = tokens.length - 2; i >= 0; i--) {
                 var parent = new DTSDoc.ASTModule(tokens[i], [
                     mod
@@ -2425,21 +2480,18 @@ var DTSDoc;
             return mod;
         }
     });
-    DTSDoc.pModuleMember = seq(function (s) {
+    var pModuleMember = seq(function (s) {
         var docs = s(pDocumentComment);
         s(pDeclare);
         s(pExport);
-        var member = s(or(DTSDoc.pVar, DTSDoc.pModule, DTSDoc.pClass, trying(DTSDoc.pFunction), DTSDoc.pCallable, DTSDoc.pInterface, DTSDoc.pEnum));
+        var member = s(or(pVar, pModule, pClass, trying(pFunction), pCallable, pInterface, pEnum, pImport));
+        s(many(semi));
         if(s.success()) {
             member.docs = docs;
             return member;
         }
     });
-    var pModuleMembers = map(function (ms) {
-        return ms.filter(function (m) {
-            return m instanceof DTSDoc.ASTModuleMember;
-        });
-    }, many(or(DTSDoc.pModuleMember, reserved(';'), pImport)));
+    var pModuleMembers = many(pModuleMember);
     function pScript(watcher) {
         return seq(function (s) {
             logger = Parsect.log(function (n) {

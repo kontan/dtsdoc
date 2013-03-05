@@ -180,7 +180,7 @@ module DTSDoc{
     }
 
     export class ASTFunctionType extends ASTType{
-        constructor(public params:ASTParameters, public retType:ASTType){ super(); }
+        constructor(public docs:ASTDocs, public params:ASTParameters, public retType:ASTType){ super(); }
         build(b:HTMLBuilder, scope:ASTModule):void{
             b.span('', ()=>{
                 this.params.build(b, scope);
@@ -295,6 +295,7 @@ module DTSDoc{
         derivedClasses:ASTClass[] = [];
         constructor(name:string, public superClass:ASTTypeName, private interfaces:ASTTypeName[], public members:ASTClassMember[]){ 
             super('class', name); 
+            members.forEach((m)=>{ m.parent = this; });
         };
         getSuperClass():ASTClass{
             if(this.superClass){
@@ -603,9 +604,16 @@ module DTSDoc{
         }
     }
 
+    export class ASTModuleMemberDocs extends ASTModuleMember{
+        constructor(public docs:ASTDocs){ 
+            super('docs', undefined); 
+        }
+    }    
+
     export class ASTModule extends ASTModuleMember{
         constructor(name:string, public members:ASTModuleMember[]){ 
             super('module', name); 
+            members.forEach((m)=>{ m.parent = this; });
         }
 
         getMember(name:string):ASTModuleMember{
