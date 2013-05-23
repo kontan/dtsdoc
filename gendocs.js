@@ -2,7 +2,7 @@ var path = require("path");
 var fs = require("fs");
 var cp = require("child_process");
 
-var dt = "../DefinitelyTyped";
+var dt = "./DefinitelyTyped";
 fs.readdirSync(dt).forEach(function(dir){
 	var _dir = path.join(dt, dir);
 	var stat = fs.statSync(_dir);

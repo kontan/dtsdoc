@@ -1,9 +1,11 @@
+/// <reference path="../DefinitelyTyped/node/node.d.ts" />
+/// <reference path="../Parsect/src/parsect.ts"/>
+/// <reference path="../Parsect/src/globals.ts"/>
 /// <reference path="htmlemitter.ts" />
 /// <reference path="primitives.ts" />
 /// <reference path="links.ts" />
 
 var marked: (src: string)=> string;
-declare function require(name: string): any;
 
 if( ! marked){
     marked = require("./marked");

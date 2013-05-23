@@ -1,25 +1,37 @@
 {
-    "name": "dtsdoc",
-    "version": "0.1.0",
-    "author": "kontan <kudagitsune+npm@gmail.com>",
-    "description": "A simple documentation generator for TypeScript ambient source file.",
-    "dependencies": {
-    },
-    "devDependencies": {
-    },
-    "bin": {
-        "dtsdoc": "node ./bin/dtsdoc"
-    },
-    "main": "./src/dtsdoc.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/kontan/dtsdoc"
-    },
-    "keywords": [
-        "TypeScript"
-    ],
-    "license": "MIT",
-    "engines": {
-        "node": ">=0.6"
-    }
+  "name": "dtsdoc",
+  "version": "0.1.0",
+  "author": "kontan <kudagitsune+npm@gmail.com>",
+  "contributors": [ 
+	  {
+		"name": "Aaron Lampros",
+		"email": "alampros@gmail.com"
+	  }
+  ],
+  "description": "A simple documentation generator for TypeScript ambient source file.",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-typescript": "~0.1.5",
+    "grunt-contrib-connect": "~0.3.0"
+  },
+  "bin": {
+    "dtsdoc": "./bin/dtsdoc"
+  },
+  "main": "./src/dtsdoc.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kontan/dtsdoc"
+  },
+  "keywords": [
+    "TypeScript"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
 }
