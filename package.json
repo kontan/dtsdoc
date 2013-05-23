@@ -20,7 +20,7 @@
     "grunt-contrib-connect": "~0.3.0"
   },
   "bin": {
-    "dtsdoc": "node ./bin/dtsdoc"
+    "dtsdoc": "./bin/dtsdoc"
   },
   "main": "./src/dtsdoc.js",
   "repository": {

@@ -2544,10 +2544,8 @@ function toHTMLDocument(input) {
     var result = DTSDoc.generateDocument(input, function (v) {
     });
     if(result.type === DTSDoc.GenerationResultType.Success) {
-        var match = /(.*[\/\\])[^\/\\]+/.exec(process.argv[1]);
-        var dir = match ? match[1] : "";
-        var styles = tryGetFile(dir + 'style.css', "");
-        var template = tryGetFile(dir + 'template.html', "<!-- CSS Content --><!-- Document Content -->");
+        var styles = tryGetFile(__dirname + '/style.css', "");
+        var template = tryGetFile(__dirname + '/template.html', "<!-- CSS Content --><!-- Document Content -->");
         template = template.replace('<!-- CSS Content -->', styles);
         template = template.replace('<!-- Document Content -->', result.docs);
         return template;
@@ -2556,4 +2554,3 @@ function toHTMLDocument(input) {
     }
 }
 exports.toHTMLDocument = toHTMLDocument;
-
