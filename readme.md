@@ -13,13 +13,11 @@ See [my Web Site](http://phyzkit.net/).
 
 # Build
 
-**If you only want to use dtsdoc, you can precompiled javascript source files in `bin` directory**.
+**If you only want to use dtsdoc, you can use the precompiled javascript source files in `bin` directory**.
 
-Some messy steps are needed to build. 
-
-1. `npm install -g jakefile`
-2. Download [Parsect](https://github.com/kontan/Parsect) and place same directory with dtsdoc. 
-2. `jake`
+1. `npm install -g grunt-cli`
+2. `git submodule update --init` 
+2. `grunt`
 
 # Usage
 
