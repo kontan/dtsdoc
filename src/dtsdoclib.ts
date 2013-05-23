@@ -1,12 +1,11 @@
-/// <reference path="../../DefinitelyTyped/node/node.d.ts" />
-/// <reference path="../../Parsect/src/parsect.ts" />
-/// <reference path="../../Parsect/src/globals.ts" />
-
-/// <reference path="htmlemitter.ts" />
-/// <reference path="primitives.ts" />
-/// <reference path="links.ts" />
-/// <reference path="type.ts" />
-/// <reference path="parser.ts" />
+/// <reference path="../DefinitelyTyped/node/node.d.ts"/>
+/// <reference path="../Parsect/src/parsect.ts"/>
+/// <reference path="../Parsect/src/globals.ts"/>
+/// <reference path="htmlemitter.ts"/>
+/// <reference path="primitives.ts"/>
+/// <reference path="links.ts"/>
+/// <reference path="type.ts"/>
+/// <reference path="parser.ts"/>
 
 import fs = module("fs");
 

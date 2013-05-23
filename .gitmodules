@@ -1,0 +1,6 @@
+[submodule "Parsect"]
+	path = Parsect
+	url = https://github.com/kontan/Parsect.git
+[submodule "DefinitelyTyped"]
+	path = DefinitelyTyped
+	url = https://github.com/borisyankov/DefinitelyTyped.git
