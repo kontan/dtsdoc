@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "author": "kontan <kudagitsune+npm@gmail.com>",
   "contributors": [ 
-  {
-    "name": "Aaron Lampros",
-    "email": "alampros@gmail.com"
-  }
+	  {
+		"name": "Aaron Lampros",
+		"email": "alampros@gmail.com"
+	  }
+  ],
   "description": "A simple documentation generator for TypeScript ambient source file.",
   "dependencies": {},
   "devDependencies": {
